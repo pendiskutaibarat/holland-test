@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holland RIASEC Personality Test</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: #2c3e50;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #3498db;
+    }
+
+    /* User Info Section */
+    .user-info {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    /* Test Sections */
+    .test-section {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .section-title {
+      color: #3498db;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+
+    /* Table Styles - Desktop */
+    .statement-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+
+    .statement-table th {
+      text-align: left;
+      padding: 10px;
+      background-color: #f2f2f2;
+    }
+
+    .statement-table td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+
+    .statement-table tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .checkbox-cell {
+      width: 30px;
+      text-align: center;
+    }
+
+    /* Mobile Table Styles - Updated Approach */
+    @media (max-width: 768px) {
+      .statement-table {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+
+      .statement-table thead {
+        display: contents;
+      }
+
+      .statement-table tbody {
+        display: contents;
+      }
+
+      .statement-table tr {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid #ddd;
+        padding: 15px;
+      }
+
+      /* Header rows - will appear before each group */
+      .statement-table tr.header-row {
+        background-color: #3498db;
+        color: white;
+        font-weight: bold;
+        padding: 10px 15px;
+        margin: 0 -15px;
+        border-bottom: none;
+      }
+
+      /* Hide original headers */
+      .statement-table th {
+        display: none;
+      }
+
+      /* Regular data rows */
+      .statement-table td {
+        display: block;
+        width: 100%;
+        padding: 8px 0;
+        border: none;
+      }
+
+      /* Add some spacing between items */
+      .statement-table td:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      /* Make checkboxes easier to tap */
+      .statement-table input[type="checkbox"] {
+        transform: scale(1.3);
+        margin-right: 10px;
+      }
+    }
+
+    /* Buttons */
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      display: block;
+      margin: 20px auto;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    /* Results Section */
+    .results {
+      display: none;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+
+    .result-item {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-title {
+      color: #3498db;
+      margin-bottom: 10px;
+    }
+
+    .career-list {
+      columns: 2;
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .career-list li {
+      margin-bottom: 5px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .career-list li:before {
+      content: "•";
+      color: #3498db;
+      position: absolute;
+      left: 0;
+    }
+
+    /* Instructions */
+    .instructions {
+      background-color: #e8f4fc;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #3498db;
+    }
+
+    .instructions h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    /* Notes */
+    .notes {
+      font-style: italic;
+      color: #7f8c8d;
+      margin-top: 20px;
+    }
+
+    /* Total Points */
+    .total-points {
+      font-weight: bold;
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    /* Print Styles */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      .results,
+      .results * {
+        visibility: visible;
+      }
+
+      .results {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none;
+      }
+
+      .save-section,
+      #calculate-btn {
+        display: none !important;
+      }
+
+      .print-banner {
+        display: block;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .print-banner img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+
+    /* Print Banner (hidden by default) */
+    .print-banner {
+      display: none;
+    }
+
+    /* Save and Print Buttons */
+    .save-section {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .save-btn {
+      background-color: #27ae60;
+      display: inline-block;
+      margin: 0 5px;
+    }
+
+    .save-btn:hover {
+      background-color: #219653;
+    }
+
+    .print-btn {
+      background-color: #6c757d;
+      display: inline-block;
+      margin: 0 5px;
+    }
+
+    .print-btn:hover {
+      background-color: #5a6268;
+    }
+
+    .save-message {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .success {
+      background-color: #d5f5e3;
+      color: #27ae60;
+    }
+
+    .error {
+      background-color: #fadbd8;
+      color: #e74c3c;
+    }
+
+    /* Loading Spinner */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, .3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<header>
+  <img src="./banner.png" alt="">
+</header>
+
+<body>
+  <h1>TES BAKAT HOLLAND RIASEC</h1>
+
+  <div class="instructions">
+    <h3>CARA MENGERJAKAN</h3>
+    <ul>
+      <li>Tes terbagi menjadi 6 bagian, masing-masing memiliki 15 pernyataan. Waktu pengerjaan adalah sekitar 5-10
+        menit.</li>
+      <li>Centang kotak di pernyataan yang menurutmu paling benar (tidak ada ketentuan maksimal atau minimal centang).
+      </li>
+      <li>Setiap kotak yang dicentang bernilai 1 poin.</li>
+    </ul>
+  </div>
+
+  <div class="notes">
+    <strong>CATATAN</strong>
+    <ul>
+      <li>Tak perlu memikirkan jawaban terlalu lama, tidak ada jawaban benar maupun salah.</li>
+      <li>Tujuan tes ini bukanlah untuk mengumpulkan poin. Pilihlah jawaban yang sesuai dengan pikiran dan tindakanmu.
+      </li>
+      <li>Hasil tes merupakan gambaran sementara dan tidak bisa digunakan sebagai pengganti konsultasi dengan konsultan
+        karir profesional.</li>
+    </ul>
+  </div>
+
+  <div class="user-info">
+    <div class="form-group">
+      <label for="fullName">NAMA LENGKAP:</label>
+      <input type="text" id="fullName" required>
+    </div>
+    <div class="form-group">
+      <label for="birthDate">TANGGAL LAHIR:</label>
+      <input type="date" id="birthDate" required>
+    </div>
+  </div>
+
+  <!-- Realistic Section -->
+  <div class="test-section" id="realistic-section">
+    <h2 class="section-title">R - REALISTIC</h2>
+    <table class="statement-table">
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya adalah orang yang:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Berpikir secara realistis</td>
+          <td><input type="checkbox"> Mandiri</td>
+          <td><input type="checkbox"> Jujur</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Suka olahraga</td>
+          <td><input type="checkbox"> Cinta alam, hewan, dan tumbuhan</td>
+          <td></td> <!-- Empty cell for alignment -->
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya bisa:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Memperbaiki peralatan dan mesin listrik</td>
+          <td><input type="checkbox"> Membaca gambar dan desain</td>
+          <td><input type="checkbox"> Melakukan 1 jenis olahraga</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Mengoperasikan mesin dan peralatan</td>
+          <td><input type="checkbox"> Melakukan pekerjaan manual</td>
+          <td></td> <!-- Empty cell for alignment -->
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya suka:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Bekerja di luar ruangan</td>
+          <td><input type="checkbox"> Perakitan furniture</td>
+          <td><input type="checkbox"> Menanam pohon, berkebun</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Menggunakan tangan dan kaki untuk bekerja</td>
+          <td><input type="checkbox"> Membuat kerajinan tangan</td>
+          <td></td> <!-- Empty cell for alignment -->
+        </tr>
+      </tbody>
+    </table>
+    <div class="total-points">Total Poin: <span id="realistic-points">0</span></div>
+  </div>
+
+  <!-- Investigative Section -->
+  <div class="test-section" id="investigative-section">
+    <h2 class="section-title">I - INVESTIGATIVE</h2>
+    <table class="statement-table">
+      <thead>
+        <tr>
+          <th>Saya adalah orang yang:</th>
+          <th>Saya bisa:</th>
+          <th>Saya suka:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Punya kemampuan analisis yang tinggi</td>
+          <td data-label="Saya bisa:"><input type="checkbox"> Melakukan eksperimen dan penelitian</td>
+          <td data-label="Saya suka:"><input type="checkbox"> Bekerja sendiri</td>
+        </tr>
+        <tr>
+          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Punya pengamatan yang baik</td>
+          <td data-label="Saya bisa:"><input type="checkbox"> Memikirkan dan memahami masalah yang kompleks dan abstrak
+          </td>
+          <td data-label="Saya suka:"><input type="checkbox"> Kegiatan investigasi, inspeksi, evaluasi, dan sejenisnya
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Punya pemikiran logis</td>
+          <td data-label="Saya bisa:"><input type="checkbox"> Analisis data dan menyelesaikan masalah matematika dengan
+            baik</td>
+          <td data-label="Saya suka:"><input type="checkbox"> Bertanya</td>
+        </tr>
+        <tr>
+          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Berhati-hati dalam segala hal, tepat waktu
+          </td>
+          <td data-label="Saya bisa:"><input type="checkbox"> Berpikir secara koheren</td>
+          <td data-label="Saya suka:"><input type="checkbox"> Mengunjungi laboratorium, museum sains, atau fasilitas
+            ilmiah lainnya</td>
+        </tr>
+        <tr>
+          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Punya wawasan yang luas</td>
+          <td data-label="Saya bisa:"><input type="checkbox"> Cepat memahami ilmu pengetahuan, fisika, matematika, dan
+            lain-lain</td>
+          <td data-label="Saya suka:"><input type="checkbox"> Membaca buku, surat kabar, dan dokumen ilmiah atau teknis
+            khusus</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="total-points">Total Poin: <span id="investigative-points">0</span></div>
+  </div>
+
+  <!-- Artistic Section -->
+  <div class="test-section" id="artistic-section">
+    <h2 class="section-title">A - ARTISTIC</h2>
+    <table class="statement-table">
+      <tr>
+        <th>Saya adalah orang yang:</th>
+        <th>Saya bisa:</th>
+        <th>Saya suka:</th>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Sangat kreatif</td>
+        <td><input type="checkbox"> Bernyanyi / berdansa / berakting dengan baik</td>
+        <td><input type="checkbox"> Kebebasan, tidak suka dibatasi</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Memiliki Imajinasi yang tinggi</td>
+        <td><input type="checkbox"> Menggambar atau mengambil foto dengan baik</td>
+        <td><input type="checkbox"> Membaca cerita dan puisi</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Sensitif, emosional</td>
+        <td><input type="checkbox"> Memainkan instrumen musik</td>
+        <td><input type="checkbox"> Menggambar, mengambil foto, merekam</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Tidak ragu mengungkapkan pendapat</td>
+        <td><input type="checkbox"> Berbicara di depan orang atau presentasi dengan percaya diri</td>
+        <td><input type="checkbox"> Menonton drama, pameran seni, mendengarkan musik</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Individualis</td>
+        <td><input type="checkbox"> Desain dan penataan (fashion/pakaian, desain interior, dst)</td>
+        <td><input type="checkbox"> Pekerjaan yang membutuhkan kreativitas</td>
+      </tr>
+    </table>
+    <div class="total-points">Total Poin: <span id="artistic-points">0</span></div>
+  </div>
+
+  <!-- Social Section -->
+  <div class="test-section" id="social-section">
+    <h2 class="section-title">S - SOCIAL</h2>
+    <table class="statement-table">
+      <tr>
+        <th>Saya adalah orang yang:</th>
+        <th>Saya bisa:</th>
+        <th>Saya suka:</th>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Ramah, mudah didekati, senang membantu</td>
+        <td><input type="checkbox"> Membimbing dan mengajar orang lain</td>
+        <td><input type="checkbox"> Membantu orang lain memecahkan masalah</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Sopan</td>
+        <td><input type="checkbox"> Menengahi dan menyelesaikan konflik</td>
+        <td><input type="checkbox"> Bertemu dan bekerja dengan orang banyak</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Mau mendengar orang lain</td>
+        <td><input type="checkbox"> Bekerja sama dalam tim dengan baik</td>
+        <td><input type="checkbox"> Berkontribusi dalam sebuah diskusi (ikut beropini)</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Simpatik</td>
+        <td><input type="checkbox"> Mengekspresikan emosi dengan jelas dan wajar</td>
+        <td><input type="checkbox"> Melakukan pekerjaan sukarela</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Ingin berguna bagi masyarakat dan komunitas</td>
+        <td><input type="checkbox"> Memantau sebuah project atau kegiatan</td>
+        <td><input type="checkbox"> Mendengarkan, membimbing, menasihati, dan menjelaskan sesuatu pada orang lain</td>
+      </tr>
+    </table>
+    <div class="total-points">Total Poin: <span id="social-points">0</span></div>
+  </div>
+
+  <!-- Enterprising Section -->
+  <div class="test-section" id="enterprising-section">
+    <h2 class="section-title">E - ENTERPRISING</h2>
+    <table class="statement-table">
+      <tr>
+        <th>Saya adalah orang yang:</th>
+        <th>Saya bisa:</th>
+        <th>Saya suka:</th>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Yakin dengan keputusan sendiri</td>
+        <td><input type="checkbox"> Meyakinkan orang lain dengan mudah</td>
+        <td><input type="checkbox"> Memiliki hak atau kewenangan atas kekuasaan, manajemen, atau evaluasi</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Dinamis, antusias</td>
+        <td><input type="checkbox"> Berekspresi dan berargumentasi dengan baik</td>
+        <td><input type="checkbox"> Mempengaruhi orang lain dalam mengambil keputusan</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Ambisius</td>
+        <td><input type="checkbox"> Memimpin sebuah kelompok</td>
+        <td><input type="checkbox"> Ketika orang lain menghormati dan mengagumi saya</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Populer di sekolah/Kampus</td>
+        <td><input type="checkbox"> Menentukan ide baru dan memulai sebuah project atau kegiatan</td>
+        <td><input type="checkbox"> Menghadapi risiko dan tantangan</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Suka berteman dengan orang baru</td>
+        <td><input type="checkbox"> Menyusun strategi untuk mencapai sebuah tujuan</td>
+        <td><input type="checkbox"> Berkompetisi dan menjadi lebih baik dari orang lain</td>
+      </tr>
+    </table>
+    <div class="total-points">Total Poin: <span id="enterprising-points">0</span></div>
+  </div>
+
+  <!-- Conventional Section -->
+  <div class="test-section" id="conventional-section">
+    <h2 class="section-title">C - CONVENTIONAL</h2>
+    <table class="statement-table">
+      <tr>
+        <th>Saya adalah orang yang:</th>
+        <th>Saya bisa:</th>
+        <th>Saya suka:</th>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Akurat, dapat diandalkan</td>
+        <td><input type="checkbox"> Memperkirakan pendapatan dan pengeluaran secara akurat</td>
+        <td><input type="checkbox"> Merapikan atau mengatur tempat kerja dan tempat tinggal</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Rapi</td>
+        <td><input type="checkbox"> Menulis laporan dan melakukan perhitungan dengan baik</td>
+        <td><input type="checkbox"> Menetapkan rencana atau tujuan hidup</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Teliti</td>
+        <td><input type="checkbox"> Mengurus dokumen dengan cepat</td>
+        <td><input type="checkbox"> Menyusun jadwal dan mengikutinya</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Bekerja sesuai prinsip dan prosedur</td>
+        <td><input type="checkbox"> Bekerja di perusahaan atau lembaga yang punya sistem teratur/baku</td>
+        <td><input type="checkbox"> Bekerja dengan angka dan data</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"> Berpikir secara terorganisasi (runtut)</td>
+        <td><input type="checkbox"> Menyelesaikan dengan baik tugas-tugas yang memerlukan ketelitian tinggi</td>
+        <td><input type="checkbox"> Pekerjaan yang berkaitan dengan menyimpan, mengklasifikasikan, atau memperbarui
+          informasi</td>
+      </tr>
+    </table>
+    <div class="total-points">Total Poin: <span id="conventional-points">0</span></div>
+  </div>
+
+  <button id="calculate-btn">HASIL TES</button>
+
+  <div class="results" id="results">
+    <div class="print-banner">
+      <img src="banner.png" alt="Holland RIASEC Test Banner">
+    </div>
+
+    <h2>Hasil Tes Holland RIASEC</h2>
+    <p>Nama: <span id="result-name"></span></p>
+    <p>Tanggal Lahir: <span id="result-birthdate"></span></p>
+    <p>Tanggal Tes: <span id="test-date"></span></p>
+
+    <h3>Tiga kepribadian kamu yang paling dominan adalah:</h3>
+    <div id="top-results"></div>
+
+    <div id="result-details"></div>
+
+    <div class="save-section">
+      <button id="save-btn" class="save-btn">Simpan Hasil ke Google Spreadsheet</button>
+      <button id="print-btn" class="print-btn">Cetak Hasil</button>
+      <div id="save-message" class="save-message"></div>
+    </div>
+  </div>
+
+
+  <script>
+    // Career suggestions for each personality type
+    const careerSuggestions = {
+      realistic: [
+        "Insinyur", "Teknisi Peralatan", "Peneliti Kimia", "Ahli Aviasi (Penerbangan)",
+        "Arsitek", "Teknisi", "Geolog", "Teknisi Tambang, Minyak, dan Material",
+        "Manager Produksi", "Civil Engineer"
+      ],
+      investigative: [
+        "Peneliti Ilmiah", "Developer", "Ahli Pangan", "Dokter Hewan/Veterinarian",
+        "Antropolog", "Psikiater", "Management Analyst", "Dokter Gigi",
+        "Ahli Gizi", "Apoteker", "Teknisi Laboratorium"
+      ],
+      artistic: [
+        "Penulis", "Aktor, Penyanyi, dan Penari", "Model", "Fotografer",
+        "Perancang Busana", "Komentator dan MC/Pembawa Acara", "Social Media Specialist",
+        "Event Organizer", "Public Relations", "Desainer Grafis", "Arsitek", "Reporter/Koresponden"
+      ],
+      social: [
+        "Human Resource Development", "Pekerja Sosial, Sukarelawan, atau Kesehatan Masyarakat",
+        "Dosen", "Tour Guide", "Guru (Umum)", "Guru (IRK)", "Spesialis Nilai Properti",
+        "Polisi", "Perawat; Ahli Gizi", "Dokter", "Psikolog"
+      ],
+      enterprising: [
+        "Business Development", "Perencana Wilayah dan Tata Kota", "Customer Service",
+        "Trader Saham", "Pengacara", "Pramugari", "Sales", "Polisi", "Copy Writer",
+        "Kriminolog", "HR Manager", "Public Relations Manager", "Marketing Manager"
+      ],
+      conventional: [
+        "Peneliti", "Web Developer", "Akuntan", "Staff Keuangan", "Auditor",
+        "Analis Keuangan", "Aparatur sipil negara (ASN)", "Teller Bank", "HR Assistant"
+      ]
+    };
+
+    // Personality descriptions
+    const personalityDescriptions = {
+      realistic: "Seseorang dengan kepribadian ini menyukai pekerjaan yang melibatkan tindakan daripada berpikir, lebih menyukai hasil nyata atau yang dapat dilihat langsung. Orang dengan tipe kepribadian ini umumnya memiliki rasa ingin tahu yang tinggi tentang sains, benda-benda nyata, dan mekanika.",
+      investigative: "Mereka yang termasuk dalam kepribadian investigative menyukai penggunaan kemampuan abstrak atau analisis untuk menemukan dan memecahkan masalah yang ada di sekitarnya. Mereka dapat dianggap sebagai 'pemikir' yang selalu berusaha menyelesaikan tugas dan sering bekerja secara mandiri. Menurut tes RIASEC Holland, kelompok ini cenderung analitis, suka menggali lebih dalam, dan mencari kebenaran atau fakta dari sebuah informasi.",
+      artistic: "Orang yang masuk dalam kepribadian Artistic pasti menyukai kreativitas dan kaya akan imaginasi, tetapi memiliki kepribadian yang sangat impulsif dan suka bekerja mengandalkan perasaan. Kamu mungkin lebih mudah dipengaruhi oleh emosi, lebih didominasi oleh perasaan daripada logika, dan tidak suka bekerja dalam batasan yang ketat.",
+      social: "Mereka yang berkepribadian Social cenderung suka membantu orang lain, berinteraksi, dan berkomunikasi. Mereka peduli pada masalah sosial dan memiliki kemampuan untuk mengekspresikan pendapat dengan baik serta ahli dalam mengajar orang lain. Pada dasarnya, mereka adalah pribadi yang ekstrovert, ramah, dan terbuka.",
+      enterprising: "Orang yang punya kepribadian Enterprising cenderung berani berpikir dan berinisiatif, condong pada peran kepemimpinan. Mereka bersedia menghadapi tantangan dan menghadapi banyak kesulitan, serta memiliki semangat berjuang.",
+      conventional: "Conventional adalah tipe orang yang hati-hati, teliti, berprinsip, dan selalu mengikuti aturan. Mereka bekerja dengan angka, laporan data. Mereka cocok dengan pekerjaan kantor, pejabat pemerintah, pekerjaan yang membutuhkan kehati-hatian, detail, serta keteraturan."
+    };
+
+    // Personality type labels
+    const personalityLabels = {
+      realistic: "Realistic (Realistis)",
+      investigative: "Investigative (Investigatif)",
+      artistic: "Artistic (Artistik)",
+      social: "Social (Sosial)",
+      enterprising: "Enterprising (Wirausaha)",
+      conventional: "Conventional (Konvensional)"
+    };
+
+    // Update point counters when checkboxes are clicked
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.addEventListener('change', updatePoints);
+    });
+
+    function updatePoints() {
+      // Calculate points for each section
+      const sections = ['realistic', 'investigative', 'artistic', 'social', 'enterprising', 'conventional'];
+
+      sections.forEach(section => {
+        const checkboxes = document.querySelectorAll(`#${section}-section input[type="checkbox"]:checked`);
+        document.getElementById(`${section}-points`).textContent = checkboxes.length;
+      });
+    }
+
+    document.getElementById('print-btn').addEventListener('click', function () {
+      // Show the banner for printing
+      document.querySelector('.print-banner').style.display = 'block';
+
+      // Format the current date
+      const now = new Date();
+      document.getElementById('test-date').textContent = now.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      // Trigger print dialog
+      window.print();
+
+      // Hide the banner again after printing (or if canceled)
+      setTimeout(() => {
+        document.querySelector('.print-banner').style.display = 'none';
+      }, 1000);
+    });
+
+    function printResults() {
+      // Add current date to the results
+      const now = new Date();
+      document.getElementById('test-date').textContent = now.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      // Show the banner for printing
+      document.querySelector('.print-banner').style.display = 'block';
+
+      // Trigger print dialog
+      window.print();
+
+      // Hide the banner again after printing (or if canceled)
+      setTimeout(() => {
+        document.querySelector('.print-banner').style.display = 'none';
+      }, 1000);
+    }
+
+    // Calculate results when button is clicked
+    document.getElementById('calculate-btn').addEventListener('click', calculateResults);
+
+    function calculateResults() {
+      // Validate form
+      const name = document.getElementById('fullName').value.trim();
+      const birthDate = document.getElementById('birthDate').value;
+
+      if (!name || !birthDate) {
+        alert('Silakan isi nama lengkap dan tanggal lahir terlebih dahulu.');
+        return;
+      }
+
+      // Calculate points for each section
+      const sections = ['realistic', 'investigative', 'artistic', 'social', 'enterprising', 'conventional'];
+      const points = {};
+
+      sections.forEach(section => {
+        const checkboxes = document.querySelectorAll(`#${section}-section input[type="checkbox"]:checked`);
+        points[section] = checkboxes.length;
+      });
+
+      // Convert to array and sort by points
+      const sortedResults = Object.entries(points)
+        .map(([type, score]) => ({ type, score }))
+        .sort((a, b) => b.score - a.score);
+
+      // Display user info
+      document.getElementById('result-name').textContent = name;
+      document.getElementById('result-birthdate').textContent = birthDate;
+
+      // Display top 3 results
+      const topResultsContainer = document.getElementById('top-results');
+      topResultsContainer.innerHTML = '';
+
+      for (let i = 0; i < 2 && i < sortedResults.length; i++) {
+        const result = sortedResults[i];
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'result-item';
+        resultDiv.innerHTML = `
+              <h3 class="result-title">${i + 1}. ${personalityLabels[result.type]}</h3>
+              <p><strong>Skor:</strong> ${result.score}</p>
+              <p>${personalityDescriptions[result.type]}</p>
+              
+              <h4>Profesi yang Cocok:</h4>
+              <ul class="career-list">
+                  ${careerSuggestions[result.type].map(career => `<li>${career}</li>`).join('')}
+              </ul>
+          `;
+        topResultsContainer.appendChild(resultDiv);
+      }
+
+      // Show all results with scores
+      const resultDetailsContainer = document.getElementById('result-details');
+      resultDetailsContainer.innerHTML = '<h3>Detail Semua Hasil:</h3>';
+
+      sortedResults.forEach(result => {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'result-item';
+        resultDiv.innerHTML = `
+              <h4>${personalityLabels[result.type]}: ${result.score} poin</h4>
+          `;
+        resultDetailsContainer.appendChild(resultDiv);
+      });
+
+      // Show results section
+      document.getElementById('results').style.display = 'block';
+
+      // Scroll to results
+      document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+      // After showing results, set up save button
+      document.getElementById('save-btn').addEventListener('click', saveToGoogleSheets);
+    }
+
+    async function saveToGoogleSheets() {
+      const saveBtn = document.getElementById('save-btn');
+      const saveMessage = document.getElementById('save-message');
+
+      // Get user info
+      const name = document.getElementById('fullName').value.trim();
+      const birthDate = document.getElementById('birthDate').value;
+
+      // Get all points
+      const sections = ['realistic', 'investigative', 'artistic', 'social', 'enterprising', 'conventional'];
+      const points = {};
+
+      sections.forEach(section => {
+        const checkboxes = document.querySelectorAll(`#${section}-section input[type="checkbox"]:checked`);
+        points[section] = checkboxes.length;
+      });
+
+      // Get top 3 results
+      const sortedResults = Object.entries(points)
+        .map(([type, score]) => ({ type, score }))
+        .sort((a, b) => b.score - a.score);
+
+      const topResults = sortedResults.slice(0, 3).map(result => personalityLabels[result.type]);
+
+      // Collect all selected answers
+      const selectedAnswers = [];
+      document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        const row = checkbox.closest('tr');
+        if (row) {
+          const question = checkbox.closest('td').textContent.trim();
+          const section = checkbox.closest('.test-section').querySelector('.section-title').textContent;
+          selectedAnswers.push({
+            section: section.replace(/^[A-Z] - /, ''), // Remove prefix like "R - "
+            question: question,
+            answer: checkbox.value || 'Selected' // Use value if exists, otherwise "Selected"
+          });
+        }
+      });
+
+      // Prepare data for submission
+      const formData = {
+        name: name,
+        birthDate: birthDate,
+        realistic: points.realistic,
+        investigative: points.investigative,
+        artistic: points.artistic,
+        social: points.social,
+        enterprising: points.enterprising,
+        conventional: points.conventional,
+        topResults: topResults.join(', '),
+        timestamp: new Date().toISOString(),
+        answers: selectedAnswers
+      };
+
+      // Show loading state
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = 'Menyimpan <span class="loading"></span>';
+      saveMessage.style.display = 'none';
+
+      try {
+        // Replace with your Google Apps Script deployment URL
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbysEj5gPw7OpumxnuQ7beuIeu_x0hZKu8yVyuf0mLxRabHdQ4RaOyccut8cCkfaaZMk-g/exec';
+
+        const response = await fetch(scriptUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        saveMessage.textContent = 'Data berhasil disimpan!';
+        saveMessage.className = 'save-message success';
+        saveMessage.style.display = 'block';
+      } catch (error) {
+        console.error('Error:', error);
+        saveMessage.textContent = 'Gagal menyimpan data. Silakan coba lagi.';
+        saveMessage.className = 'save-message error';
+        saveMessage.style.display = 'block';
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Simpan Hasil ke Google Spreadsheet';
+      }
+    }
+  </script>
+</body>
+
+</html>
