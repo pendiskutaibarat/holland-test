@@ -125,37 +125,20 @@
       .statement-table tr {
         display: flex;
         flex-direction: column;
-        border-bottom: 1px solid #ddd;
-        padding: 15px;
-      }
-
-      /* Header rows - will appear before each group */
-      .statement-table tr.header-row {
-        background-color: #3498db;
-        color: white;
-        font-weight: bold;
-        padding: 10px 15px;
-        margin: 0 -15px;
-        border-bottom: none;
-      }
-
-      /* Hide original headers */
-      .statement-table th {
-        display: none;
       }
 
       /* Regular data rows */
       .statement-table td {
         display: block;
         width: 100%;
-        padding: 8px 0;
+        padding: 8px;
         border: none;
       }
 
       /* Add some spacing between items */
-      .statement-table td:not(:last-child) {
+      /* .statement-table td:not(:last-child) {
         margin-bottom: 10px;
-      }
+      } */
 
       /* Make checkboxes easier to tap */
       .statement-table input[type="checkbox"] {
@@ -469,44 +452,56 @@
     <h2 class="section-title">I - INVESTIGATIVE</h2>
     <table class="statement-table">
       <thead>
-        <tr>
-          <th>Saya adalah orang yang:</th>
-          <th>Saya bisa:</th>
-          <th>Saya suka:</th>
+        <tr class="header-row">
+          <th colspan="3">Saya adalah orang yang:</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Punya kemampuan analisis yang tinggi</td>
-          <td data-label="Saya bisa:"><input type="checkbox"> Melakukan eksperimen dan penelitian</td>
-          <td data-label="Saya suka:"><input type="checkbox"> Bekerja sendiri</td>
+          <td><input type="checkbox"> Punya kemampuan analisis yang tinggi</td>
+          <td><input type="checkbox"> Punya pengamatan yang baik</td>
+          <td><input type="checkbox"> Punya pemikiran logis</td>
         </tr>
         <tr>
-          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Punya pengamatan yang baik</td>
-          <td data-label="Saya bisa:"><input type="checkbox"> Memikirkan dan memahami masalah yang kompleks dan abstrak
-          </td>
-          <td data-label="Saya suka:"><input type="checkbox"> Kegiatan investigasi, inspeksi, evaluasi, dan sejenisnya
-          </td>
+          <td><input type="checkbox"> Berhati-hati dalam segala hal, tepat waktu</td>
+          <td><input type="checkbox"> Punya wawasan yang luas</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya bisa:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Melakukan eksperimen dan penelitian</td>
+          <td><input type="checkbox"> Memikirkan dan memahami masalah yang kompleks dan abstrak</td>
+          <td><input type="checkbox"> Analisis data dan menyelesaikan masalah matematika dengan baik</td>
         </tr>
         <tr>
-          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Punya pemikiran logis</td>
-          <td data-label="Saya bisa:"><input type="checkbox"> Analisis data dan menyelesaikan masalah matematika dengan
-            baik</td>
-          <td data-label="Saya suka:"><input type="checkbox"> Bertanya</td>
+          <td><input type="checkbox"> Berpikir secara koheren</td>
+          <td><input type="checkbox"> Cepat memahami ilmu pengetahuan, fisika, matematika, dan lain-lain</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya suka:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Bekerja sendiri</td>
+          <td><input type="checkbox"> Kegiatan investigasi, inspeksi, evaluasi, dan sejenisnya</td>
+          <td><input type="checkbox"> Bertanya</td>
         </tr>
         <tr>
-          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Berhati-hati dalam segala hal, tepat waktu
-          </td>
-          <td data-label="Saya bisa:"><input type="checkbox"> Berpikir secara koheren</td>
-          <td data-label="Saya suka:"><input type="checkbox"> Mengunjungi laboratorium, museum sains, atau fasilitas
-            ilmiah lainnya</td>
-        </tr>
-        <tr>
-          <td data-label="Saya adalah orang yang:"><input type="checkbox"> Punya wawasan yang luas</td>
-          <td data-label="Saya bisa:"><input type="checkbox"> Cepat memahami ilmu pengetahuan, fisika, matematika, dan
-            lain-lain</td>
-          <td data-label="Saya suka:"><input type="checkbox"> Membaca buku, surat kabar, dan dokumen ilmiah atau teknis
-            khusus</td>
+          <td><input type="checkbox"> Mengunjungi laboratorium, museum sains, atau fasilitas ilmiah lainnya</td>
+          <td><input type="checkbox"> Membaca buku, surat kabar, dan dokumen ilmiah atau teknis khusus</td>
+          <td></td>
         </tr>
       </tbody>
     </table>
@@ -517,36 +512,59 @@
   <div class="test-section" id="artistic-section">
     <h2 class="section-title">A - ARTISTIC</h2>
     <table class="statement-table">
-      <tr>
-        <th>Saya adalah orang yang:</th>
-        <th>Saya bisa:</th>
-        <th>Saya suka:</th>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Sangat kreatif</td>
-        <td><input type="checkbox"> Bernyanyi / berdansa / berakting dengan baik</td>
-        <td><input type="checkbox"> Kebebasan, tidak suka dibatasi</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Memiliki Imajinasi yang tinggi</td>
-        <td><input type="checkbox"> Menggambar atau mengambil foto dengan baik</td>
-        <td><input type="checkbox"> Membaca cerita dan puisi</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Sensitif, emosional</td>
-        <td><input type="checkbox"> Memainkan instrumen musik</td>
-        <td><input type="checkbox"> Menggambar, mengambil foto, merekam</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Tidak ragu mengungkapkan pendapat</td>
-        <td><input type="checkbox"> Berbicara di depan orang atau presentasi dengan percaya diri</td>
-        <td><input type="checkbox"> Menonton drama, pameran seni, mendengarkan musik</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Individualis</td>
-        <td><input type="checkbox"> Desain dan penataan (fashion/pakaian, desain interior, dst)</td>
-        <td><input type="checkbox"> Pekerjaan yang membutuhkan kreativitas</td>
-      </tr>
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya adalah orang yang:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Sangat kreatif</td>
+          <td><input type="checkbox"> Memiliki Imajinasi yang tinggi</td>
+          <td><input type="checkbox"> Sensitif, emosional</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Tidak ragu mengungkapkan pendapat</td>
+          <td><input type="checkbox"> Individualis</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya bisa:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Bernyanyi/berdansa/berakting dengan baik</td>
+          <td><input type="checkbox"> Menggambar atau mengambil foto dengan baik</td>
+          <td><input type="checkbox"> Memainkan instrumen musik</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Berbicara di depan orang atau presentasi dengan percaya diri</td>
+          <td><input type="checkbox"> Desain dan penataan (fashion/pakaian, desain interior, dst)</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya suka:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Kebebasan, tidak suka dibatasi</td>
+          <td><input type="checkbox"> Membaca cerita dan puisi</td>
+          <td><input type="checkbox"> Menggambar, mengambil foto, merekam</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Menonton drama, pameran seni, mendengarkan musik</td>
+          <td><input type="checkbox"> Pekerjaan yang membutuhkan kreativitas</td>
+          <td></td>
+        </tr>
+      </tbody>
     </table>
     <div class="total-points">Total Poin: <span id="artistic-points">0</span></div>
   </div>
@@ -555,36 +573,59 @@
   <div class="test-section" id="social-section">
     <h2 class="section-title">S - SOCIAL</h2>
     <table class="statement-table">
-      <tr>
-        <th>Saya adalah orang yang:</th>
-        <th>Saya bisa:</th>
-        <th>Saya suka:</th>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Ramah, mudah didekati, senang membantu</td>
-        <td><input type="checkbox"> Membimbing dan mengajar orang lain</td>
-        <td><input type="checkbox"> Membantu orang lain memecahkan masalah</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Sopan</td>
-        <td><input type="checkbox"> Menengahi dan menyelesaikan konflik</td>
-        <td><input type="checkbox"> Bertemu dan bekerja dengan orang banyak</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Mau mendengar orang lain</td>
-        <td><input type="checkbox"> Bekerja sama dalam tim dengan baik</td>
-        <td><input type="checkbox"> Berkontribusi dalam sebuah diskusi (ikut beropini)</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Simpatik</td>
-        <td><input type="checkbox"> Mengekspresikan emosi dengan jelas dan wajar</td>
-        <td><input type="checkbox"> Melakukan pekerjaan sukarela</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Ingin berguna bagi masyarakat dan komunitas</td>
-        <td><input type="checkbox"> Memantau sebuah project atau kegiatan</td>
-        <td><input type="checkbox"> Mendengarkan, membimbing, menasihati, dan menjelaskan sesuatu pada orang lain</td>
-      </tr>
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya adalah orang yang:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Ramah, mudah didekati, senang membantu</td>
+          <td><input type="checkbox"> Sopan</td>
+          <td><input type="checkbox"> Mau mendengar orang lain</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Simpatik</td>
+          <td><input type="checkbox"> Ingin berguna bagi masyarakat dan komunitas</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya bisa:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Membimbing dan mengajar orang lain</td>
+          <td><input type="checkbox"> Menengahi dan menyelesaikan konflik</td>
+          <td><input type="checkbox"> Bekerja sama dalam tim dengan baik</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Mengekspresikan emosi dengan jelas dan wajar</td>
+          <td><input type="checkbox"> Memantau dan memantau sebuah project atau kegiatan</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya suka:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Membantu orang lain memecahkan masalah</td>
+          <td><input type="checkbox"> Bertemu dan bekerja dengan orang banyak</td>
+          <td><input type="checkbox"> Berkontribusi dalam sebuah diskusi (ikut beropini)</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Melakukan pekerjaan sukarela</td>
+          <td><input type="checkbox"> Mendengarkan, membimbing, menasihati, dan menjelaskan sesuatu pada orang lain</td>
+          <td></td>
+        </tr>
+      </tbody>
     </table>
     <div class="total-points">Total Poin: <span id="social-points">0</span></div>
   </div>
@@ -593,36 +634,59 @@
   <div class="test-section" id="enterprising-section">
     <h2 class="section-title">E - ENTERPRISING</h2>
     <table class="statement-table">
-      <tr>
-        <th>Saya adalah orang yang:</th>
-        <th>Saya bisa:</th>
-        <th>Saya suka:</th>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Yakin dengan keputusan sendiri</td>
-        <td><input type="checkbox"> Meyakinkan orang lain dengan mudah</td>
-        <td><input type="checkbox"> Memiliki hak atau kewenangan atas kekuasaan, manajemen, atau evaluasi</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Dinamis, antusias</td>
-        <td><input type="checkbox"> Berekspresi dan berargumentasi dengan baik</td>
-        <td><input type="checkbox"> Mempengaruhi orang lain dalam mengambil keputusan</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Ambisius</td>
-        <td><input type="checkbox"> Memimpin sebuah kelompok</td>
-        <td><input type="checkbox"> Ketika orang lain menghormati dan mengagumi saya</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Populer di sekolah/Kampus</td>
-        <td><input type="checkbox"> Menentukan ide baru dan memulai sebuah project atau kegiatan</td>
-        <td><input type="checkbox"> Menghadapi risiko dan tantangan</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Suka berteman dengan orang baru</td>
-        <td><input type="checkbox"> Menyusun strategi untuk mencapai sebuah tujuan</td>
-        <td><input type="checkbox"> Berkompetisi dan menjadi lebih baik dari orang lain</td>
-      </tr>
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya adalah orang yang:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Yakin dengan keputusan sendiri</td>
+          <td><input type="checkbox"> Dinamis, antusias</td>
+          <td><input type="checkbox"> Ambisius</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Populer di sekolah/Kampus</td>
+          <td><input type="checkbox"> Suka berteman dengan orang baru</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya bisa:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Meyakinkan orang lain dengan mudah</td>
+          <td><input type="checkbox"> Berekspresi dan berargumentasi dengan baik</td>
+          <td><input type="checkbox"> Memimpin sebuah kelompok</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Menentukan ide baru dan memulai sebuah project atau kegiatan</td>
+          <td><input type="checkbox"> Menyusun strategi untuk mencapai sebuah tujuan</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya suka:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Memiliki hak atau kewenangan atas kekuasaan, manajemen, atau evaluasi</td>
+          <td><input type="checkbox"> Mempengaruhi orang lain dalam mengambil keputusan</td>
+          <td><input type="checkbox"> Ketika orang lain menghormati dan mengagumi saya</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Menghadapi risiko dan tantangan</td>
+          <td><input type="checkbox"> Berkompetisi dan menjadi lebih baik dari orang lain</td>
+          <td></td>
+        </tr>
+      </tbody>
     </table>
     <div class="total-points">Total Poin: <span id="enterprising-points">0</span></div>
   </div>
@@ -631,37 +695,60 @@
   <div class="test-section" id="conventional-section">
     <h2 class="section-title">C - CONVENTIONAL</h2>
     <table class="statement-table">
-      <tr>
-        <th>Saya adalah orang yang:</th>
-        <th>Saya bisa:</th>
-        <th>Saya suka:</th>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Akurat, dapat diandalkan</td>
-        <td><input type="checkbox"> Memperkirakan pendapatan dan pengeluaran secara akurat</td>
-        <td><input type="checkbox"> Merapikan atau mengatur tempat kerja dan tempat tinggal</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Rapi</td>
-        <td><input type="checkbox"> Menulis laporan dan melakukan perhitungan dengan baik</td>
-        <td><input type="checkbox"> Menetapkan rencana atau tujuan hidup</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Teliti</td>
-        <td><input type="checkbox"> Mengurus dokumen dengan cepat</td>
-        <td><input type="checkbox"> Menyusun jadwal dan mengikutinya</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Bekerja sesuai prinsip dan prosedur</td>
-        <td><input type="checkbox"> Bekerja di perusahaan atau lembaga yang punya sistem teratur/baku</td>
-        <td><input type="checkbox"> Bekerja dengan angka dan data</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"> Berpikir secara terorganisasi (runtut)</td>
-        <td><input type="checkbox"> Menyelesaikan dengan baik tugas-tugas yang memerlukan ketelitian tinggi</td>
-        <td><input type="checkbox"> Pekerjaan yang berkaitan dengan menyimpan, mengklasifikasikan, atau memperbarui
-          informasi</td>
-      </tr>
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya adalah orang yang:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Akurat, dapat diandalkan</td>
+          <td><input type="checkbox"> Rapi</td>
+          <td><input type="checkbox"> Teliti</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Bekerja sesuai prinsip dan prosedur</td>
+          <td><input type="checkbox"> Berpikir secara terorganisasi (runtut)</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya bisa:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Memperkirakan pendapatan dan pengeluaran secara akurat</td>
+          <td><input type="checkbox"> Menulis laporan dan melakukan perhitungan dengan baik</td>
+          <td><input type="checkbox"> Mengurus dokumen dengan cepat</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Bekerja di perusahaan atau lembaga yang punya sistem teratur/baku</td>
+          <td><input type="checkbox"> Menyelesaikan dengan baik tugas-tugas yang memerlukan ketelitian tinggi</td>
+          <td></td>
+        </tr>
+      </tbody>
+
+      <thead>
+        <tr class="header-row">
+          <th colspan="3">Saya suka:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"> Merapikan atau mengatur tempat kerja dan tempat tinggal</td>
+          <td><input type="checkbox"> Menetapkan rencana atau tujuan hidup</td>
+          <td><input type="checkbox"> Menyusun jadwal dan mengikutinya</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"> Bekerja dengan angka dan data</td>
+          <td><input type="checkbox"> Pekerjaan yang berkaitan dengan menyimpan, mengklasifikasikan, atau memperbarui
+            informasi</td>
+          <td></td>
+        </tr>
+      </tbody>
     </table>
     <div class="total-points">Total Poin: <span id="conventional-points">0</span></div>
   </div>
@@ -678,7 +765,7 @@
     <p>Tanggal Lahir: <span id="result-birthdate"></span></p>
     <p>Tanggal Tes: <span id="test-date"></span></p>
 
-    <h3>Tiga kepribadian kamu yang paling dominan adalah:</h3>
+    <h3>Kepribadian kamu yang paling dominan adalah:</h3>
     <div id="top-results"></div>
 
     <div id="result-details"></div>
@@ -829,31 +916,62 @@
       // Convert to array and sort by points
       const sortedResults = Object.entries(points)
         .map(([type, score]) => ({ type, score }))
+        .filter(result => result.score > 0) // Only include results with score > 0
         .sort((a, b) => b.score - a.score);
 
       // Display user info
       document.getElementById('result-name').textContent = name;
       document.getElementById('result-birthdate').textContent = birthDate;
 
+      // Add current date to results
+      const now = new Date();
+      document.getElementById('test-date').textContent = now.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
       // Display top 3 results
       const topResultsContainer = document.getElementById('top-results');
       topResultsContainer.innerHTML = '';
+      if (sortedResults.length === 0) {
+        topResultsContainer.innerHTML = '<p>Anda belum memilih pernyataan apapun. Silakan centang beberapa pernyataan yang sesuai dengan Anda.</p>';
+      } else {
+        const resultsToShow = Math.min(2, sortedResults.length);
 
-      for (let i = 0; i < 2 && i < sortedResults.length; i++) {
-        const result = sortedResults[i];
-        const resultDiv = document.createElement('div');
-        resultDiv.className = 'result-item';
-        resultDiv.innerHTML = `
-              <h3 class="result-title">${i + 1}. ${personalityLabels[result.type]}</h3>
-              <p><strong>Skor:</strong> ${result.score}</p>
-              <p>${personalityDescriptions[result.type]}</p>
-              
-              <h4>Profesi yang Cocok:</h4>
-              <ul class="career-list">
-                  ${careerSuggestions[result.type].map(career => `<li>${career}</li>`).join('')}
-              </ul>
-          `;
-        topResultsContainer.appendChild(resultDiv);
+        for (let i = 0; i < resultsToShow; i++) {
+          const result = sortedResults[i];
+          const resultDiv = document.createElement('div');
+          resultDiv.className = 'result-item';
+
+          resultDiv.innerHTML = `
+                <h3 class="result-title">${i + 1}. ${personalityLabels[result.type]}</h3>
+                <p><strong>Skor:</strong> ${result.score}</p>
+                <p>${personalityDescriptions[result.type]}</p>
+                
+                <h4>25 Profesi yang Cocok:</h4>
+                <table class="career-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Karir</th>
+                            <th>Deskripsi Singkat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${careerData[result.type].map((career, index) => `
+                            <tr>
+                                <td class="career-number">${index + 1}.</td>
+                                <td class="career-name">${career.name}</td>
+                                <td>${career.desc}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+          topResultsContainer.appendChild(resultDiv);
+        }
       }
 
       // Show all results with scores
@@ -964,6 +1082,173 @@
         saveBtn.textContent = 'Simpan Hasil ke Google Spreadsheet';
       }
     }
+  </script>
+
+  <script>
+    var careerData = {
+      realistic: [
+        { name: "Teknisi Listrik", desc: "Merawat dan memperbaiki instalasi listrik pada bangunan atau mesin" },
+        { name: "Mekanik Otomotif", desc: "Mendiagnosis dan memperbaiki kendaraan bermotor" },
+        { name: "Operator Mesin Industri", desc: "Mengoperasikan dan merawat mesin di pabrik manufaktur" },
+        { name: "Surveyor Tanah", desc: "Mengukur dan memetakan area lahan untuk keperluan pembangunan" },
+        { name: "Pekerja Konstruksi", desc: "Membangun, memperbaiki, dan merawat struktur bangunan" },
+        { name: "Tukang Las (Welder)", desc: "Menyambung logam menggunakan peralatan pengelasan" },
+        { name: "Sopir Truk/Bis", desc: "Mengemudikan kendaraan berat untuk pengangkutan barang atau penumpang" },
+        { name: "Teknisi AC dan Pendingin", desc: "Memasang dan memperbaiki sistem pendingin ruangan" },
+        { name: "Petugas Pemadam Kebakaran", desc: "Menangani kebakaran dan penyelamatan darurat" },
+        { name: "Montir Sepeda Motor", desc: "Memperbaiki dan melakukan servis sepeda motor" },
+        { name: "Petugas Keamanan (Satpam)", desc: "Menjaga keamanan lingkungan atau properti tertentu" },
+        { name: "Petani / Pekebun", desc: "Bekerja mengelola lahan pertanian atau kebun" },
+        { name: "Nelayan", desc: "Menangkap ikan dan hasil laut lainnya" },
+        { name: "Pemelihara Taman (Tukang Kebun)", desc: "Merawat taman dan ruang hijau" },
+        { name: "Peternak", desc: "Merawat hewan ternak untuk produksi pangan" },
+        { name: "Teknisi Otomasi / Robotik", desc: "Menangani perakitan dan pemeliharaan sistem otomatisasi" },
+        { name: "Pilot Pesawat", desc: "Mengoperasikan pesawat komersial atau khusus" },
+        { name: "Teknisi Telekomunikasi", desc: "Memasang dan merawat sistem jaringan dan komunikasi" },
+        { name: "Montir Kapal", desc: "Memperbaiki dan merawat mesin kapal laut" },
+        { name: "Petugas Lapangan Tambang", desc: "Bekerja di lokasi pertambangan untuk ekstraksi sumber daya alam" },
+        { name: "Pekerja Pemrosesan Makanan", desc: "Mengoperasikan peralatan di pabrik makanan" },
+        { name: "Teknisi Mesin", desc: "Mengerjakan instalasi, perawatan, dan perbaikan mesin" },
+        { name: "Petugas Kebersihan Gedung", desc: "Menjaga kebersihan fasilitas umum dan kantor" },
+        { name: "Teknisi Jaringan Komputer", desc: "Menangani instalasi dan pemeliharaan jaringan komputer" },
+        { name: "Pemandu Wisata Alam / Ranger", desc: "Mengarahkan wisatawan di lokasi alam dan konservasi" }
+      ],
+      investigative: [
+        { name: "Peneliti / Researcher", desc: "Melakukan studi ilmiah untuk menemukan atau mengembangkan pengetahuan baru" },
+        { name: "Dosen / Akademisi", desc: "Mengajar dan melakukan penelitian di perguruan tinggi" },
+        { name: "Analis Data (Data Analyst)", desc: "Mengumpulkan dan menganalisis data untuk mendukung pengambilan keputusan" },
+        { name: "Statistikawan", desc: "Menggunakan metode statistik untuk analisis data kuantitatif" },
+        { name: "Dokter Spesialis", desc: "Mendiagnosis dan mengobati penyakit dengan pendekatan berbasis ilmu kedokteran mendalam" },
+        { name: "Psikolog", desc: "Menganalisis perilaku dan proses mental manusia untuk membantu penyembuhan atau pengembangan diri" },
+        { name: "Ahli Bioteknologi", desc: "Mengembangkan teknologi berbasis ilmu biologi dan kimia untuk keperluan industri dan kesehatan" },
+        { name: "Ilmuwan Komputer (Computer Scientist)", desc: "Meneliti dan mengembangkan teknologi, algoritma, dan sistem komputasi" },
+        { name: "Ahli Forensik", desc: "Menganalisis bukti ilmiah dalam kasus hukum" },
+        { name: "Aktuaris", desc: "Menggunakan statistik untuk menghitung risiko dan premi asuransi" },
+        { name: "Geolog", desc: "Meneliti struktur dan proses bumi, termasuk potensi sumber daya alam" },
+        { name: "Ahli Gizi (Nutrisionis)", desc: "Menganalisis kebutuhan gizi dan merancang pola makan berdasarkan sains" },
+        { name: "Peneliti Sosial", desc: "Mengkaji fenomena sosial menggunakan metode ilmiah" },
+        { name: "Ahli Ekonomi", desc: "Menganalisis tren ekonomi dan memberi saran kebijakan atau strategi keuangan" },
+        { name: "Ahli Mikrobiologi", desc: "Meneliti mikroorganisme dan dampaknya bagi lingkungan atau kesehatan" },
+        { name: "Analis Riset Pasar (Market Research Analyst)", desc: "Mengkaji data konsumen dan pasar untuk menentukan strategi bisnis" },
+        { name: "Ahli Astronomi", desc: "Meneliti fenomena luar angkasa dan benda langit" },
+        { name: "Analis Kecerdasan Buatan (AI Analyst)", desc: "Mengembangkan dan mengevaluasi sistem berbasis AI dan machine learning" },
+        { name: "Arkeolog", desc: "Meneliti peninggalan masa lalu untuk memahami budaya kuno" },
+        { name: "Ahli Lingkungan", desc: "Menganalisis dampak lingkungan dan mencari solusi berbasis ilmiah" },
+        { name: "Peneliti Pendidikan", desc: "Meneliti proses dan kebijakan pendidikan untuk meningkatkan mutu belajar" },
+        { name: "Programmer Sistem", desc: "Membuat dan menguji sistem perangkat lunak yang kompleks" },
+        { name: "Ahli Matematika", desc: "Menyelesaikan masalah melalui pendekatan matematis dan logis" },
+        { name: "Pakar Kriptografi", desc: "Mengembangkan sistem enkripsi dan keamanan data digital" },
+        { name: "Bioinformatikawan", desc: "Menggabungkan ilmu komputer, matematika, dan biologi untuk menganalisis data biologis kompleks" }
+      ],
+      artistic: [
+        { name: "Desainer Grafis", desc: "Membuat desain visual untuk media cetak maupun digital" },
+        { name: "Fotografer", desc: "Mengambil dan mengedit gambar untuk keperluan artistik atau komersial" },
+        { name: "Seniman Rupa (Pelukis/Pemahat/Ilustrator)", desc: "Mengekspresikan ide melalui karya seni visual" },
+        { name: "Penulis (Fiksi/Nonfiksi)", desc: "Menulis cerita, artikel, naskah, atau konten lainnya" },
+        { name: "Desainer Interior", desc: "Merancang tata ruang dalam rumah atau gedung agar estetis dan fungsional" },
+        { name: "Musisi / Penyanyi", desc: "Menciptakan, membawakan, atau merekam karya musik" },
+        { name: "Aktor / Aktris", desc: "Memerankan karakter dalam film, sinetron, teater, atau iklan" },
+        { name: "Editor Video", desc: "Mengolah dan menyusun video untuk film, iklan, konten YouTube, dll" },
+        { name: "Animator", desc: "Membuat animasi 2D/3D untuk film, iklan, atau video edukatif" },
+        { name: "Desainer Mode (Fashion Designer)", desc: "Merancang pakaian dan aksesoris sesuai tren dan estetika" },
+        { name: "Makeup Artist", desc: "Menata rias wajah untuk keperluan seni, film, pernikahan, dll" },
+        { name: "Desainer UI/UX", desc: "Merancang antarmuka dan pengalaman pengguna untuk aplikasi dan website" },
+        { name: "Content Creator / Influencer", desc: "Membuat konten kreatif di media sosial atau platform digital" },
+        { name: "Sutradara", desc: "Mengarahkan produksi film, video musik, atau teater" },
+        { name: "Penulis Skenario (Scriptwriter)", desc: "Menulis naskah untuk film, sinetron, atau iklan" },
+        { name: "Koreografer / Penari", desc: "Menciptakan gerakan tari dan tampil dalam pertunjukan" },
+        { name: "Penyiar Radio / Podcaster", desc: "Membuat dan menyampaikan konten audio dengan gaya ekspresif" },
+        { name: "Arsitek", desc: "Merancang bangunan dengan pendekatan artistik dan fungsional" },
+        { name: "Desainer Produk", desc: "Merancang produk fungsional yang juga menarik secara visual" },
+        { name: "Penyunting Buku (Book Editor)", desc: "Menyunting naskah agar layak terbit secara bahasa dan gaya" },
+        { name: "Pewarta Foto (Photojournalist)", desc: "Mengabadikan peristiwa nyata melalui lensa kamera dengan nilai artistik" },
+        { name: "Penata Musik (Composer/Sound Designer)", desc: "Membuat musik latar atau efek suara untuk berbagai media" },
+        { name: "Ilustrator Buku Anak / Komik", desc: "Membuat gambar naratif untuk cerita anak atau komik" },
+        { name: "Fashion Stylist", desc: "Menata gaya busana untuk individu atau pemotretan komersial" },
+        { name: "Kurator Galeri / Pameran Seni", desc: "Mengelola dan menyusun karya seni untuk dipamerkan" }
+      ],
+      social: [
+        { name: "Guru / Pengajar", desc: "Mendidik dan membimbing siswa di berbagai jenjang pendidikan" },
+        { name: "Perawat", desc: "Merawat pasien dan memberikan dukungan kesehatan secara langsung" },
+        { name: "Psikolog", desc: "Membantu individu memahami dan mengatasi masalah emosional atau mental" },
+        { name: "Konselor Pendidikan / Bimbingan", desc: "Memberikan arahan akademik, karir, dan personal kepada siswa" },
+        { name: "Pekerja Sosial", desc: "Menyediakan layanan dukungan kepada individu atau kelompok yang membutuhkan" },
+        { name: "Dosen / Akademisi", desc: "Mengajar dan membimbing mahasiswa, serta melakukan penelitian" },
+        { name: "Dokter Umum", desc: "Memberikan pelayanan kesehatan secara langsung kepada pasien" },
+        { name: "HRD (Human Resource Development)", desc: "Mengelola dan mengembangkan sumber daya manusia dalam organisasi" },
+        { name: "Trainer / Instruktur", desc: "Memberikan pelatihan dan pengembangan keterampilan untuk individu atau kelompok" },
+        { name: "Public Relations Officer", desc: "Menjalin komunikasi positif antara organisasi dan publik" },
+        { name: "MC / Pembawa Acara", desc: "Menyampaikan acara di depan publik dengan keterampilan komunikasi tinggi" },
+        { name: "Penyuluh Lapangan (Pertanian, Kesehatan, Agama, dll.)", desc: "Memberikan edukasi dan pendampingan kepada masyarakat secara langsung" },
+        { name: "Relawan / Pegiat LSM", desc: "Terlibat dalam kegiatan sosial dan kemanusiaan" },
+        { name: "Customer Service", desc: "Menyediakan bantuan dan solusi kepada pelanggan" },
+        { name: "Psikoterapis / Konselor Keluarga", desc: "Membantu individu atau keluarga mengatasi permasalahan pribadi dan relasi" },
+        { name: "Pemandu Wisata (Tour Guide)", desc: "Memberikan informasi dan pengalaman menyenangkan bagi wisatawan" },
+        { name: "Career Coach", desc: "Membimbing orang lain dalam menentukan arah kariernya" },
+        { name: "Manajer Asrama / Panti Asuhan", desc: "Mengelola kegiatan dan kebutuhan penghuni lembaga sosial" },
+        { name: "Pendeta / Rohaniwan / Penyuluh Keagamaan", desc: "Memberikan bimbingan spiritual dan dukungan moral" },
+        { name: "Bidan", desc: "Membantu ibu hamil, persalinan, dan pasca melahirkan secara langsung" },
+        { name: "Ahli Gizi (Nutrisionis) Klinik", desc: "Memberikan konseling gizi dan pola makan kepada pasien" },
+        { name: "Mediator / Negosiator Sosial", desc: "Menyelesaikan konflik antarindividu atau kelompok dengan pendekatan sosial" },
+        { name: "Pendidik Anak Usia Dini (PAUD)", desc: "Mengajar dan membimbing anak-anak pada masa perkembangan awal" },
+        { name: "Pemandu Acara Radio / Penyiar", desc: "Membangun hubungan dengan pendengar melalui siaran yang komunikatif" },
+        { name: "Pegawai Layanan Publik (loket, pelayanan masyarakat, dll.)", desc: "Melayani masyarakat secara langsung dalam birokrasi atau instansi" }
+      ],
+      enterprising: [
+        { name: "Pengusaha / Wirausahawan", desc: "Membangun dan mengelola bisnis sendiri di berbagai sektor" },
+        { name: "Marketing Executive", desc: "Menyusun dan menjalankan strategi pemasaran untuk meningkatkan penjualan" },
+        { name: "Sales Representative", desc: "Menjual produk atau layanan kepada pelanggan secara langsung" },
+        { name: "Manajer Penjualan (Sales Manager)", desc: "Memimpin tim penjualan dan mengatur target serta strategi pasar" },
+        { name: "Public Relations Specialist", desc: "Mengelola citra dan komunikasi organisasi dengan publik atau media" },
+        { name: "Manajer Proyek (Project Manager)", desc: "Memimpin proyek dari perencanaan hingga penyelesaian" },
+        { name: "Politikus / Anggota Legislatif", desc: "Mengadvokasi kebijakan dan mewakili kepentingan publik" },
+        { name: "Notaris / PPAT", desc: "Memberikan jasa hukum dan transaksi properti dengan kewenangan resmi" },
+        { name: "Kepala Sekolah / Pimpinan Lembaga Pendidikan", desc: "Memimpin operasional dan pengembangan institusi pendidikan" },
+        { name: "CEO / Direktur Perusahaan", desc: "Mengelola perusahaan secara menyeluruh dan membuat keputusan strategis" },
+        { name: "Manajer SDM (HR Manager)", desc: "Mengelola strategi sumber daya manusia dan hubungan antarpegawai" },
+        { name: "Broker Saham / Perencana Investasi", desc: "Menjual dan mengelola portofolio investasi bagi klien" },
+        { name: "Manajer Restoran / Kafe", desc: "Memimpin dan mengelola operasional bisnis makanan dan minuman" },
+        { name: "Konsultan Bisnis", desc: "Memberikan saran strategi bisnis untuk peningkatan performa perusahaan" },
+        { name: "Event Organizer / Manajer Acara", desc: "Merancang dan melaksanakan berbagai jenis acara komersial dan sosial" },
+        { name: "Franchisor / Mitra Waralaba", desc: "Mengelola dan mengembangkan jaringan bisnis waralaba" },
+        { name: "Manajer Produk (Product Manager)", desc: "Mengatur pengembangan dan pemasaran produk tertentu" },
+        { name: "Digital Marketer / Growth Hacker", desc: "Meningkatkan jangkauan dan konversi melalui strategi pemasaran digital" },
+        { name: "Penasihat Politik / Campaign Manager", desc: "Mengatur strategi kampanye dan citra politik kandidat" },
+        { name: "Duta Merek / Brand Ambassador", desc: "Mewakili dan mempromosikan brand secara publik" },
+        { name: "Konsultan Hukum Bisnis", desc: "Memberikan nasihat hukum kepada perusahaan dan pebisnis" },
+        { name: "Manajer Hotel / Penginapan", desc: "Mengelola kegiatan operasional dan pelayanan di sektor hospitality" },
+        { name: "MC Profesional / Host Komersial", desc: "Memandu acara dengan gaya komunikatif dan menarik untuk audiens" },
+        { name: "Kepala Divisi Pemasaran", desc: "Mengarahkan seluruh strategi pemasaran dalam perusahaan besar" },
+        { name: "Startup Founder / Co-Founder", desc: "Mendirikan dan mengembangkan perusahaan rintisan (startup)" }
+      ],
+      conventional: [
+        { name: "Staf Administrasi", desc: "Mengelola dokumen, arsip, dan kebutuhan administrasi kantor" },
+        { name: "Sekretaris", desc: "Membantu atasan dalam urusan administrasi dan komunikasi" },
+        { name: "Teller Bank", desc: "Melayani transaksi keuangan nasabah secara akurat dan rapi" },
+        { name: "Akuntan", desc: "Menyusun laporan keuangan dan memastikan transaksi sesuai standar" },
+        { name: "Analis Keuangan", desc: "Mengevaluasi data keuangan untuk pengambilan keputusan" },
+        { name: "Petugas Pajak / Konsultan Pajak", desc: "Mengurus pelaporan dan perhitungan kewajiban pajak individu atau perusahaan" },
+        { name: "Auditor", desc: "Memeriksa dan menilai akurasi laporan keuangan suatu institusi" },
+        { name: "Staf Kepegawaian (HR Admin)", desc: "Mengelola data dan dokumen kepegawaian serta penggajian" },
+        { name: "Petugas Arsip / Dokumentasi", desc: "Menyimpan dan mengatur dokumen penting secara sistematis" },
+        { name: "Administrasi Gudang / Inventory Staff", desc: "Mengelola stok barang dan catatan keluar-masuk barang" },
+        { name: "Operator Data Entry", desc: "Memasukkan dan memperbarui data ke dalam sistem komputer" },
+        { name: "Kasir", desc: "Menangani transaksi pembayaran dengan ketelitian tinggi" },
+        { name: "Analis Data Operasional", desc: "Mengevaluasi proses kerja dan kinerja operasional perusahaan" },
+        { name: "Asisten Notaris", desc: "Membantu penanganan dokumen legal secara administratif" },
+        { name: "Staff Perpajakan Perusahaan", desc: "Bertugas menangani pelaporan dan arsip pajak perusahaan" },
+        { name: "Pustakawan", desc: "Mengelola koleksi buku, katalog, dan layanan perpustakaan" },
+        { name: "Analis Kredit Bank", desc: "Mengevaluasi kelayakan kredit nasabah berdasarkan data" },
+        { name: "Staff Keuangan Sekolah / Lembaga", desc: "Mengatur pembukuan dan laporan keuangan institusi pendidikan" },
+        { name: "Staff Pembelian (Purchasing Officer)", desc: "Mengelola pembelian barang dan pencatatan transaksi" },
+        { name: "Staff Penjadwalan Produksi", desc: "Menyusun jadwal kerja produksi dan memastikan kesesuaian waktu" },
+        { name: "Petugas Lelang / Arsip Pemerintah", desc: "Menangani dokumen resmi dan kegiatan administratif lembaga" },
+        { name: "Pegawai Tata Usaha Sekolah", desc: "Menyusun dan mengarsip dokumen serta surat menyurat" },
+        { name: "Staf Logistik", desc: "Mencatat, menyusun, dan melaporkan alur distribusi barang" },
+        { name: "Pegawai Administrasi Pemerintahan", desc: "Bekerja dalam sistem birokrasi untuk pelayanan publik" },
+        { name: "Admin E-Commerce", desc: "Mengelola pesanan, pembukuan, dan log data penjualan online" }
+      ]
+    };
   </script>
 </body>
 
