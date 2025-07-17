@@ -30,6 +30,15 @@
       color: #3498db;
     }
 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .career-table table, .career-table th, .career-table td {
+      border: 1px solid black;
+    }
+
     /* User Info Section */
     .user-info {
       background-color: #fff;
@@ -926,7 +935,12 @@
 
       // Display user info
       document.getElementById('result-name').textContent = name;
-      document.getElementById('result-birthdate').textContent = birthDate;
+      document.getElementById('result-birthdate').textContent = new Date(birthDate).toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
 
       // Add current date to results
       const now = new Date();
