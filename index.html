@@ -248,8 +248,19 @@
 
     /* Print Styles */
     @media print {
+      body {
+        transform: scale(1);
+      }
+      
       body * {
+        overflow: visible !important;
+        float: none;
         visibility: hidden;
+      }
+
+      table{
+        overflow: visible;
+        width: 8.5in;
       }
 
       .results,
