@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #3498db;
+  --color-primary-dark: #2980b9;
+  --color-text: #333333;
+  --color-bg: #f5f5f5;
+  --font-sans:
+    var(--font-geist-sans), "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+@media print {
+  body {
+    width: 8.5in;
+    background: white;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #results,
+  #results * {
+    visibility: visible;
+  }
+
+  #results {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+  }
+}
