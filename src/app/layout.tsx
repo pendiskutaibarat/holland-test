@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "Tes Kepribadian Holland RIASEC - Temukan tipe kepribadian dan karir yang cocok untukmu",
   icons: {
-    icon: "/favicon.ico",
+    icon: "favicon.ico",
   },
 };
 

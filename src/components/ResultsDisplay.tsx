@@ -55,7 +55,7 @@ export default function ResultsDisplay({
   return (
     <div id="results" className="bg-white p-5 rounded-lg shadow-sm">
       <div className="print:block hidden">
-        <img src="/banner.png" alt="Holland RIASEC" className="mx-auto mb-4" />
+        <img src="banner.png" alt="Holland RIASEC" className="mx-auto mb-4" />
       </div>
 
       <h2 className="text-xl font-bold text-gray-800">
