@@ -99,3 +99,45 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ sessionId: string }> },
+) {
+  try {
+    const { adminId } = await requireAuth();
+    const { sessionId } = await params;
+
+    if (!isValidUUID(sessionId)) {
+      return NextResponse.json({ error: "Invalid session ID" }, { status: 400 });
+    }
+
+    const session = await prisma.session.findFirst({
+      where: {
+        id: sessionId,
+        admin_id: adminId,
+      },
+    });
+
+    if (!session) {
+      return NextResponse.json(
+        { error: "Sesi tidak ditemukan" },
+        { status: 404 },
+      );
+    }
+
+    await prisma.session.delete({
+      where: { id: sessionId },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    return NextResponse.json(
+      { error: "Terjadi kesalahan" },
+      { status: 500 },
+    );
+  }
+}

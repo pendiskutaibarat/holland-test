@@ -42,3 +42,5 @@ next-env.d.ts
 
 # prisma generated client
 prisma/generated/
+# Added by code-review-graph
+.code-review-graph/

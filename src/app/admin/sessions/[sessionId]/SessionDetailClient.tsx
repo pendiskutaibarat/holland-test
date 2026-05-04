@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import LoadingButton from "@/components/LoadingButton";
 
 interface Result {
   id: string;
@@ -68,7 +70,17 @@ export default function SessionDetailClient({
     ? results.reduce((s, r) => s + (r.bahasa_pct || 0), 0) / results.length
     : 0;
 
-  function exportCSV() {
+  const [copied, setCopied] = useState(false);
+  const [exporting, setExporting] = useState(false);
+
+  function handleCopyLink() {
+    navigator.clipboard.writeText(`${window.location.origin}/test/${session.code}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function exportCSV() {
+    setExporting(true);
     const headers = [
       "Nama",
       "Kelas",
@@ -118,6 +130,7 @@ export default function SessionDetailClient({
     link.download = `hasil-${session.name}.csv`;
     link.click();
     URL.revokeObjectURL(url);
+    setExporting(false);
   }
 
   return (
@@ -130,12 +143,14 @@ export default function SessionDetailClient({
             {results.length} hasil · Mode: {session.mode}
           </p>
         </div>
-        <button
+        <LoadingButton
           onClick={exportCSV}
+          loading={exporting}
+          loadingText="Mengunduh..."
           className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm"
         >
           Unduh CSV
-        </button>
+        </LoadingButton>
       </div>
 
       {results.length > 0 && (
@@ -205,12 +220,20 @@ export default function SessionDetailClient({
       {results.length === 0 ? (
         <div className="bg-white p-8 rounded-lg shadow-sm text-center text-gray-500">
           Belum ada hasil. Bagikan link sesi kepada siswa.
-          <div className="mt-3">
-            <code className="bg-gray-100 px-2 py-1 rounded">
-              {typeof window !== "undefined"
-                ? `${window.location.origin}/test/${session.code}`
-                : `/test/${session.code}`}
-            </code>
+          <div className="mt-3 flex items-center justify-center">
+            <button
+              onClick={handleCopyLink}
+              className="relative"
+            >
+              <code className="bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition-colors">
+                {`${window.location.origin}/test/${session.code}`}
+              </code>
+              {copied && (
+                <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                  Tersalin!
+                </span>
+              )}
+            </button>
           </div>
         </div>
       ) : (

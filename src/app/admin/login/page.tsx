@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import LoadingButton from "@/components/LoadingButton";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function AdminLoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className={`space-y-4 ${loading ? "opacity-50 pointer-events-none" : ""}`}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -80,13 +81,14 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          <button
+          <LoadingButton
             type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+            loading={loading}
+            loadingText="Masuk..."
+            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-300"
           >
-            {loading ? "Masuk..." : "Masuk"}
-          </button>
+            Masuk
+          </LoadingButton>
         </form>
       </div>
     </div>

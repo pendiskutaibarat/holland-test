@@ -7,7 +7,7 @@ import { careers } from "@/data/careers";
 import { personalities } from "@/data/personalities";
 import { getBadgeByCode, getTop3Code } from "@/data/badges";
 import { getProgramStudiByCode } from "@/data/programStudi";
-import { downloadPdf } from "@/utils/pdfExport";
+
 import CareerTable from "./CareerTable";
 
 const Radar = dynamic(
@@ -333,17 +333,6 @@ export default function KarirResults({
       </section>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3 print:hidden">
-        <button
-          onClick={() =>
-            downloadPdf(
-              "results",
-              `Hasil-Tes-Holland-${name.replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}.pdf`,
-            )
-          }
-          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-        >
-          Unduh PDF
-        </button>
         <button
           onClick={() => window.print()}
           className="px-6 py-2.5 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
