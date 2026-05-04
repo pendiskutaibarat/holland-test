@@ -20,7 +20,7 @@ export default function UserInfoStep({
       {/* Banner */}
       <div className="text-center">
         <img
-          src="banner.png"
+          src="/banner.png"
           alt="Holland RIASEC"
           className="mx-auto rounded-lg"
         />

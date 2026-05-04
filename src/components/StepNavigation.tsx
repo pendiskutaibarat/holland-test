@@ -15,17 +15,23 @@ export default function StepNavigation({
   onNext,
   canProceed,
 }: StepNavigationProps) {
-  const isLastStep = currentStep === totalSteps - 2; // second-to-last step = last test section
+  const isLastStep = currentStep === totalSteps - 2;
   const isFirstStep = currentStep === 0;
 
   return (
-    <div className="flex justify-between mt-6 print:hidden">
+    <nav
+      className="flex justify-between items-center mt-8 print:hidden"
+      aria-label="Navigasi langkah tes"
+    >
       <div>
         {!isFirstStep && (
           <button
             onClick={onBack}
-            className="px-6 py-2.5 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+            className="px-6 py-2.5 bg-white text-slate-600 font-semibold rounded-lg border border-slate-300 hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
           >
+            <span aria-hidden="true" className="mr-1">
+              ←
+            </span>{" "}
             Kembali
           </button>
         )}
@@ -33,10 +39,24 @@ export default function StepNavigation({
       <button
         onClick={onNext}
         disabled={!canProceed}
-        className="px-6 py-2.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+        className="px-8 py-2.5 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
       >
-        {isLastStep ? "Lihat Hasil" : "Lanjut"}
+        {isLastStep ? (
+          <>
+            Lihat Hasil{" "}
+            <span aria-hidden="true" className="ml-1">
+              →
+            </span>
+          </>
+        ) : (
+          <>
+            Lanjut{" "}
+            <span aria-hidden="true" className="ml-1">
+              →
+            </span>
+          </>
+        )}
       </button>
-    </div>
+    </nav>
   );
 }

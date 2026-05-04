@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { questions } from "@/data/questions";
-import { PersonalityType, TestResult } from "@/data/types";
+import { PersonalityType, TestResult, Mode } from "@/data/types";
 import ProgressBar from "./ProgressBar";
 import StepNavigation from "./StepNavigation";
-import UserInfoStep from "./UserInfoStep";
+import ModeSelectorStep from "./ModeSelectorStep";
 import TestSectionStep from "./TestSectionStep";
-import ResultsDisplay from "./ResultsDisplay";
+import PeminatanResults from "./PeminatanResults";
+import KarirResults from "./KarirResults";
 
-const TOTAL_STEPS = 8; // 0 (info) + 1-6 (sections) + 7 (results)
+const TOTAL_STEPS = 8;
 const PERSONALITY_TYPES: PersonalityType[] = [
   "realistic",
   "investigative",
@@ -19,15 +20,27 @@ const PERSONALITY_TYPES: PersonalityType[] = [
   "conventional",
 ];
 
-export default function WizardContainer() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [name, setName] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [errors, setErrors] = useState<{ name?: string; birthDate?: string }>(
-    {},
-  );
+interface WizardContainerProps {
+  sessionId: string;
+  forcedMode: "peminatan" | "karir" | null;
+  studentName: string;
+  studentClass: string;
+}
 
-  // Track selections per personality type: type -> Set<questionIndex>
+export default function WizardContainer({
+  sessionId,
+  forcedMode,
+  studentName,
+  studentClass,
+}: WizardContainerProps) {
+  const [currentStep, setCurrentStep] = useState(forcedMode ? 0 : 0);
+  const [mode, setMode] = useState<Mode | null>(forcedMode);
+  const [name] = useState(studentName);
+  const [birthDate] = useState(studentClass);
+  const [submissionStatus, setSubmissionStatus] = useState<
+    "idle" | "submitting" | "success" | "error" | "duplicate"
+  >("idle");
+
   const [selections, setSelections] = useState<Record<string, Set<number>>>(
     () => {
       const init: Record<string, Set<number>> = {};
@@ -57,42 +70,39 @@ export default function WizardContainer() {
 
   const canProceed = (): boolean => {
     if (currentStep === 0) {
-      return name.trim() !== "" && birthDate !== "";
+      return mode !== null;
     }
     return true;
   };
 
   const handleNext = () => {
     if (currentStep === 0) {
-      const newErrors: { name?: string; birthDate?: string } = {};
-      if (!name.trim()) newErrors.name = "Silakan isi nama lengkap.";
-      if (!birthDate) newErrors.birthDate = "Silakan isi tanggal lahir.";
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
-      }
-      setErrors({});
+      if (!mode) return;
     }
     if (currentStep < TOTAL_STEPS - 1) {
       setCurrentStep((s) => s + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
       setCurrentStep((s) => s - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
-  // Calculate results
-  const getResults = (): TestResult[] => {
-    return PERSONALITY_TYPES.map((type) => ({
-      type,
-      score: selections[type]?.size ?? 0,
-    }));
+  const handleRestart = () => {
+    setMode(forcedMode);
+    setCurrentStep(0);
+    setSubmissionStatus("idle");
+    const init: Record<string, Set<number>> = {};
+    PERSONALITY_TYPES.forEach((type) => {
+      init[type] = new Set();
+    });
+    setSelections(init);
   };
 
-  // Build selected answers for submission
   const getSelectedAnswers = () => {
     const answers: { section: string; question: string; answer: string }[] = [];
     PERSONALITY_TYPES.forEach((type) => {
@@ -118,57 +128,199 @@ export default function WizardContainer() {
     return answers;
   };
 
-  // Results step
+  const hasSubmitted = useRef(false);
+
+  useEffect(() => {
+    if (currentStep !== TOTAL_STEPS - 1) return;
+    if (hasSubmitted.current) return;
+
+    async function submit() {
+      hasSubmitted.current = true;
+      setSubmissionStatus("submitting");
+      const results = PERSONALITY_TYPES.map((type) => ({
+        type,
+        score: selections[type]?.size ?? 0,
+      }));
+
+      const answers = getSelectedAnswers();
+
+      try {
+        const res = await fetch("/api/results", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            session_code: sessionId,
+            student_name: studentName,
+            student_class: studentClass,
+            mode,
+            birth_date: birthDate || null,
+            r_score: results.find((r) => r.type === "realistic")?.score ?? 0,
+            i_score:
+              results.find((r) => r.type === "investigative")?.score ?? 0,
+            a_score: results.find((r) => r.type === "artistic")?.score ?? 0,
+            s_score: results.find((r) => r.type === "social")?.score ?? 0,
+            e_score:
+              results.find((r) => r.type === "enterprising")?.score ?? 0,
+            c_score:
+              results.find((r) => r.type === "conventional")?.score ?? 0,
+            holland_code: null,
+            ipa_pct: null,
+            ips_pct: null,
+            bahasa_pct: null,
+            answers,
+          }),
+        });
+
+        if (res.status === 409) {
+          setSubmissionStatus("duplicate");
+        } else if (res.ok) {
+          setSubmissionStatus("success");
+        } else {
+          setSubmissionStatus("error");
+        }
+      } catch {
+        setSubmissionStatus("error");
+      }
+    }
+
+    submit();
+  }, [currentStep]);
+
   if (currentStep === TOTAL_STEPS - 1) {
+    const results = PERSONALITY_TYPES.map((type) => ({
+      type,
+      score: selections[type]?.size ?? 0,
+    }));
+
     return (
-      <div className="max-w-[1000px] mx-auto p-5 print:max-w-none print:p-4">
-        <ResultsDisplay
-          name={name}
-          birthDate={birthDate}
-          results={getResults()}
-          selectedAnswers={getSelectedAnswers()}
-        />
+      <div className="max-w-[1000px] mx-auto p-4 md:p-6 print:max-w-none print:p-4">
+        {submissionStatus === "success" && (
+          <div
+            className="mb-4 p-4 bg-green-50 border border-green-200 text-green-800 rounded-lg text-sm text-center font-medium"
+            role="status"
+            aria-live="polite"
+          >
+            <svg
+              className="w-5 h-5 inline-block mr-1.5 -mt-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Hasil berhasil disimpan
+          </div>
+        )}
+        {submissionStatus === "duplicate" && (
+          <div
+            className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-sm text-center font-medium"
+            role="status"
+            aria-live="polite"
+          >
+            <svg
+              className="w-5 h-5 inline-block mr-1.5 -mt-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            Anda sudah mengirim hasil tes untuk sesi ini
+          </div>
+        )}
+        {submissionStatus === "error" && (
+          <div
+            className="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm text-center flex flex-col items-center gap-2"
+            role="alert"
+          >
+            <span>Gagal menyimpan hasil.</span>
+            <button
+              onClick={() => {
+                hasSubmitted.current = false;
+                setSubmissionStatus("idle");
+              }}
+              className="px-4 py-1.5 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+            >
+              Coba Lagi
+            </button>
+          </div>
+        )}
+        {submissionStatus === "submitting" && (
+          <div
+            className="mb-4 p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg text-sm text-center flex items-center justify-center gap-2"
+            role="status"
+            aria-live="polite"
+          >
+            <span
+              className="inline-block w-4 h-4 border-2 border-blue-300 border-t-blue-700 rounded-full animate-spin"
+              aria-hidden="true"
+            />
+            Mengirim hasil...
+          </div>
+        )}
+
+        {mode === "peminatan" ? (
+          <PeminatanResults
+            name={name}
+            birthDate={birthDate}
+            results={results}
+            selectedAnswers={getSelectedAnswers()}
+            mode={mode}
+          />
+        ) : (
+          <KarirResults
+            name={name}
+            birthDate={birthDate}
+            results={results}
+            selectedAnswers={getSelectedAnswers()}
+            mode={mode!}
+          />
+        )}
       </div>
     );
   }
 
-  // Step 0: User info
   if (currentStep === 0) {
     return (
-      <div className="max-w-[1000px] mx-auto p-5">
+      <div className="max-w-[1000px] mx-auto p-4 md:p-6">
         <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
-        <UserInfoStep
-          name={name}
-          birthDate={birthDate}
-          onNameChange={(n) => {
-            setName(n);
-            if (errors.name) setErrors((e) => ({ ...e, name: undefined }));
-          }}
-          onBirthDateChange={(d) => {
-            setBirthDate(d);
-            if (errors.birthDate)
-              setErrors((e) => ({ ...e, birthDate: undefined }));
-          }}
-          errors={errors}
+        <ModeSelectorStep
+          selectedMode={mode}
+          onSelectMode={(m) => setMode(m)}
+          onRestart={handleRestart}
+          hasSavedState={false}
         />
-        <StepNavigation
-          currentStep={currentStep}
-          totalSteps={TOTAL_STEPS}
-          onBack={handleBack}
-          onNext={handleNext}
-          canProceed={canProceed()}
-        />
+        <div className="text-center mt-8">
+          <button
+            onClick={handleNext}
+            disabled={!mode}
+            className="px-8 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+          >
+            Mulai Tes
+          </button>
+        </div>
       </div>
     );
   }
 
-  // Steps 1-6: Test sections
   const sectionIndex = currentStep - 1;
   const section = questions[sectionIndex];
   const personalityType = PERSONALITY_TYPES[sectionIndex];
 
   return (
-    <div className="max-w-[1000px] mx-auto p-5 print:hidden">
+    <div className="max-w-[1000px] mx-auto p-4 md:p-6 print:hidden">
       <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
       <TestSectionStep
         section={section}
