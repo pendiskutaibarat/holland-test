@@ -1,0 +1,185 @@
+"use client";
+
+import { useState } from "react";
+import WizardContainer from "@/components/WizardContainer";
+
+interface TestPageClientProps {
+  sessionId: string;
+  sessionCode: string;
+  sessionName: string;
+  sessionMode: string;
+  isActive: boolean;
+}
+
+export default function TestPageClient({
+  sessionId,
+  sessionCode,
+  sessionName,
+  sessionMode,
+  isActive,
+}: TestPageClientProps) {
+  const [studentName, setStudentName] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [errors, setErrors] = useState<{ name?: string; birthDate?: string }>(
+    {},
+  );
+  const [started, setStarted] = useState(false);
+
+  function handleStart(e: React.FormEvent) {
+    e.preventDefault();
+    const newErrors: { name?: string; birthDate?: string } = {};
+
+    if (!studentName.trim()) {
+      newErrors.name = "Silakan isi nama lengkap.";
+    }
+    if (!birthDate.trim()) {
+      newErrors.birthDate = "Silakan isi tanggal lahir.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setStarted(true);
+  }
+
+  if (!isActive) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-5">
+        <div
+          className="bg-white p-8 rounded-xl shadow-sm max-w-md w-full text-center border border-slate-200"
+          role="alert"
+        >
+          <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
+            <svg
+              className="w-7 h-7 text-red-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+          </div>
+          <h1 className="text-xl font-bold text-slate-800 mb-3">
+            Sesi Ditutup
+          </h1>
+          <p className="text-slate-600">
+            Sesi ini sudah ditutup. Hubungi admin untuk informasi lebih lanjut.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!started) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-5">
+        <div className="bg-white p-8 rounded-xl shadow-sm max-w-md w-full border border-slate-200">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold text-slate-800 mb-1">
+              Tes Holland RIASEC
+            </h1>
+            <p className="text-slate-600">{sessionName}</p>
+          </div>
+
+          <form onSubmit={handleStart} className="space-y-5" noValidate>
+            <div>
+              <label
+                htmlFor="studentName"
+                className="block text-sm font-semibold text-slate-800 mb-1.5"
+              >
+                Nama Lengkap <span className="text-red-600" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="studentName"
+                type="text"
+                value={studentName}
+                onChange={(e) => {
+                  setStudentName(e.target.value);
+                  if (errors.name)
+                    setErrors((err) => ({ ...err, name: undefined }));
+                }}
+                aria-required="true"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? "name-error" : undefined}
+                className="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-800 placeholder:text-slate-400 transition-colors hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                placeholder="Contoh: Budi Santoso"
+              />
+              {errors.name && (
+                <p
+                  id="name-error"
+                  role="alert"
+                  className="mt-1.5 text-sm text-red-600 flex items-center gap-1"
+                >
+                  <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {errors.name}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="birthDate"
+                className="block text-sm font-semibold text-slate-800 mb-1.5"
+              >
+                Tanggal Lahir <span className="text-red-600" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="birthDate"
+                type="date"
+                value={birthDate}
+                onChange={(e) => {
+                  setBirthDate(e.target.value);
+                  if (errors.birthDate)
+                    setErrors((err) => ({ ...err, birthDate: undefined }));
+                }}
+                aria-required="true"
+                aria-invalid={!!errors.birthDate}
+                aria-describedby={errors.birthDate ? "birthdate-error" : undefined}
+                className="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-800 transition-colors hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              />
+              {errors.birthDate && (
+                <p
+                  id="birthdate-error"
+                  role="alert"
+                  className="mt-1.5 text-sm text-red-600 flex items-center gap-1"
+                >
+                  <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {errors.birthDate}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+            >
+              Mulai Tes
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <WizardContainer
+      sessionId={sessionId}
+      forcedMode={sessionMode === "bebas" ? null : (sessionMode as "peminatan" | "karir")}
+      studentName={studentName}
+      studentClass={birthDate}
+    />
+  );
+}

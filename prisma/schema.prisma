@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String    @unique
+  password_hash String
+  name          String
+  created_at    DateTime  @default(now())
+  sessions      Session[]
+
+  @@map("admins")
+}
+
+model Session {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  admin_id    String        @db.Uuid
+  admin       Admin         @relation(fields: [admin_id], references: [id], onDelete: Cascade)
+  code        String        @unique @db.VarChar(8)
+  name        String
+  description String?
+  mode        String        @default("bebas")
+  is_active   Boolean       @default(true)
+  created_at  DateTime      @default(now())
+  expires_at  DateTime?
+  results     TestResult[]
+
+  @@map("sessions")
+}
+
+model TestResult {
+  id             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id     String          @db.Uuid
+  session        Session         @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  student_name   String
+  student_class  String
+  mode           String
+  birth_date     DateTime?       @db.Date
+  r_score        Int             @default(0)
+  i_score        Int             @default(0)
+  a_score        Int             @default(0)
+  s_score        Int             @default(0)
+  e_score        Int             @default(0)
+  c_score        Int             @default(0)
+  holland_code   String?
+  ipa_pct        Float?
+  ips_pct        Float?
+  bahasa_pct     Float?
+  created_at     DateTime        @default(now())
+  answers        ResultAnswer[]
+
+  @@unique([session_id, student_name, student_class])
+  @@map("test_results")
+}
+
+model ResultAnswer {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  result_id  String     @db.Uuid
+  result     TestResult @relation(fields: [result_id], references: [id], onDelete: Cascade)
+  section    String
+  question   String
+  answer     String     @default("Selected")
+
+  @@map("result_answers")
+}
