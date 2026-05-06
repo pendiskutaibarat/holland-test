@@ -29,6 +29,12 @@ export default function CareerTable({ careers }: CareerTableProps) {
             >
               Deskripsi Singkat
             </th>
+            <th
+              scope="col"
+              className="border-b border-slate-200 px-4 py-2.5 text-left font-semibold text-slate-800"
+            >
+              Jurusan / Prodi Rekomendasi
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -45,6 +51,9 @@ export default function CareerTable({ careers }: CareerTableProps) {
               </td>
               <td className="px-4 py-2 text-slate-600">
                 {career.desc}
+              </td>
+              <td className="px-4 py-2 text-slate-600">
+                {career.majorRecommendation}
               </td>
             </tr>
           ))}

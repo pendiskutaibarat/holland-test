@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import LoadingButton from "@/components/LoadingButton";
 
 export default function AdminLoginPage() {
@@ -90,6 +91,13 @@ export default function AdminLoginPage() {
             Masuk
           </LoadingButton>
         </form>
+
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Belum punya akun?{" "}
+          <Link href="/admin/register" className="text-blue-600 hover:text-blue-800">
+            Daftar
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -19,14 +19,13 @@ export default async function ResultViewPage({
     redirect("/admin/login");
   }
 
-  let adminId: string;
-  try {
-    const payload = verifyToken(token);
-    adminId = payload.adminId;
-  } catch {
+  const payload = verifyToken(token);
+
+  if (payload.status === "PENDING" || payload.status === "REJECTED") {
     redirect("/admin/login");
   }
 
+  const userId = payload.userId;
   const { sessionId, resultId } = await params;
 
   if (!isValidUUID(sessionId) || !isValidUUID(resultId)) {
@@ -36,7 +35,7 @@ export default async function ResultViewPage({
   const session = await prisma.session.findFirst({
     where: {
       id: sessionId,
-      admin_id: adminId,
+      user_id: userId,
     },
   });
 

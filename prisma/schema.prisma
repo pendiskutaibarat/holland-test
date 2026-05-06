@@ -7,21 +7,23 @@ datasource db {
   provider = "postgresql"
 }
 
-model Admin {
+model User {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email         String    @unique
   password_hash String
   name          String
+  role          String    @default("TEACHER")
+  status        String    @default("PENDING")
   created_at    DateTime  @default(now())
   sessions      Session[]
 
-  @@map("admins")
+  @@map("users")
 }
 
 model Session {
   id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  admin_id    String        @db.Uuid
-  admin       Admin         @relation(fields: [admin_id], references: [id], onDelete: Cascade)
+  user_id     String        @db.Uuid
+  user        User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   code        String        @unique @db.VarChar(8)
   name        String
   description String?

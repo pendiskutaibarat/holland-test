@@ -3,605 +3,314 @@ import { Career, PersonalityType } from "./types";
 export const careers: Record<PersonalityType, Career[]> = {
   realistic: [
     {
-      name: "Teknisi Listrik",
-      desc: "Merawat dan memperbaiki instalasi listrik pada bangunan atau mesin",
+      name: "Insinyur Sipil (BUMN/Swasta)",
+      desc: "Mengawasi proyek pembangunan infrastruktur fisik seperti jalan tol, jembatan, dan gedung.",
+      majorRecommendation: "Teknik Sipil",
     },
     {
-      name: "Mekanik Otomotif",
-      desc: "Mendiagnosis dan memperbaiki kendaraan bermotor",
+      name: "Ahli K3 (Kesehatan & Keselamatan Kerja)",
+      desc: "Memastikan standar keselamatan pekerja di pabrik, lokasi tambang, atau proyek konstruksi.",
+      majorRecommendation: "Kesehatan Masyarakat (K3) / Teknik Keselamatan",
     },
     {
-      name: "Operator Mesin Industri",
-      desc: "Mengoperasikan dan merawat mesin di pabrik manufaktur",
+      name: "Teknisi Mesin / Manufaktur",
+      desc: "Merawat dan memperbaiki mesin-mesin industri atau kendaraan bermotor.",
+      majorRecommendation: "Teknik Mesin / Otomotif",
     },
     {
-      name: "Surveyor Tanah",
-      desc: "Mengukur dan memetakan area lahan untuk keperluan pembangunan",
+      name: "Ahli Pertambangan / Perminyakan",
+      desc: "Merencanakan dan mengelola ekstraksi sumber daya alam di area tambang/kilang.",
+      majorRecommendation: "Teknik Pertambangan / Teknik Perminyakan",
     },
     {
-      name: "Pekerja Konstruksi",
-      desc: "Membangun, memperbaiki, dan merawat struktur bangunan",
+      name: "Polisi / Prajurit TNI",
+      desc: "Menjaga keamanan, ketertiban masyarakat, dan pertahanan negara.",
+      majorRecommendation: "Akpol / Akmil / Kriminologi",
     },
     {
-      name: "Tukang Las (Welder)",
-      desc: "Menyambung logam menggunakan peralatan pengelasan",
+      name: "Penyuluh Pertanian / Agribisnis",
+      desc: "Mengedukasi petani terkait teknologi tanam modern dan manajemen hasil panen.",
+      majorRecommendation: "Agroteknologi / Agribisnis",
     },
     {
-      name: "Sopir Truk/Bis",
-      desc: "Mengemudikan kendaraan berat untuk pengangkutan barang atau penumpang",
+      name: "Nakhoda / Pelaut",
+      desc: "Mengoperasikan kapal untuk keperluan logistik maritim antar pulau atau internasional.",
+      majorRecommendation: "Pelayaran / Ketatalaksanaan Pelayaran Niaga",
     },
     {
-      name: "Teknisi AC dan Pendingin",
-      desc: "Memasang dan memperbaiki sistem pendingin ruangan",
+      name: "Pengusaha Kuliner / Chef",
+      desc: "Mengelola dapur profesional, merancang resep, dan membangun bisnis F&B.",
+      majorRecommendation: "Tata Boga / Manajemen Kuliner",
     },
     {
-      name: "Petugas Pemadam Kebakaran",
-      desc: "Menangani kebakaran dan penyelamatan darurat",
+      name: "Operator Alat Berat",
+      desc: "Mengoperasikan ekskavator, crane, atau alat berat lainnya di lokasi konstruksi/tambang.",
+      majorRecommendation: "Teknik Alat Berat (Vokasi)",
     },
     {
-      name: "Montir Sepeda Motor",
-      desc: "Memperbaiki dan melakukan servis sepeda motor",
-    },
-    {
-      name: "Petugas Keamanan (Satpam)",
-      desc: "Menjaga keamanan lingkungan atau properti tertentu",
-    },
-    {
-      name: "Petani / Pekebun",
-      desc: "Bekerja mengelola lahan pertanian atau kebun",
-    },
-    { name: "Nelayan", desc: "Menangkap ikan dan hasil laut lainnya" },
-    {
-      name: "Pemelihara Taman (Tukang Kebun)",
-      desc: "Merawat taman dan ruang hijau",
-    },
-    { name: "Peternak", desc: "Merawat hewan ternak untuk produksi pangan" },
-    {
-      name: "Teknisi Otomasi / Robotik",
-      desc: "Menangani perakitan dan pemeliharaan sistem otomatisasi",
-    },
-    {
-      name: "Pilot Pesawat",
-      desc: "Mengoperasikan pesawat komersial atau khusus",
-    },
-    {
-      name: "Teknisi Telekomunikasi",
-      desc: "Memasang dan merawat sistem jaringan dan komunikasi",
-    },
-    { name: "Montir Kapal", desc: "Memperbaiki dan merawat mesin kapal laut" },
-    {
-      name: "Petugas Lapangan Tambang",
-      desc: "Bekerja di lokasi pertambangan untuk ekstraksi sumber daya alam",
-    },
-    {
-      name: "Pekerja Pemrosesan Makanan",
-      desc: "Mengoperasikan peralatan di pabrik makanan",
-    },
-    {
-      name: "Teknisi Mesin",
-      desc: "Mengerjakan instalasi, perawatan, dan perbaikan mesin",
-    },
-    {
-      name: "Petugas Kebersihan Gedung",
-      desc: "Menjaga kebersihan fasilitas umum dan kantor",
-    },
-    {
-      name: "Teknisi Jaringan Komputer",
-      desc: "Menangani instalasi dan pemeliharaan jaringan komputer",
-    },
-    {
-      name: "Pemandu Wisata Alam / Ranger",
-      desc: "Mengarahkan wisatawan di lokasi alam dan konservasi",
+      name: "Surveyor Pemetaan (BPN/Swasta)",
+      desc: "Melakukan pengukuran lahan untuk pembuatan sertifikat tanah atau peta tata ruang.",
+      majorRecommendation: "Teknik Geomatika / Geodesi",
     },
   ],
   investigative: [
     {
-      name: "Peneliti / Researcher",
-      desc: "Melakukan studi ilmiah untuk menemukan atau mengembangkan pengetahuan baru",
+      name: "Dokter (Umum/Spesialis)",
+      desc: "Mendiagnosis dan memberikan penanganan medis kepada pasien di RS/Puskesmas.",
+      majorRecommendation: "Pendidikan Dokter / Kedokteran",
     },
     {
-      name: "Dosen / Akademisi",
-      desc: "Mengajar dan melakukan penelitian di perguruan tinggi",
+      name: "Programmer / Software Engineer",
+      desc: "Menulis kode untuk membangun aplikasi, website, atau sistem informasi instansi/perusahaan.",
+      majorRecommendation: "Teknik Informatika / Ilmu Komputer",
     },
     {
-      name: "Analis Data (Data Analyst)",
-      desc: "Mengumpulkan dan menganalisis data untuk mendukung pengambilan keputusan",
+      name: "Data Analyst / Data Scientist",
+      desc: "Mengolah data besar untuk memberikan insight bisnis atau kebijakan pemerintah.",
+      majorRecommendation: "Sains Data / Statistika",
     },
     {
-      name: "Statistikawan",
-      desc: "Menggunakan metode statistik untuk analisis data kuantitatif",
+      name: "Dosen / Peneliti (BRIN/Kampus)",
+      desc: "Melakukan riset akademik mendalam dan mengajar mahasiswa di perguruan tinggi.",
+      majorRecommendation: "Berbagai Ilmu Murni/Terapan (Minimal S2)",
     },
     {
-      name: "Dokter Spesialis",
-      desc: "Mendiagnosis dan mengobati penyakit dengan pendekatan berbasis ilmu kedokteran mendalam",
+      name: "Apoteker",
+      desc: "Meracik, mengembangkan, dan memantau distribusi obat di apotek atau rumah sakit.",
+      majorRecommendation: "Farmasi (dan Profesi Apoteker)",
     },
     {
-      name: "Psikolog",
-      desc: "Menganalisis perilaku dan proses mental manusia untuk membantu penyembuhan atau pengembangan diri",
+      name: "Analis Laboratorium Medis",
+      desc: "Memeriksa sampel darah atau jaringan tubuh di laboratorium untuk diagnosis medis.",
+      majorRecommendation: "Teknologi Laboratorium Medik (TLM)",
     },
     {
-      name: "Ahli Bioteknologi",
-      desc: "Mengembangkan teknologi berbasis ilmu biologi dan kimia untuk keperluan industri dan kesehatan",
-    },
-    {
-      name: "Ilmuwan Komputer (Computer Scientist)",
-      desc: "Meneliti dan mengembangkan teknologi, algoritma, dan sistem komputasi",
-    },
-    {
-      name: "Ahli Forensik",
-      desc: "Menganalisis bukti ilmiah dalam kasus hukum",
-    },
-    {
-      name: "Aktuaris",
-      desc: "Menggunakan statistik untuk menghitung risiko dan premi asuransi",
-    },
-    {
-      name: "Geolog",
-      desc: "Meneliti struktur dan proses bumi, termasuk potensi sumber daya alam",
+      name: "Prakirawan Cuaca (Forecaster BMKG)",
+      desc: "Menganalisis data satelit untuk memprediksi cuaca dan peringatan dini bencana.",
+      majorRecommendation: "Meteorologi / Geofisika",
     },
     {
       name: "Ahli Gizi (Nutrisionis)",
-      desc: "Menganalisis kebutuhan gizi dan merancang pola makan berdasarkan sains",
+      desc: "Merancang program diet sehat untuk pasien rumah sakit atau edukasi gizi masyarakat.",
+      majorRecommendation: "Ilmu Gizi",
     },
     {
-      name: "Peneliti Sosial",
-      desc: "Mengkaji fenomena sosial menggunakan metode ilmiah",
+      name: "Psikolog Klinis",
+      desc: "Memberikan terapi untuk masalah kesehatan mental dan gangguan psikologis.",
+      majorRecommendation: "Psikologi (dan Profesi Psikolog)",
     },
     {
-      name: "Ahli Ekonomi",
-      desc: "Menganalisis tren ekonomi dan memberi saran kebijakan atau strategi keuangan",
-    },
-    {
-      name: "Ahli Mikrobiologi",
-      desc: "Meneliti mikroorganisme dan dampaknya bagi lingkungan atau kesehatan",
-    },
-    {
-      name: "Analis Riset Pasar (Market Research Analyst)",
-      desc: "Mengkaji data konsumen dan pasar untuk menentukan strategi bisnis",
-    },
-    {
-      name: "Ahli Astronomi",
-      desc: "Meneliti fenomena luar angkasa dan benda langit",
-    },
-    {
-      name: "Analis Kecerdasan Buatan (AI Analyst)",
-      desc: "Mengembangkan dan mengevaluasi sistem berbasis AI dan machine learning",
-    },
-    {
-      name: "Arkeolog",
-      desc: "Meneliti peninggalan masa lalu untuk memahami budaya kuno",
-    },
-    {
-      name: "Ahli Lingkungan",
-      desc: "Menganalisis dampak lingkungan dan mencari solusi berbasis ilmiah",
-    },
-    {
-      name: "Peneliti Pendidikan",
-      desc: "Meneliti proses dan kebijakan pendidikan untuk meningkatkan mutu belajar",
-    },
-    {
-      name: "Programmer Sistem",
-      desc: "Membuat dan menguji sistem perangkat lunak yang kompleks",
-    },
-    {
-      name: "Ahli Matematika",
-      desc: "Menyelesaikan masalah melalui pendekatan matematis dan logis",
-    },
-    {
-      name: "Pakar Kriptografi",
-      desc: "Mengembangkan sistem enkripsi dan keamanan data digital",
-    },
-    {
-      name: "Bioinformatikawan",
-      desc: "Menggabungkan ilmu komputer, matematika, dan biologi untuk menganalisis data biologis kompleks",
+      name: "Auditor Forensik / Investigasi",
+      desc: "Menyelidiki aliran dana untuk mengungkap kasus kecurangan finansial (fraud).",
+      majorRecommendation: "Akuntansi / Kriminologi",
     },
   ],
   artistic: [
     {
-      name: "Desainer Grafis",
-      desc: "Membuat desain visual untuk media cetak maupun digital",
+      name: "Desainer Grafis / UI-UX Designer",
+      desc: "Membuat antarmuka aplikasi atau aset visual promosi yang estetis dan fungsional.",
+      majorRecommendation: "Desain Komunikasi Visual (DKV)",
     },
     {
-      name: "Fotografer",
-      desc: "Mengambil dan mengedit gambar untuk keperluan artistik atau komersial",
-    },
-    {
-      name: "Seniman Rupa (Pelukis/Pemahat/Ilustrator)",
-      desc: "Mengekspresikan ide melalui karya seni visual",
-    },
-    {
-      name: "Penulis (Fiksi/Nonfiksi)",
-      desc: "Menulis cerita, artikel, naskah, atau konten lainnya",
-    },
-    {
-      name: "Desainer Interior",
-      desc: "Merancang tata ruang dalam rumah atau gedung agar estetis dan fungsional",
-    },
-    {
-      name: "Musisi / Penyanyi",
-      desc: "Menciptakan, membawakan, atau merekam karya musik",
-    },
-    {
-      name: "Aktor / Aktris",
-      desc: "Memerankan karakter dalam film, sinetron, teater, atau iklan",
-    },
-    {
-      name: "Editor Video",
-      desc: "Mengolah dan menyusun video untuk film, iklan, konten YouTube, dll",
-    },
-    {
-      name: "Animator",
-      desc: "Membuat animasi 2D/3D untuk film, iklan, atau video edukatif",
-    },
-    {
-      name: "Desainer Mode (Fashion Designer)",
-      desc: "Merancang pakaian dan aksesoris sesuai tren dan estetika",
-    },
-    {
-      name: "Makeup Artist",
-      desc: "Menata rias wajah untuk keperluan seni, film, pernikahan, dll",
-    },
-    {
-      name: "Desainer UI/UX",
-      desc: "Merancang antarmuka dan pengalaman pengguna untuk aplikasi dan website",
-    },
-    {
-      name: "Content Creator / Influencer",
-      desc: "Membuat konten kreatif di media sosial atau platform digital",
-    },
-    {
-      name: "Sutradara",
-      desc: "Mengarahkan produksi film, video musik, atau teater",
-    },
-    {
-      name: "Penulis Skenario (Scriptwriter)",
-      desc: "Menulis naskah untuk film, sinetron, atau iklan",
-    },
-    {
-      name: "Koreografer / Penari",
-      desc: "Menciptakan gerakan tari dan tampil dalam pertunjukan",
-    },
-    {
-      name: "Penyiar Radio / Podcaster",
-      desc: "Membuat dan menyampaikan konten audio dengan gaya ekspresif",
+      name: "Content Creator / Video Editor",
+      desc: "Memproduksi konten digital kreatif untuk YouTube, TikTok, atau kampanye merek.",
+      majorRecommendation: "Ilmu Komunikasi / Film dan Televisi",
     },
     {
       name: "Arsitek",
-      desc: "Merancang bangunan dengan pendekatan artistik dan fungsional",
+      desc: "Merancang bentuk fisik rumah, gedung perkantoran, atau fasilitas publik.",
+      majorRecommendation: "Arsitektur",
     },
     {
-      name: "Desainer Produk",
-      desc: "Merancang produk fungsional yang juga menarik secara visual",
+      name: "Desainer Interior",
+      desc: "Menata ruang dalam agar nyaman, estetis, dan sesuai dengan kebutuhan klien.",
+      majorRecommendation: "Desain Interior",
     },
     {
-      name: "Penyunting Buku (Book Editor)",
-      desc: "Menyunting naskah agar layak terbit secara bahasa dan gaya",
+      name: "Copywriter / Penulis Naskah",
+      desc: "Menulis teks iklan yang persuasif atau skenario untuk film dan serial televisi.",
+      majorRecommendation: "Sastra Indonesia / Jurnalistik",
     },
     {
-      name: "Pewarta Foto (Photojournalist)",
-      desc: "Mengabadikan peristiwa nyata melalui lensa kamera dengan nilai artistik",
+      name: "Fashion Designer",
+      desc: "Merancang pakaian, hijab, atau aksesoris, khususnya di industri modest fashion lokal.",
+      majorRecommendation: "Tata Busana / Desain Mode",
     },
     {
-      name: "Penata Musik (Composer/Sound Designer)",
-      desc: "Membuat musik latar atau efek suara untuk berbagai media",
+      name: "Make-Up Artist (MUA) Profesional",
+      desc: "Menata rias untuk kebutuhan pernikahan, pemotretan komersial, atau syuting film.",
+      majorRecommendation: "Tata Rias dan Kecantikan (Vokasi)",
     },
     {
-      name: "Ilustrator Buku Anak / Komik",
-      desc: "Membuat gambar naratif untuk cerita anak atau komik",
+      name: "Fotografer / Videografer",
+      desc: "Mendokumentasikan momen pernikahan (wedding), produk komersial, atau jurnalistik.",
+      majorRecommendation: "Fotografi / Seni Rupa",
     },
     {
-      name: "Fashion Stylist",
-      desc: "Menata gaya busana untuk individu atau pemotretan komersial",
+      name: "Musisi / Arranger",
+      desc: "Menciptakan, mengaransemen, atau menampilkan karya musik di industri hiburan.",
+      majorRecommendation: "Seni Musik",
     },
     {
-      name: "Kurator Galeri / Pameran Seni",
-      desc: "Mengelola dan menyusun karya seni untuk dipamerkan",
+      name: "Animator 2D/3D",
+      desc: "Membuat gambar bergerak untuk serial animasi televisi, iklan, atau game.",
+      majorRecommendation: "Animasi / DKV",
     },
   ],
   social: [
     {
-      name: "Guru / Pengajar",
-      desc: "Mendidik dan membimbing siswa di berbagai jenjang pendidikan",
+      name: "Guru / Pendidik",
+      desc: "Merencanakan dan melaksanakan pembelajaran di sekolah dasar maupun menengah.",
+      majorRecommendation: "PGSD / Pendidikan Mata Pelajaran",
+    },
+    {
+      name: "Pengembang Teknologi Pembelajaran (PTP)",
+      desc: "Mendesain media digital dan mengintegrasikan model pembelajaran inovatif di instansi/sekolah.",
+      majorRecommendation: "Teknologi Pendidikan / Ilmu Komputer",
     },
     {
       name: "Perawat",
-      desc: "Merawat pasien dan memberikan dukungan kesehatan secara langsung",
-    },
-    {
-      name: "Psikolog",
-      desc: "Membantu individu memahami dan mengatasi masalah emosional atau mental",
-    },
-    {
-      name: "Konselor Pendidikan / Bimbingan",
-      desc: "Memberikan arahan akademik, karir, dan personal kepada siswa",
-    },
-    {
-      name: "Pekerja Sosial",
-      desc: "Menyediakan layanan dukungan kepada individu atau kelompok yang membutuhkan",
-    },
-    {
-      name: "Dosen / Akademisi",
-      desc: "Mengajar dan membimbing mahasiswa, serta melakukan penelitian",
-    },
-    {
-      name: "Dokter Umum",
-      desc: "Memberikan pelayanan kesehatan secara langsung kepada pasien",
-    },
-    {
-      name: "HRD (Human Resource Development)",
-      desc: "Mengelola dan mengembangkan sumber daya manusia dalam organisasi",
-    },
-    {
-      name: "Trainer / Instruktur",
-      desc: "Memberikan pelatihan dan pengembangan keterampilan untuk individu atau kelompok",
-    },
-    {
-      name: "Public Relations Officer",
-      desc: "Menjalin komunikasi positif antara organisasi dan publik",
-    },
-    {
-      name: "MC / Pembawa Acara",
-      desc: "Menyampaikan acara di depan publik dengan keterampilan komunikasi tinggi",
-    },
-    {
-      name: "Penyuluh Lapangan (Pertanian, Kesehatan, Agama, dll.)",
-      desc: "Memberikan edukasi dan pendampingan kepada masyarakat secara langsung",
-    },
-    {
-      name: "Relawan / Pegiat LSM",
-      desc: "Terlibat dalam kegiatan sosial dan kemanusiaan",
-    },
-    {
-      name: "Customer Service",
-      desc: "Menyediakan bantuan dan solusi kepada pelanggan",
-    },
-    {
-      name: "Psikoterapis / Konselor Keluarga",
-      desc: "Membantu individu atau keluarga mengatasi permasalahan pribadi dan relasi",
-    },
-    {
-      name: "Pemandu Wisata (Tour Guide)",
-      desc: "Memberikan informasi dan pengalaman menyenangkan bagi wisatawan",
-    },
-    {
-      name: "Career Coach",
-      desc: "Membimbing orang lain dalam menentukan arah kariernya",
-    },
-    {
-      name: "Manajer Asrama / Panti Asuhan",
-      desc: "Mengelola kegiatan dan kebutuhan penghuni lembaga sosial",
-    },
-    {
-      name: "Pendeta / Rohaniwan / Penyuluh Keagamaan",
-      desc: "Memberikan bimbingan spiritual dan dukungan moral",
+      desc: "Memberikan asuhan keperawatan dan mendampingi proses pemulihan pasien di faskes.",
+      majorRecommendation: "Keperawatan",
     },
     {
       name: "Bidan",
-      desc: "Membantu ibu hamil, persalinan, dan pasca melahirkan secara langsung",
+      desc: "Membantu proses persalinan, pemeriksaan kehamilan, dan kesehatan ibu & anak (KIA).",
+      majorRecommendation: "Kebidanan",
     },
     {
-      name: "Ahli Gizi (Nutrisionis) Klinik",
-      desc: "Memberikan konseling gizi dan pola makan kepada pasien",
+      name: "Konselor Sekolah (Guru BK)",
+      desc: "Membantu peserta didik mengatasi masalah akademik dan merencanakan karir lanjutan.",
+      majorRecommendation: "Bimbingan dan Konseling (BK)",
     },
     {
-      name: "Mediator / Negosiator Sosial",
-      desc: "Menyelesaikan konflik antarindividu atau kelompok dengan pendekatan sosial",
+      name: "Penyuluh Agama / Sosial",
+      desc: "Memberikan bimbingan keagamaan, sosial, dan moral kepada masyarakat.",
+      majorRecommendation: "Ilmu Agama / Komunikasi Penyiaran Islam",
     },
     {
-      name: "Pendidik Anak Usia Dini (PAUD)",
-      desc: "Mengajar dan membimbing anak-anak pada masa perkembangan awal",
+      name: "HRD / Personalia",
+      desc: "Mengelola rekrutmen karyawan, kesejahteraan, dan pengembangan SDM perusahaan.",
+      majorRecommendation: "Psikologi / Manajemen SDM",
     },
     {
-      name: "Pemandu Acara Radio / Penyiar",
-      desc: "Membangun hubungan dengan pendengar melalui siaran yang komunikatif",
+      name: "Pekerja Sosial / Pendamping Desa",
+      desc: "Membantu masyarakat desa merencanakan program pemberdayaan ekonomi dan sosial.",
+      majorRecommendation: "Ilmu Kesejahteraan Sosial / Sosiologi",
     },
     {
-      name: "Pegawai Layanan Publik (loket, pelayanan masyarakat, dll.)",
-      desc: "Melayani masyarakat secara langsung dalam birokrasi atau instansi",
+      name: "Humas (Public Relations)",
+      desc: "Menjadi jembatan komunikasi antara instansi pemerintah/perusahaan dengan masyarakat.",
+      majorRecommendation: "Ilmu Komunikasi (Humas)",
+    },
+    {
+      name: "Pemandu Wisata (Tour Guide)",
+      desc: "Memandu wisatawan domestik dan mancanegara di berbagai destinasi wisata lokal.",
+      majorRecommendation: "Pariwisata / Usaha Perjalanan Wisata",
     },
   ],
   enterprising: [
     {
-      name: "Pengusaha / Wirausahawan",
-      desc: "Membangun dan mengelola bisnis sendiri di berbagai sektor",
+      name: "Pengusaha / Wirausaha",
+      desc: "Merintis dan membangun bisnis sendiri, mulai dari startup hingga ritel.",
+      majorRecommendation: "Kewirausahaan / Bisnis Digital",
     },
     {
-      name: "Marketing Executive",
-      desc: "Menyusun dan menjalankan strategi pemasaran untuk meningkatkan penjualan",
+      name: "Digital Marketer",
+      desc: "Merancang strategi iklan di media sosial dan mesin pencari untuk meningkatkan penjualan.",
+      majorRecommendation: "Ilmu Komunikasi / Manajemen Pemasaran",
     },
     {
-      name: "Sales Representative",
-      desc: "Menjual produk atau layanan kepada pelanggan secara langsung",
+      name: "Pegawai Bank (Frontliner/Marketing)",
+      desc: "Melayani nasabah perbankan dan menawarkan produk keuangan (KPR, Kredit Usaha).",
+      majorRecommendation: "Perbankan / Keuangan",
     },
     {
-      name: "Manajer Penjualan (Sales Manager)",
-      desc: "Memimpin tim penjualan dan mengatur target serta strategi pasar",
+      name: "Pengacara / Konsultan Hukum",
+      desc: "Mewakili klien di pengadilan dan memberikan nasihat hukum korporat/pribadi.",
+      majorRecommendation: "Ilmu Hukum",
     },
     {
-      name: "Public Relations Specialist",
-      desc: "Mengelola citra dan komunikasi organisasi dengan publik atau media",
+      name: "Diplomat (Kemenlu)",
+      desc: "Mewakili kepentingan negara Indonesia di forum internasional atau kedutaan besar.",
+      majorRecommendation: "Hubungan Internasional",
     },
     {
-      name: "Manajer Proyek (Project Manager)",
-      desc: "Memimpin proyek dari perencanaan hingga penyelesaian",
+      name: "Sales Supervisor / Area Manager",
+      desc: "Memimpin tim penjualan lapangan untuk mencapai target distribusi produk perusahaan.",
+      majorRecommendation: "Manajemen Bisnis",
     },
     {
-      name: "Politikus / Anggota Legislatif",
-      desc: "Mengadvokasi kebijakan dan mewakili kepentingan publik",
+      name: "Agen Properti",
+      desc: "Membantu klien melakukan transaksi jual-beli atau sewa rumah, tanah, dan apartemen.",
+      majorRecommendation: "Manajemen (Umum)",
     },
     {
-      name: "Notaris / PPAT",
-      desc: "Memberikan jasa hukum dan transaksi properti dengan kewenangan resmi",
+      name: "Event Organizer (EO)",
+      desc: "Mengelola perencanaan dan eksekusi acara berskala besar seperti konser atau pameran.",
+      majorRecommendation: "Ilmu Komunikasi / Pariwisata",
     },
     {
-      name: "Kepala Sekolah / Pimpinan Lembaga Pendidikan",
-      desc: "Memimpin operasional dan pengembangan institusi pendidikan",
+      name: "Konsultan Pajak",
+      desc: "Membantu individu atau perusahaan menghitung dan melaporkan kewajiban pajaknya.",
+      majorRecommendation: "Perpajakan / Administrasi Fiskal",
     },
     {
-      name: "CEO / Direktur Perusahaan",
-      desc: "Mengelola perusahaan secara menyeluruh dan membuat keputusan strategis",
-    },
-    {
-      name: "Manajer SDM (HR Manager)",
-      desc: "Mengelola strategi sumber daya manusia dan hubungan antarpegawai",
-    },
-    {
-      name: "Broker Saham / Perencana Investasi",
-      desc: "Menjual dan mengelola portofolio investasi bagi klien",
-    },
-    {
-      name: "Manajer Restoran / Kafe",
-      desc: "Memimpin dan mengelola operasional bisnis makanan dan minuman",
-    },
-    {
-      name: "Konsultan Bisnis",
-      desc: "Memberikan saran strategi bisnis untuk peningkatan performa perusahaan",
-    },
-    {
-      name: "Event Organizer / Manajer Acara",
-      desc: "Merancang dan melaksanakan berbagai jenis acara komersial dan sosial",
-    },
-    {
-      name: "Franchisor / Mitra Waralaba",
-      desc: "Mengelola dan mengembangkan jaringan bisnis waralaba",
-    },
-    {
-      name: "Manajer Produk (Product Manager)",
-      desc: "Mengatur pengembangan dan pemasaran produk tertentu",
-    },
-    {
-      name: "Digital Marketer / Growth Hacker",
-      desc: "Meningkatkan jangkauan dan konversi melalui strategi pemasaran digital",
-    },
-    {
-      name: "Penasihat Politik / Campaign Manager",
-      desc: "Mengatur strategi kampanye dan citra politik kandidat",
-    },
-    {
-      name: "Duta Merek / Brand Ambassador",
-      desc: "Mewakili dan mempromosikan brand secara publik",
-    },
-    {
-      name: "Konsultan Hukum Bisnis",
-      desc: "Memberikan nasihat hukum kepada perusahaan dan pebisnis",
-    },
-    {
-      name: "Manajer Hotel / Penginapan",
-      desc: "Mengelola kegiatan operasional dan pelayanan di sektor hospitality",
-    },
-    {
-      name: "MC Profesional / Host Komersial",
-      desc: "Memandu acara dengan gaya komunikatif dan menarik untuk audiens",
-    },
-    {
-      name: "Kepala Divisi Pemasaran",
-      desc: "Mengarahkan seluruh strategi pemasaran dalam perusahaan besar",
-    },
-    {
-      name: "Startup Founder / Co-Founder",
-      desc: "Mendirikan dan mengembangkan perusahaan rintisan (startup)",
+      name: "Politisi / Anggota Legislatif",
+      desc: "Menyusun undang-undang dan mewakili aspirasi masyarakat di DPR/DPRD.",
+      majorRecommendation: "Ilmu Politik / Ilmu Pemerintahan",
     },
   ],
   conventional: [
     {
-      name: "Staf Administrasi",
-      desc: "Mengelola dokumen, arsip, dan kebutuhan administrasi kantor",
+      name: "PNS Administrasi / Analis Kebijakan",
+      desc: "Menjalankan roda administrasi dan menganalisis kebijakan di kementerian/pemerintah daerah.",
+      majorRecommendation: "Administrasi Negara / Kebijakan Publik",
     },
     {
-      name: "Sekretaris",
-      desc: "Membantu atasan dalam urusan administrasi dan komunikasi",
+      name: "Akuntan / APK APBN",
+      desc: "Menyusun pembukuan harian dan laporan keuangan tahunan untuk perusahaan/instansi.",
+      majorRecommendation: "Akuntansi",
     },
     {
-      name: "Teller Bank",
-      desc: "Melayani transaksi keuangan nasabah secara akurat dan rapi",
+      name: "Staf Administrasi Perkantoran",
+      desc: "Mengurus persuratan, jadwal pimpinan, rapat, dan arsip dokumen kantor.",
+      majorRecommendation: "Administrasi Perkantoran",
     },
     {
-      name: "Akuntan",
-      desc: "Menyusun laporan keuangan dan memastikan transaksi sesuai standar",
+      name: "Analis Anggaran (Pemerintah/Swasta)",
+      desc: "Menyusun, memantau, dan mengevaluasi rencana pengeluaran dana instansi.",
+      majorRecommendation: "Ilmu Ekonomi / Keuangan Publik",
     },
     {
-      name: "Analis Keuangan",
-      desc: "Mengevaluasi data keuangan untuk pengambilan keputusan",
+      name: "Staf Rekam Medis",
+      desc: "Mengklasifikasikan dan menjaga kerahasiaan data riwayat penyakit pasien di rumah sakit.",
+      majorRecommendation: "Manajemen Informasi Kesehatan",
     },
     {
-      name: "Petugas Pajak / Konsultan Pajak",
-      desc: "Mengurus pelaporan dan perhitungan kewajiban pajak individu atau perusahaan",
+      name: "Admin Logistik / Ekspedisi",
+      desc: "Mengatur kelancaran arus pengiriman barang dan inventaris di gudang (warehouse).",
+      majorRecommendation: "Manajemen Logistik / Teknik Industri",
     },
     {
-      name: "Auditor",
-      desc: "Memeriksa dan menilai akurasi laporan keuangan suatu institusi",
+      name: "Auditor Internal",
+      desc: "Memeriksa kesesuaian operasional perusahaan dengan Standar Operasional Prosedur (SOP).",
+      majorRecommendation: "Akuntansi / Audit",
     },
     {
-      name: "Staf Kepegawaian (HR Admin)",
-      desc: "Mengelola data dan dokumen kepegawaian serta penggajian",
+      name: "Aktuaris",
+      desc: "Mengkalkulasi risiko finansial menggunakan ilmu matematika untuk perusahaan asuransi.",
+      majorRecommendation: "Ilmu Aktuaria / Matematika",
     },
     {
-      name: "Petugas Arsip / Dokumentasi",
-      desc: "Menyimpan dan mengatur dokumen penting secara sistematis",
+      name: "Pustakawan / Arsiparis",
+      desc: "Mengelola sistem katalog buku di perpustakaan atau arsip dokumen penting negara.",
+      majorRecommendation: "Ilmu Perpustakaan dan Informasi",
     },
     {
-      name: "Administrasi Gudang / Inventory Staff",
-      desc: "Mengelola stok barang dan catatan keluar-masuk barang",
-    },
-    {
-      name: "Operator Data Entry",
-      desc: "Memasukkan dan memperbarui data ke dalam sistem komputer",
-    },
-    {
-      name: "Kasir",
-      desc: "Menangani transaksi pembayaran dengan ketelitian tinggi",
-    },
-    {
-      name: "Analis Data Operasional",
-      desc: "Mengevaluasi proses kerja dan kinerja operasional perusahaan",
-    },
-    {
-      name: "Asisten Notaris",
-      desc: "Membantu penanganan dokumen legal secara administratif",
-    },
-    {
-      name: "Staff Perpajakan Perusahaan",
-      desc: "Bertugas menangani pelaporan dan arsip pajak perusahaan",
-    },
-    {
-      name: "Pustakawan",
-      desc: "Mengelola koleksi buku, katalog, dan layanan perpustakaan",
-    },
-    {
-      name: "Analis Kredit Bank",
-      desc: "Mengevaluasi kelayakan kredit nasabah berdasarkan data",
-    },
-    {
-      name: "Staff Keuangan Sekolah / Lembaga",
-      desc: "Mengatur pembukuan dan laporan keuangan institusi pendidikan",
-    },
-    {
-      name: "Staff Pembelian (Purchasing Officer)",
-      desc: "Mengelola pembelian barang dan pencatatan transaksi",
-    },
-    {
-      name: "Staff Penjadwalan Produksi",
-      desc: "Menyusun jadwal kerja produksi dan memastikan kesesuaian waktu",
-    },
-    {
-      name: "Petugas Lelang / Arsip Pemerintah",
-      desc: "Menangani dokumen resmi dan kegiatan administratif lembaga",
-    },
-    {
-      name: "Pegawai Tata Usaha Sekolah",
-      desc: "Menyusun dan mengarsip dokumen serta surat menyurat",
-    },
-    {
-      name: "Staf Logistik",
-      desc: "Mencatat, menyusun, dan melaporkan alur distribusi barang",
-    },
-    {
-      name: "Pegawai Administrasi Pemerintahan",
-      desc: "Bekerja dalam sistem birokrasi untuk pelayanan publik",
-    },
-    {
-      name: "Admin E-Commerce",
-      desc: "Mengelola pesanan, pembukuan, dan log data penjualan online",
+      name: "Data Entry / Operator Komputer",
+      desc: "Menginput, memverifikasi, dan merapikan data secara cepat ke dalam sistem basis data.",
+      majorRecommendation: "Manajemen Informatika / Sistem Informasi",
     },
   ],
 };

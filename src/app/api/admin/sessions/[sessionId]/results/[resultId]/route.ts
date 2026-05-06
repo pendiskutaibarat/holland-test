@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ sessionId: string; resultId: string }> },
 ) {
   try {
-    const { adminId } = await requireAuth();
+    const { userId } = await requireAuth();
     const { sessionId, resultId } = await params;
 
     if (!isValidUUID(sessionId) || !isValidUUID(resultId)) {
@@ -21,7 +21,7 @@ export async function GET(
     const session = await prisma.session.findFirst({
       where: {
         id: sessionId,
-        admin_id: adminId,
+        user_id: userId,
       },
     });
 

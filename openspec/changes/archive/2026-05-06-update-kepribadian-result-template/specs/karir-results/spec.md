@@ -1,4 +1,4 @@
-## ADDED Requirements
+## MODIFIED Requirements
 
 ### Requirement: Karir result page rendering
 When the user selected "karir" mode, the results step SHALL render the KarirResults component. This component SHALL display name, birthDate, test date, bar chart, badge, top-3 personality cards with structured descriptions, career tables, Holland code, and full score summary.
@@ -17,17 +17,6 @@ The KarirResults component SHALL display a horizontal bar chart showing all 6 RI
 #### Scenario: All scores are zero
 - **WHEN** all RIASEC scores are 0
 - **THEN** the bar chart shows zero-length bars with a visible message "Belum ada data"
-
-### Requirement: Badge/profile name system
-KarirResults SHALL display a badge name for the student based on their top-3 RIASEC code (e.g., S-I-A → "Inovator Analitis"). Badge names and descriptions SHALL be stored in `src/data/badges.ts`. For combinations without a specific badge, the system SHALL display a generic badge using the Holland code itself.
-
-#### Scenario: Recognized badge combination
-- **WHEN** a student's top-3 scores yield the code I-A-S
-- **THEN** the badge "Inovator Analitis" is displayed with its description
-
-#### Scenario: Unrecognized combination
-- **WHEN** a student's top-3 scores yield a combination not present in badges.ts
-- **THEN** the system displays the Holland code (e.g., "C-R-A") as the badge name with a generic description
 
 ### Requirement: Top-3 Holland code display
 KarirResults SHALL display the student's 3-letter Holland code (top 3 RIASEC types by score, e.g., "SIA") prominently in the results header area.
@@ -57,3 +46,17 @@ KarirResults SHALL display a career table for each of the top 3 personality type
 #### Scenario: Career table columns
 - **WHEN** a career table is rendered
 - **THEN** the table SHALL contain columns: No, Jenis Karir di Indonesia, Deskripsi Singkat, Jurusan / Prodi Rekomendasi
+
+## REMOVED Requirements
+
+### Requirement: RIASEC radar chart
+**Reason**: Replaced by horizontal bar chart for better readability
+**Migration**: Remove Radar chart import and replace with Bar chart component using indexAxis: 'y'
+
+### Requirement: Program studi recommendations
+**Reason**: Replaced by per-career Jurusan/Prodi Rekomendasi column in career tables
+**Migration**: Remove `getProgramStudiByCode` import and programStudi conditional rendering block from KarirResults. Delete `src/data/programStudi.ts`.
+
+### Requirement: Career tables retained
+**Reason**: Superseded by new career table requirement with different structure, column count, and career quantity
+**Migration**: Career tables now have 4 columns and 10 careers per type instead of 3 columns and 25 careers per type

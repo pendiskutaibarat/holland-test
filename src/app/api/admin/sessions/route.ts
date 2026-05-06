@@ -5,7 +5,7 @@ import { generateSessionCode } from "@/lib/code";
 
 export async function POST(request: NextRequest) {
   try {
-    const { adminId } = await requireAuth();
+    const { userId } = await requireAuth();
     const { name, mode, description } = await request.json();
 
     if (!name || !mode) {
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     const session = await prisma.session.create({
       data: {
-        admin_id: adminId,
+        user_id: userId,
         code,
         name,
         description: description || null,
@@ -62,10 +62,10 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const { adminId } = await requireAuth();
+    const { userId } = await requireAuth();
 
     const sessions = await prisma.session.findMany({
-      where: { admin_id: adminId },
+      where: { user_id: userId },
       orderBy: { created_at: "desc" },
       include: {
         _count: {

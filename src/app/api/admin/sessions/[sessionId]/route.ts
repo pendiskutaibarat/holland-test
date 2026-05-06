@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ sessionId: string }> },
 ) {
   try {
-    const { adminId } = await requireAuth();
+    const { userId } = await requireAuth();
     const { sessionId } = await params;
 
     if (!isValidUUID(sessionId)) {
@@ -21,7 +21,7 @@ export async function GET(
     const session = await prisma.session.findFirst({
       where: {
         id: sessionId,
-        admin_id: adminId,
+        user_id: userId,
       },
       include: {
         results: {
@@ -57,7 +57,7 @@ export async function PATCH(
   { params }: { params: Promise<{ sessionId: string }> },
 ) {
   try {
-    const { adminId } = await requireAuth();
+    const { userId } = await requireAuth();
     const { sessionId } = await params;
     const body = await request.json();
 
@@ -68,7 +68,7 @@ export async function PATCH(
     const session = await prisma.session.findFirst({
       where: {
         id: sessionId,
-        admin_id: adminId,
+        user_id: userId,
       },
     });
 
@@ -105,7 +105,7 @@ export async function DELETE(
   { params }: { params: Promise<{ sessionId: string }> },
 ) {
   try {
-    const { adminId } = await requireAuth();
+    const { userId } = await requireAuth();
     const { sessionId } = await params;
 
     if (!isValidUUID(sessionId)) {
@@ -115,7 +115,7 @@ export async function DELETE(
     const session = await prisma.session.findFirst({
       where: {
         id: sessionId,
-        admin_id: adminId,
+        user_id: userId,
       },
     });
 

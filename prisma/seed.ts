@@ -22,26 +22,28 @@ async function main() {
     );
   }
 
-  const existing = await prisma.admin.findUnique({
+  const existing = await prisma.user.findUnique({
     where: { email },
   });
 
   if (existing) {
-    console.log(`Admin with email ${email} already exists. Skipping.`);
+    console.log(`User with email ${email} already exists. Skipping.`);
     return;
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
 
-  await prisma.admin.create({
+  await prisma.user.create({
     data: {
       email,
       password_hash: passwordHash,
       name: email.split("@")[0],
+      role: "ADMIN",
+      status: "ACTIVE",
     },
   });
 
-  console.log(`Admin created: ${email}`);
+  console.log(`Admin user created: ${email}`);
 }
 
 main()

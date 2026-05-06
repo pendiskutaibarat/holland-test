@@ -21,12 +21,27 @@ export async function verifyPassword(
   return bcrypt.compare(password, hash);
 }
 
-export function signToken(payload: { adminId: string; email: string }): string {
+export function signToken(payload: {
+  userId: string;
+  email: string;
+  role: string;
+  status: string;
+}): string {
   return jwt.sign(payload, getSecret(), { expiresIn: "24h" });
 }
 
-export function verifyToken(token: string): { adminId: string; email: string } {
-  return jwt.verify(token, getSecret()) as { adminId: string; email: string };
+export function verifyToken(token: string): {
+  userId: string;
+  email: string;
+  role: string;
+  status: string;
+} {
+  return jwt.verify(token, getSecret()) as {
+    userId: string;
+    email: string;
+    role: string;
+    status: string;
+  };
 }
 
 export async function setAuthCookie(token: string): Promise<void> {
@@ -51,16 +66,38 @@ export async function getAuthToken(): Promise<string | undefined> {
 }
 
 export async function requireAuth(): Promise<{
-  adminId: string;
+  userId: string;
   email: string;
+  role: string;
+  status: string;
 }> {
   const token = await getAuthToken();
   if (!token) {
     throw new Error("Unauthorized");
   }
   try {
-    return verifyToken(token);
+    const payload = verifyToken(token);
+    if (payload.status === "PENDING") {
+      throw new Error("Akun Anda masih menunggu persetujuan admin");
+    }
+    if (payload.status === "REJECTED") {
+      throw new Error("Akun ditolak");
+    }
+    return payload;
   } catch {
     throw new Error("Unauthorized");
   }
+}
+
+export async function requireAdmin(): Promise<{
+  userId: string;
+  email: string;
+  role: string;
+  status: string;
+}> {
+  const auth = await requireAuth();
+  if (auth.role !== "ADMIN") {
+    throw new Error("Forbidden");
+  }
+  return auth;
 }

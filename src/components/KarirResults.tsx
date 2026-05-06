@@ -2,16 +2,15 @@
 
 import "@/lib/chartjs";
 import dynamic from "next/dynamic";
-import { TestResult, Mode } from "@/data/types";
+import { TestResult, Mode, PersonalityType } from "@/data/types";
 import { careers } from "@/data/careers";
 import { personalities } from "@/data/personalities";
 import { getBadgeByCode, getTop3Code } from "@/data/badges";
-import { getProgramStudiByCode } from "@/data/programStudi";
 
 import CareerTable from "./CareerTable";
 
-const Radar = dynamic(
-  () => import("react-chartjs-2").then((mod) => mod.Radar),
+const Bar = dynamic(
+  () => import("react-chartjs-2").then((mod) => mod.Bar),
   { ssr: false },
 );
 
@@ -30,7 +29,7 @@ export default function KarirResults({
 }: KarirResultsProps) {
   const sorted = [...results].sort((a, b) => b.score - a.score);
   const topResults = sorted.filter((r) => r.score > 0);
-  const top2 = topResults.slice(0, 2);
+  const top3 = topResults.slice(0, 3);
 
   const testDate = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
@@ -50,9 +49,19 @@ export default function KarirResults({
 
   const hollandCode = getTop3Code(results);
   const badge = getBadgeByCode(hollandCode);
-  const programStudi = getProgramStudiByCode(hollandCode);
 
-  const radarData = {
+  const typeOrder: PersonalityType[] = [
+    "realistic",
+    "investigative",
+    "artistic",
+    "social",
+    "enterprising",
+    "conventional",
+  ];
+
+  const top3Types = new Set(top3.map((r) => r.type));
+
+  const barData = {
     labels: [
       "Realistis",
       "Investigatif",
@@ -64,35 +73,37 @@ export default function KarirResults({
     datasets: [
       {
         label: "Skor RIASEC",
-        data: [
-          results.find((r) => r.type === "realistic")?.score ?? 0,
-          results.find((r) => r.type === "investigative")?.score ?? 0,
-          results.find((r) => r.type === "artistic")?.score ?? 0,
-          results.find((r) => r.type === "social")?.score ?? 0,
-          results.find((r) => r.type === "enterprising")?.score ?? 0,
-          results.find((r) => r.type === "conventional")?.score ?? 0,
-        ],
-        backgroundColor: "rgba(29, 78, 216, 0.15)",
-        borderColor: "rgba(29, 78, 216, 0.8)",
-        pointBackgroundColor: "rgba(29, 78, 216, 1)",
-        pointBorderColor: "#fff",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(29, 78, 216, 1)",
-        borderWidth: 2,
+        data: typeOrder.map((t) => results.find((r) => r.type === t)?.score ?? 0),
+        backgroundColor: typeOrder.map((t) =>
+          top3Types.has(t)
+            ? "rgba(29, 78, 216, 0.9)"
+            : "rgba(148, 163, 184, 0.5)"
+        ),
+        borderColor: typeOrder.map((t) =>
+          top3Types.has(t)
+            ? "rgba(29, 78, 216, 1)"
+            : "rgba(148, 163, 184, 0.8)"
+        ),
+        borderWidth: 1,
+        borderRadius: 4,
       },
     ],
   };
 
-  const radarOptions = {
+  const barOptions = {
+    indexAxis: "y" as const,
     responsive: true,
     maintainAspectRatio: true,
     scales: {
-      r: {
+      x: {
         beginAtZero: true,
         suggestedMax: 5,
         ticks: { stepSize: 1 },
         grid: { color: "rgba(0,0,0,0.06)" },
-        pointLabels: {
+      },
+      y: {
+        grid: { display: false },
+        ticks: {
           font: { size: 12, weight: "bold" as const },
           color: "#1e293b",
         },
@@ -172,106 +183,35 @@ export default function KarirResults({
 
       <section
         className="mt-8 max-w-md mx-auto"
-        aria-labelledby="radar-heading"
+        aria-labelledby="bar-heading"
       >
-        <h3 id="radar-heading" className="text-lg font-bold text-slate-800 mb-3 text-center">
+        <h3 id="bar-heading" className="text-lg font-bold text-slate-800 mb-3 text-center">
           Profil RIASEC
         </h3>
-        <Radar data={radarData} options={radarOptions} />
+        <Bar data={barData} options={barOptions} />
       </section>
 
-      {programStudi && (
-        <section className="mt-8" aria-labelledby="prodi-heading">
-          <h3
-            id="prodi-heading"
-            className="text-lg font-bold text-slate-800 mb-4"
-          >
-            Rekomendasi Program Studi
-          </h3>
-          <div className="space-y-4">
-            {programStudi.clusters.map((cluster, idx) => (
-              <div
-                key={idx}
-                className="p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
-              >
-                <h4 className="font-bold text-blue-700 mb-2">
-                  {cluster.name}
-                </h4>
-                <p className="text-sm text-slate-600">
-                  <span className="font-semibold text-slate-800">
-                    Program Studi:
-                  </span>{" "}
-                  {cluster.programs.join(", ")}
-                </p>
-                <p className="text-sm text-slate-600 mt-1">
-                  <span className="font-semibold text-slate-800">
-                    Profesi:
-                  </span>{" "}
-                  {cluster.professions.join(", ")}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {!programStudi && (
-        <section className="mt-6">
-          <h3 className="text-lg font-bold text-slate-800 mb-3">
-            Kepribadian kamu yang paling dominan adalah:
-          </h3>
-          {top2.length === 0 ? (
-            <p className="text-slate-500" role="status">
-              Anda belum memilih pernyataan apapun. Silakan centang beberapa
-              pernyataan yang sesuai dengan Anda.
-            </p>
-          ) : (
-            top2.map((result, index) => {
-              const info = personalities[result.type];
-              return (
-                <div
-                  key={result.type}
-                  className="mb-6 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
-                >
-                  <h3 className="text-blue-700 font-bold mb-1">
-                    {index + 1}. {info.label}
-                  </h3>
-                  <p className="text-sm text-slate-600">
-                    <span className="font-semibold text-slate-800">
-                      Skor:
-                    </span>{" "}
-                    {result.score}
-                  </p>
-                  <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                    {info.description}
-                  </p>
-                  <h4 className="mt-3 font-semibold text-slate-800">
-                    25 Profesi yang Cocok:
-                  </h4>
-                  <CareerTable careers={careers[result.type]} />
-                </div>
-              );
-            })
-          )}
-        </section>
-      )}
-
-      {programStudi && top2.length > 0 && (
-        <section className="mt-8" aria-labelledby="dominant-career-heading">
-          <h3
-            id="dominant-career-heading"
-            className="text-lg font-bold text-slate-800 mb-4"
-          >
-            Kepribadian Dominan
-          </h3>
-          {top2.map((result, index) => {
+      <section className="mt-8" aria-labelledby="dominant-heading">
+        <h3
+          id="dominant-heading"
+          className="text-lg font-bold text-slate-800 mb-4"
+        >
+          Kepribadian Dominan
+        </h3>
+        {top3.length === 0 ? (
+          <p className="text-slate-500" role="status">
+            Anda belum memilih pernyataan apapun. Silakan centang beberapa
+            pernyataan yang sesuai dengan Anda.
+          </p>
+        ) : (
+          top3.map((result, index) => {
             const info = personalities[result.type];
             return (
               <div
                 key={result.type}
-                className="mb-5 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
+                className="mb-6 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
               >
-                <h4 className="text-blue-700 font-bold mb-1">
+                <h4 className="text-blue-700 font-bold text-base mb-1">
                   {index + 1}. {info.label}
                 </h4>
                 <p className="text-sm text-slate-600">
@@ -280,33 +220,38 @@ export default function KarirResults({
                   </span>{" "}
                   {result.score}
                 </p>
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                  {info.description}
+                <p className="mt-3 text-slate-600 text-sm leading-relaxed italic">
+                  {info.summary}
                 </p>
+                <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                  <li>
+                    <span className="font-semibold text-slate-800">
+                      Sifat Utama:
+                    </span>{" "}
+                    {info.traits}
+                  </li>
+                  <li>
+                    <span className="font-semibold text-slate-800">
+                      Preferensi (Suka):
+                    </span>{" "}
+                    {info.preferences}
+                  </li>
+                  <li>
+                    <span className="font-semibold text-slate-800">
+                      Hal yang Dihindari:
+                    </span>{" "}
+                    {info.avoidances}
+                  </li>
+                </ul>
+                <h4 className="mt-4 font-semibold text-slate-800">
+                  Profesi yang Cocok:
+                </h4>
+                <CareerTable careers={careers[result.type]} />
               </div>
             );
-          })}
-        </section>
-      )}
-
-      {top2.length > 0 && (
-        <section className="mt-6" aria-labelledby="profesi-heading">
-          <h3
-            id="profesi-heading"
-            className="text-lg font-bold text-slate-800 mb-4"
-          >
-            Profesi yang Cocok
-          </h3>
-          {top2.map((result) => (
-            <div key={result.type} className="mb-6">
-              <h4 className="font-semibold text-blue-700 mb-2">
-                {personalities[result.type].label}
-              </h4>
-              <CareerTable careers={careers[result.type]} />
-            </div>
-          ))}
-        </section>
-      )}
+          })
+        )}
+      </section>
 
       <section className="mt-6" aria-labelledby="detail-career-heading">
         <h3

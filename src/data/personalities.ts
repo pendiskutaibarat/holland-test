@@ -5,36 +5,84 @@ export const personalities: Record<PersonalityType, PersonalityInfo> = {
     type: "realistic",
     label: "Realistic (Realistis)",
     description:
-      "Seseorang dengan kepribadian ini menyukai pekerjaan yang melibatkan tindakan daripada berpikir, lebih menyukai hasil nyata atau yang dapat dilihat langsung. Orang dengan tipe kepribadian ini umumnya memiliki rasa ingin tahu yang tinggi tentang sains, benda-benda nyata, dan mekanika.",
+      "Individu dengan tipe ini bertindak berdasarkan fakta dan hasil yang nyata. Mereka memiliki kecerdasan kinestetik atau mekanik yang baik.",
+    summary:
+      "Individu dengan tipe ini bertindak berdasarkan fakta dan hasil yang nyata. Mereka memiliki kecerdasan kinestetik atau mekanik yang baik.",
+    traits:
+      "Praktis, tangkas, logis, tidak banyak bicara, dan mengutamakan tindakan fisik.",
+    preferences:
+      "Bekerja di luar ruangan (lapangan), menggunakan perkakas, mengoperasikan mesin atau alat berat, dan berinteraksi dengan flora/fauna.",
+    avoidances:
+      "Teori yang terlalu abstrak, diskusi yang bertele-tele, dan pekerjaan yang menuntut interaksi sosial intens atau negosiasi.",
   },
   investigative: {
     type: "investigative",
     label: "Investigative (Investigatif)",
     description:
-      "Mereka yang termasuk dalam kepribadian investigative menyukai penggunaan kemampuan abstrak atau analisis untuk menemukan dan memecahkan masalah yang ada di sekitarnya. Mereka dapat dianggap sebagai 'pemikir' yang selalu berusaha menyelesaikan tugas dan sering bekerja secara mandiri. Menurut tes RIASEC Holland, kelompok ini cenderung analitis, suka menggali lebih dalam, dan mencari kebenaran atau fakta dari sebuah informasi.",
+      "Individu ini sangat digerakkan oleh rasa ingin tahu dan pencarian kebenaran melalui metode ilmiah atau logika.",
+    summary:
+      "Individu ini sangat digerakkan oleh rasa ingin tahu dan pencarian kebenaran melalui metode ilmiah atau logika.",
+    traits:
+      "Analitis, rasional, intelektual, kritis, dan berorientasi pada pemecahan masalah (problem-solving).",
+    preferences:
+      "Mengumpulkan data, meneliti fenomena, observasi mendalam, matematika/sains, dan bekerja secara mandiri.",
+    avoidances:
+      "Kegiatan repetitif (rutinitas berulang yang membosankan), memimpin banyak orang, atau tugas memengaruhi/membujuk orang lain.",
   },
   artistic: {
     type: "artistic",
     label: "Artistic (Artistik)",
     description:
-      "Orang yang masuk dalam kepribadian Artistic pasti menyukai kreativitas dan kaya akan imaginasi, tetapi memiliki kepribadian yang sangat impulsif dan suka bekerja mengandalkan perasaan. Kamu mungkin lebih mudah dipengaruhi oleh emosi, lebih didominasi oleh perasaan daripada logika, dan tidak suka bekerja dalam batasan yang ketat.",
+      "Tipe yang melihat dunia sebagai kanvas. Mereka tidak menyukai batasan dan lebih memilih mengekspresikan diri melalui karya.",
+    summary:
+      "Tipe yang melihat dunia sebagai kanvas. Mereka tidak menyukai batasan dan lebih memilih mengekspresikan diri melalui karya.",
+    traits:
+      "Imajinatif, orisinal, ekspresif, intuitif, idealis, dan cenderung tidak kaku (fleksibel).",
+    preferences:
+      "Kebebasan berekspresi, seni visual, desain, musik, menulis, aktivitas konseptual, dan menciptakan ide/karya baru yang tidak biasa.",
+    avoidances:
+      "Aturan atau SOP yang terlalu ketat, jam kerja terstruktur secara kaku, dan tugas administratif atau klerikal.",
   },
   social: {
     type: "social",
     label: "Social (Sosial)",
     description:
-      "Mereka yang berkepribadian Social cenderung suka membantu orang lain, berinteraksi, dan berkomunikasi. Mereka peduli pada masalah sosial dan memiliki kemampuan untuk mengekspresikan pendapat dengan baik serta ahli dalam mengajar orang lain. Pada dasarnya, mereka adalah pribadi yang ekstrovert, ramah, dan terbuka.",
+      "Tipe yang menjadikan manusia sebagai fokus utama mereka. Mereka mendapatkan kepuasan dari melihat orang lain berkembang atau pulih.",
+    summary:
+      "Tipe yang menjadikan manusia sebagai fokus utama mereka. Mereka mendapatkan kepuasan dari melihat orang lain berkembang atau pulih.",
+    traits:
+      "Empatik, hangat, komunikatif, sabar, suportif, dan sangat menghargai kerja sama tim.",
+    preferences:
+      "Mengajar, menyembuhkan, melatih, memfasilitasi, mendengarkan, dan kegiatan sosial yang berdampak langsung pada masyarakat.",
+    avoidances:
+      "Bekerja sendirian terisolasi dari manusia (seperti berhadapan dengan mesin atau data angka terus-menerus), dan lingkungan kerja yang terlalu kompetitif/kejam.",
   },
   enterprising: {
     type: "enterprising",
     label: "Enterprising (Wirausaha)",
     description:
-      "Orang yang punya kepribadian Enterprising cenderung berani berpikir dan berinisiatif, condong pada peran kepemimpinan. Mereka bersedia menghadapi tantangan dan menghadapi banyak kesulitan, serta memiliki semangat berjuang.",
+      "Individu dengan tipe ini adalah 'motor' dalam sebuah kelompok. Mereka pandai melihat peluang, mengambil risiko, dan mengarahkan orang lain.",
+    summary:
+      "Individu dengan tipe ini adalah 'motor' dalam sebuah kelompok. Mereka pandai melihat peluang, mengambil risiko, dan mengarahkan orang lain.",
+    traits:
+      "Ambisius, percaya diri, persuasif, ekstrover, kompetitif, dan berjiwa kepemimpinan.",
+    preferences:
+      "Bernegosiasi, memimpin proyek, mengejar target (keuntungan finansial atau status), berbicara di depan umum, dan memengaruhi keputusan.",
+    avoidances:
+      "Observasi atau riset sains yang terlalu detail dan sunyi, pekerjaan teknis yang kaku, atau posisi pasif yang tidak memberikan ruang untuk berkembang/promosi.",
   },
   conventional: {
     type: "conventional",
     label: "Conventional (Konvensional)",
     description:
-      "Conventional adalah tipe orang yang hati-hati, teliti, berprinsip, dan selalu mengikuti aturan. Mereka bekerja dengan angka, laporan data. Mereka cocok dengan pekerjaan kantor, pejabat pemerintah, pekerjaan yang membutuhkan kehati-hatian, detail, serta keteraturan.",
+      "Tipe yang menjadi tulang punggung operasional di banyak instansi karena kemampuannya menjaga keteraturan dan presisi.",
+    summary:
+      "Tipe yang menjadi tulang punggung operasional di banyak instansi karena kemampuannya menjaga keteraturan dan presisi.",
+    traits:
+      "Terstruktur, teliti, rapi, sangat berorientasi pada detail (detail-oriented), dan taat pada aturan.",
+    preferences:
+      "Mengolah data angka atau teks, pengarsipan, mengoperasikan perangkat lunak basis data, serta lingkungan kerja dengan SOP (Standar Operasional Prosedur) dan hierarki yang jelas.",
+    avoidances:
+      "Situasi kerja yang ambigu/tidak jelas arahnya, tugas yang tiba-tiba menuntut kreativitas bebas, atau posisi kepemimpinan yang minim panduan teknis.",
   },
 };

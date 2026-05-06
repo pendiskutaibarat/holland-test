@@ -10,16 +10,17 @@ export default async function DashboardPage() {
     redirect("/admin/login");
   }
 
-  let adminId: string;
-  try {
-    const payload = verifyToken(token);
-    adminId = payload.adminId;
-  } catch {
+  const payload = verifyToken(token);
+
+  if (payload.status === "PENDING" || payload.status === "REJECTED") {
     redirect("/admin/login");
   }
 
+  const userId = payload.userId;
+  const role = payload.role;
+
   const sessions = await prisma.session.findMany({
-    where: { admin_id: adminId },
+    where: { user_id: userId },
     orderBy: { created_at: "desc" },
     include: {
       _count: {
@@ -34,6 +35,7 @@ export default async function DashboardPage() {
         ...s,
         result_count: s._count.results,
       }))}
+      role={role}
     />
   );
 }

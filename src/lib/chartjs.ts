@@ -1,6 +1,9 @@
 import {
   Chart as ChartJS,
   RadialLinearScale,
+  LinearScale,
+  CategoryScale,
+  BarElement,
   PointElement,
   LineElement,
   Filler,
@@ -10,6 +13,9 @@ import {
 
 ChartJS.register(
   RadialLinearScale,
+  LinearScale,
+  CategoryScale,
+  BarElement,
   PointElement,
   LineElement,
   Filler,

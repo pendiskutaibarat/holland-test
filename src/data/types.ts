@@ -24,12 +24,17 @@ export interface PersonalityQuestions {
 export interface Career {
   name: string;
   desc: string;
+  majorRecommendation: string;
 }
 
 export interface PersonalityInfo {
   type: PersonalityType;
   label: string; // e.g. "Realistic (Realistis)"
-  description: string;
+  description: string; // kept for backward compatibility (peminatan mode)
+  summary: string;
+  traits: string;
+  preferences: string;
+  avoidances: string;
 }
 
 export interface TestResult {
