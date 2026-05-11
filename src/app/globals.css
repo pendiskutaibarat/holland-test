@@ -57,11 +57,32 @@ body {
   }
 
   #results {
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: relative;
     width: 100%;
     margin: 0;
     padding: 20px;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: white;
+  }
+
+  #print-banner {
+    z-index: 9999;
+    background: white;
+    text-align: center;
+    padding: 12px 20px;
+  }
+
+  #print-banner img {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  #results-content {
+    padding-top: 16px;
   }
 }

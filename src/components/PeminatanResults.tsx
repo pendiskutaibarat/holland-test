@@ -68,7 +68,7 @@ export default function PeminatanResults({
       id="results"
       className="bg-white p-5 md:p-8 rounded-xl shadow-sm border border-slate-200"
     >
-      <div className="print:block hidden">
+      <div id="print-banner" className="print:block hidden">
         <img
           src="/banner.png"
           alt="Holland RIASEC"
@@ -76,6 +76,7 @@ export default function PeminatanResults({
         />
       </div>
 
+      <div id="results-content">
       <h2 className="text-2xl font-bold text-slate-800 mb-4">
         Hasil Pemetaan Peminatan SMA/MA
       </h2>
@@ -254,6 +255,7 @@ export default function PeminatanResults({
         >
           Cetak Hasil
         </button>
+      </div>
       </div>
     </div>
   );

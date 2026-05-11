@@ -119,7 +119,7 @@ export default function KarirResults({
       id="results"
       className="bg-white p-5 md:p-8 rounded-xl shadow-sm border border-slate-200"
     >
-      <div className="print:block hidden">
+      <div id="print-banner" className="print:block hidden">
         <img
           src="/banner.png"
           alt="Holland RIASEC"
@@ -127,6 +127,7 @@ export default function KarirResults({
         />
       </div>
 
+      <div id="results-content">
       <h2 className="text-2xl font-bold text-slate-800 mb-4">
         Hasil Tes Holland RIASEC
       </h2>
@@ -284,6 +285,7 @@ export default function KarirResults({
         >
           Cetak Hasil
         </button>
+      </div>
       </div>
     </div>
   );

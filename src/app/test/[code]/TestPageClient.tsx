@@ -90,6 +90,44 @@ export default function TestPageClient({
             <p className="text-slate-600">{sessionName}</p>
           </div>
 
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+            <h2 className="text-sm font-semibold text-slate-800 mb-3">
+              Perlu diketahui
+            </h2>
+            <ul className="space-y-2 text-sm text-slate-600">
+              <li className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Asesmen ini menggunakan model Holland Occupational Themes (RIASEC).
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Semua jawaban valid — pilih sesuai minatmu, tanpa jawaban benar atau salah.
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Pilihan jawaban bisa dipilih lebih dari satu.
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Waktu pengerjaan kira-kira 7–12 menit.
+              </li>
+              <li className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Hasil tes bersifat eksploratif — disarankan untuk dibahas bersama guru BK atau konselor.
+              </li>
+            </ul>
+          </div>
+
           <form onSubmit={handleStart} className="space-y-5" noValidate>
             <div>
               <label
@@ -162,7 +200,7 @@ export default function TestPageClient({
               )}
             </div>
 
-            <button
+<button
               type="submit"
               className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
             >
