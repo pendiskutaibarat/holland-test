@@ -296,21 +296,80 @@ export default function WizardContainer({
     return (
       <div className="max-w-[1000px] mx-auto p-4 md:p-6">
         <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
-        <ModeSelectorStep
-          selectedMode={mode}
-          onSelectMode={(m) => setMode(m)}
-          onRestart={handleRestart}
-          hasSavedState={false}
-        />
-        <div className="text-center mt-8">
-          <button
-            onClick={handleNext}
-            disabled={!mode}
-            className="px-8 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-          >
-            Mulai Tes
-          </button>
-        </div>
+        {forcedMode ? (
+          <div className="space-y-8">
+            <div className="text-center">
+              <img
+                src="/banner.png"
+                alt="Tes Bakat Holland RIASEC"
+                className="mx-auto rounded-lg"
+              />
+            </div>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-blue-700 mb-2">
+                TES BAKAT HOLLAND RIASEC
+              </h1>
+              <p className="text-slate-600">
+                Mode tes telah ditentukan oleh admin:
+              </p>
+            </div>
+            <div className="max-w-md mx-auto">
+              <div
+                className={`p-6 rounded-xl border-2 text-left ${
+                  forcedMode === "peminatan"
+                    ? "border-blue-700 bg-blue-50"
+                    : "border-purple-700 bg-purple-50"
+                }`}
+              >
+                <div className="text-4xl mb-3" aria-hidden="true">
+                  {forcedMode === "peminatan" ? "🏫" : "🎓"}
+                </div>
+                <h2
+                  className={`text-lg font-bold mb-2 ${
+                    forcedMode === "peminatan"
+                      ? "text-blue-700"
+                      : "text-purple-700"
+                  }`}
+                >
+                  {forcedMode === "peminatan"
+                    ? "Peminatan SMA/MA"
+                    : "Karir & Program Studi"}
+                </h2>
+                <p className="text-sm text-slate-600">
+                  {forcedMode === "peminatan"
+                    ? "Temukan kecenderunganmu antara IPA, IPS, atau Bahasa & Budaya untuk menentukan peminatan di jenjang menengah atas."
+                    : "Temukan kombinasi kepribadian RIASEC-mu, lencana profil, dan rekomendasi program studi serta profesi yang cocok untukmu."}
+                </p>
+              </div>
+            </div>
+            <div className="text-center mt-8">
+              <button
+                onClick={handleNext}
+                className="px-8 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+              >
+                Mulai Tes
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <ModeSelectorStep
+              selectedMode={mode}
+              onSelectMode={(m) => setMode(m)}
+              onRestart={handleRestart}
+              hasSavedState={false}
+            />
+            <div className="text-center mt-8">
+              <button
+                onClick={handleNext}
+                disabled={!mode}
+                className="px-8 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+              >
+                Mulai Tes
+              </button>
+            </div>
+          </>
+        )}
       </div>
     );
   }

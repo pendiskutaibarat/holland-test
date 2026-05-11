@@ -59,6 +59,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (session.mode !== "bebas" && mode !== session.mode) {
+      return NextResponse.json(
+        { error: "Mode tidak valid untuk sesi ini" },
+        { status: 403 },
+      );
+    }
+
     const result = await prisma.testResult.create({
       data: {
         session_id: session.id,
