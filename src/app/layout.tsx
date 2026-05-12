@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Suspense } from "react";
 import TopLoadingBar from "@/components/TopLoadingBar";
 import "./globals.css";
 
@@ -25,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${geistSans.variable} antialiased`} suppressHydrationWarning>
       <body className="min-h-screen bg-gray-100 text-gray-800 font-sans">
-        <TopLoadingBar />
+        <Suspense fallback={null}>
+          <TopLoadingBar />
+        </Suspense>
         {children}
       </body>
     </html>
