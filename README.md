@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Holland Test - Tes Bakat Holland RIASEC
+
+Platform tes kepribadian dan pemetaan peminatan/karir berdasarkan teori Holland RIASEC (Realistic, Investigative, Artistic, Social, Enterprising, Conventional).
+
+## Fitur
+
+- **Dual-mode tes**: Peminatan (IPA/IPS/Bahasa) dan Karir
+- **Wizard 8 langkah** dengan 90 pertanyaan RIASEC
+- **Visualisasi radar chart** menggunakan Chart.js
+- **Sistem badge/lencana karakter** untuk kombinasi kode tertentu
+- **Ekspor hasil ke PDF** menggunakan html2pdf.js
+- **Dashboard admin** dengan manajemen sesi dan kode unik
+- **Autentikasi JWT** untuk admin
+
+## Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS 4
+- **Database**: PostgreSQL dengan Prisma 7
+- **Auth**: JWT (jsonwebtoken)
+- **Charts**: Chart.js + react-chartjs-2
+- **PDF**: html2pdf.js
+- **Password**: bcryptjs
+
+## Prerequisites
+
+- Node.js 20+
+- PostgreSQL database
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone dan install dependencies**
+
+```bash
+npm install
+```
+
+2. **Configure environment variables**
+
+Salin `.env.example` ke `.env` dan sesuaikan:
+
+```bash
+cp .env.example .env
+```
+
+Atur variabel berikut di `.env`:
+- `DATABASE_URL` - PostgreSQL connection string
+- `JWT_SECRET` - Secret untuk JWT token
+- `ADMIN_EMAIL` - Email untuk admin default
+- `ADMIN_PASSWORD` - Password untuk admin default
+
+3. **Setup database**
+
+```bash
+npx prisma db push
+npx prisma db seed
+```
+
+4. **Run development server**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) untuk melihat aplikasi.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Admin
 
-## Learn More
+1. Buka `/admin/register` untuk registrasi
+2. Login di `/admin/login`
+3. Buat sesi tes baru dari dashboard
+4. Bagikan kode sesi ke siswa
 
-To learn more about Next.js, take a look at the following resources:
+### Siswa
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Kunjungi `/test/[code]` dengan kode sesi
+2. Pilih mode (Peminatan atau Karir)
+3. Ikuti wizard 8 langkah
+4. Lihat hasil dengan radar chart dan rekomendasi
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+├── prisma/
+│   ├── schema.prisma      # Database schema
+│   └── seed.ts            # Admin seed script
+├── src/
+│   ├── app/
+│   │   ├── admin/         # Admin pages (login, register, dashboard)
+│   │   ├── api/           # API routes
+│   │   └── test/[code]/   # Student test page
+│   ├── components/        # React components (Wizard, Charts, etc.)
+│   ├── data/              # Questions, careers, badges data
+│   └── lib/               # Auth, prisma client utilities
+└── .env.example           # Environment template
+```
