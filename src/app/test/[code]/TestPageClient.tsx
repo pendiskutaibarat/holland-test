@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { FormEvent, ReactNode } from "react";
 import WizardContainer from "@/components/WizardContainer";
 
 interface TestPageClientProps {
@@ -9,6 +10,32 @@ interface TestPageClientProps {
   schoolName: string;
   sessionMode: string;
   isActive: boolean;
+}
+
+const TEST_PAGE_BACKGROUND_STYLE = {
+  backgroundImage: "url('/test-background.jpeg'), url('/banner.png')",
+  backgroundPosition: "center",
+  backgroundSize: "cover",
+} as const;
+
+function TestPageBackgroundShell({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-slate-950">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 scale-105 blur-sm"
+        style={TEST_PAGE_BACKGROUND_STYLE}
+      />
+      <div aria-hidden="true" className="absolute inset-0 bg-slate-950/45" />
+      <div className="relative z-10 flex min-h-screen items-center justify-center p-5">
+        {children}
+      </div>
+    </div>
+  );
 }
 
 export default function TestPageClient({
@@ -25,7 +52,7 @@ export default function TestPageClient({
   );
   const [started, setStarted] = useState(false);
 
-  function handleStart(e: React.FormEvent) {
+  function handleStart(e: FormEvent) {
     e.preventDefault();
     const newErrors: { name?: string; birthDate?: string } = {};
 
@@ -47,9 +74,9 @@ export default function TestPageClient({
 
   if (!isActive) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-5">
+      <TestPageBackgroundShell>
         <div
-          className="bg-white p-8 rounded-xl shadow-sm max-w-md w-full text-center border border-slate-200"
+          className="w-full max-w-md rounded-xl border border-white/35 bg-white/88 p-8 text-center shadow-xl backdrop-blur-md"
           role="alert"
         >
           <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
@@ -75,14 +102,14 @@ export default function TestPageClient({
             Sesi ini sudah ditutup. Hubungi admin untuk informasi lebih lanjut.
           </p>
         </div>
-      </div>
+      </TestPageBackgroundShell>
     );
   }
 
   if (!started) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-5">
-        <div className="bg-white p-8 rounded-xl shadow-sm max-w-md w-full border border-slate-200">
+      <TestPageBackgroundShell>
+        <div className="w-full max-w-md rounded-xl border border-white/35 bg-white/88 p-8 shadow-xl backdrop-blur-md">
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-slate-800 mb-1">
               Tes Holland RIASEC
@@ -209,7 +236,7 @@ export default function TestPageClient({
             </button>
           </form>
         </div>
-      </div>
+      </TestPageBackgroundShell>
     );
   }
 
