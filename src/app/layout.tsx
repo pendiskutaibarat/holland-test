@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Geist } from "next/font/google";
 import { Suspense } from "react";
 import TopLoadingBar from "@/components/TopLoadingBar";
