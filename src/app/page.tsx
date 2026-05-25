@@ -1,6 +1,24 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getAuthToken, verifyToken } from "@/lib/auth";
 
-export default function Home() {
+export default async function Home() {
+  const token = await getAuthToken();
+  let shouldRedirect = false;
+
+  if (token) {
+    try {
+      const payload = verifyToken(token);
+      shouldRedirect = payload.status === "ACTIVE";
+    } catch {
+      // Invalid token, stay on home page
+    }
+  }
+
+  if (shouldRedirect) {
+    redirect("/admin/dashboard");
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center">
