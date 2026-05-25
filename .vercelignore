@@ -1,0 +1,11 @@
+.agents/
+.code-review-graph/
+.next/
+.opencode/
+.vercel/
+node_modules/
+opencode/
+out/
+prisma/generated/
+*.tsbuildinfo
+next-env.d.ts
