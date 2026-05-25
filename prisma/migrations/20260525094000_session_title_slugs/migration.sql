@@ -1,0 +1,1 @@
+ALTER TABLE "sessions" ALTER COLUMN "code" TYPE VARCHAR(100);

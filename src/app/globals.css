@@ -12,6 +12,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:where(button:not(:disabled)),
+:where([role="button"]:not([aria-disabled="true"])) {
+  cursor: pointer;
+}
+
+:where(button:disabled),
+:where([role="button"][aria-disabled="true"]) {
+  cursor: not-allowed;
+}
+
 #nprogress {
   pointer-events: none;
 }

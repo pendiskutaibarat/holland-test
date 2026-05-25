@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { calculatePeminatanPercentages } from "@/utils/peminatan";
+import type { TestResult } from "@/data/types";
 
 export async function POST(request: NextRequest) {
   try {
@@ -66,6 +68,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const peminatanPercentages =
+      mode === "peminatan"
+        ? calculatePeminatanPercentages([
+            { type: "realistic", score: r_score },
+            { type: "investigative", score: i_score },
+            { type: "artistic", score: a_score },
+            { type: "social", score: s_score },
+            { type: "enterprising", score: e_score },
+            { type: "conventional", score: c_score },
+          ] satisfies TestResult[])
+        : null;
+
     const result = await prisma.testResult.create({
       data: {
         session_id: session.id,
@@ -80,9 +94,9 @@ export async function POST(request: NextRequest) {
         e_score,
         c_score,
         holland_code: holland_code || null,
-        ipa_pct: ipa_pct ?? null,
-        ips_pct: ips_pct ?? null,
-        bahasa_pct: bahasa_pct ?? null,
+        ipa_pct: peminatanPercentages?.ipa ?? ipa_pct ?? null,
+        ips_pct: peminatanPercentages?.ips ?? ips_pct ?? null,
+        bahasa_pct: peminatanPercentages?.bahasa ?? bahasa_pct ?? null,
         answers: {
           create:
             answers?.map(

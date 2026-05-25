@@ -242,66 +242,128 @@ export default function DashboardClient({
         <>
           <div className="mb-6">
             <button
-              onClick={() => setShowForm(!showForm)}
+              onClick={() => setShowForm(true)}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             >
-              {showForm ? "Batal" : "+ Buat Sesi Baru"}
+              + Buat Sesi Baru
             </button>
           </div>
 
           {showForm && (
-            <form
-              onSubmit={handleCreateSession}
-              className={`bg-white p-6 rounded-lg shadow-sm mb-8 space-y-4 ${loading ? "opacity-50 pointer-events-none" : ""}`}
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+              role="presentation"
             >
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nama Sesi
-                </label>
-                <input
-                  name="name"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Contoh: Kelas 10A"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Mode
-                </label>
-                <select
-                  name="mode"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="bebas">Bebas (siswa memilih)</option>
-                  <option value="peminatan">Peminatan SMA/MA</option>
-                  <option value="karir">Karir & Program Studi</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Deskripsi (opsional)
-                </label>
-                <textarea
-                  name="description"
-                  rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Deskripsi sesi..."
-                />
-              </div>
-
-              <LoadingButton
-                type="submit"
-                loading={loading}
-                loadingText="Membuat..."
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-300"
+              <button
+                type="button"
+                className="absolute inset-0 cursor-default"
+                aria-label="Tutup dialog"
+                disabled={loading}
+                onClick={() => setShowForm(false)}
+              />
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="create-session-title"
+                className="relative w-full max-w-lg rounded-lg bg-white shadow-xl"
               >
-                Buat Sesi
-              </LoadingButton>
-            </form>
+                <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+                  <h2
+                    id="create-session-title"
+                    className="text-lg font-semibold text-gray-800"
+                  >
+                    Buat Sesi Baru
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    disabled={loading}
+                    title="Tutup"
+                    aria-label="Tutup"
+                    className="p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-800 rounded-md transition-colors disabled:opacity-50"
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <form
+                  onSubmit={handleCreateSession}
+                  className={`space-y-4 p-6 ${loading ? "opacity-50 pointer-events-none" : ""}`}
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nama Sesi
+                    </label>
+                    <input
+                      name="name"
+                      required
+                      autoFocus
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Contoh: Kelas 10A"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Mode
+                    </label>
+                    <select
+                      name="mode"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="bebas">Bebas (siswa memilih)</option>
+                      <option value="peminatan">Peminatan SMA/MA</option>
+                      <option value="karir">Karir & Program Studi</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Deskripsi (opsional)
+                    </label>
+                    <textarea
+                      name="description"
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Deskripsi sesi..."
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowForm(false)}
+                      disabled={loading}
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                      Batal
+                    </button>
+                    <LoadingButton
+                      type="submit"
+                      loading={loading}
+                      loadingText="Membuat..."
+                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-300"
+                    >
+                      Buat Sesi
+                    </LoadingButton>
+                  </div>
+                </form>
+              </div>
+            </div>
           )}
 
           {sessions.length === 0 ? (
@@ -318,7 +380,12 @@ export default function DashboardClient({
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-semibold text-lg text-gray-800">
-                        {session.name}
+                        <Link
+                          href={`/admin/sessions/${session.id}`}
+                          className="hover:text-blue-600 transition-colors"
+                        >
+                          {session.name}
+                        </Link>
                       </h3>
                       <p className="text-sm text-gray-500 mt-1">
                         Mode: <span className="capitalize">{session.mode}</span> ·{" "}
