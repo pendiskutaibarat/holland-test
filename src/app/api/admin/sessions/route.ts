@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
-import { generateSessionCode } from "@/lib/code";
+import { generateSessionSlug } from "@/lib/code";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,18 +22,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let code = generateSessionCode();
+    const baseSlug = generateSessionSlug(name);
+    let code = baseSlug;
     let existing = await prisma.session.findUnique({ where: { code } });
-    let retries = 0;
-    while (existing && retries < 10) {
-      code = generateSessionCode();
+    let suffix = 2;
+    while (existing && suffix <= 99) {
+      code = `${baseSlug}-${suffix}`;
       existing = await prisma.session.findUnique({ where: { code } });
-      retries++;
+      suffix++;
     }
 
     if (existing) {
       return NextResponse.json(
-        { error: "Gagal membuat kode sesi unik" },
+        { error: "Gagal membuat link sesi unik" },
         { status: 500 },
       );
     }

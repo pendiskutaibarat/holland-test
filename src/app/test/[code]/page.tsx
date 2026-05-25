@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import TestPageClient from "./TestPageClient";
 
-function isValidSessionCode(code: string): boolean {
-  return /^[a-zA-Z0-9]{8}$/.test(code);
+function isValidSessionSlug(code: string): boolean {
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(code) && code.length <= 100;
 }
 
 export default async function TestPage({
@@ -13,7 +13,7 @@ export default async function TestPage({
 }) {
   const { code } = await params;
 
-  if (!isValidSessionCode(code)) {
+  if (!isValidSessionSlug(code)) {
     notFound();
   }
 
@@ -28,7 +28,6 @@ export default async function TestPage({
   return (
     <TestPageClient
       sessionId={session.id}
-      sessionCode={session.code}
       sessionName={session.name}
       sessionMode={session.mode}
       isActive={session.is_active}

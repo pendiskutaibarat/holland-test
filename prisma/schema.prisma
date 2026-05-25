@@ -24,7 +24,7 @@ model Session {
   id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user_id     String        @db.Uuid
   user        User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  code        String        @unique @db.VarChar(8)
+  code        String        @unique @db.VarChar(100)
   name        String
   description String?
   mode        String        @default("bebas")

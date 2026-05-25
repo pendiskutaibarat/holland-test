@@ -5,7 +5,6 @@ import WizardContainer from "@/components/WizardContainer";
 
 interface TestPageClientProps {
   sessionId: string;
-  sessionCode: string;
   sessionName: string;
   sessionMode: string;
   isActive: boolean;
@@ -13,7 +12,6 @@ interface TestPageClientProps {
 
 export default function TestPageClient({
   sessionId,
-  sessionCode,
   sessionName,
   sessionMode,
   isActive,
