@@ -31,6 +31,7 @@ interface Session {
   id: string;
   code: string;
   name: string;
+  school_name: string;
   mode: string;
   is_active: boolean;
   results: Result[];
@@ -412,6 +413,7 @@ export default function SessionDetailClient({
     const rows: ExcelCell[][] = [
       ["Hasil Tes Holland RIASEC"],
       ["Sesi", session.name],
+      ["Sekolah / Madrasah", session.school_name],
       ["Kode", session.code],
       ["Mode", session.mode],
       ["Total Siswa", results.length],
@@ -437,6 +439,7 @@ export default function SessionDetailClient({
       <div className="flex justify-between items-start mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">{session.name}</h1>
+          <p className="text-gray-600 mt-1">{session.school_name}</p>
           <p className="text-gray-500 mt-1">
             Kode: <code className="bg-gray-100 px-1 rounded">{session.code}</code> ·{" "}
             {results.length} hasil · Mode: {session.mode}

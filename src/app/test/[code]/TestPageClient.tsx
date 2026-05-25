@@ -6,6 +6,7 @@ import WizardContainer from "@/components/WizardContainer";
 interface TestPageClientProps {
   sessionId: string;
   sessionName: string;
+  schoolName: string;
   sessionMode: string;
   isActive: boolean;
 }
@@ -13,6 +14,7 @@ interface TestPageClientProps {
 export default function TestPageClient({
   sessionId,
   sessionName,
+  schoolName,
   sessionMode,
   isActive,
 }: TestPageClientProps) {
@@ -85,7 +87,8 @@ export default function TestPageClient({
             <h1 className="text-2xl font-bold text-slate-800 mb-1">
               Tes Holland RIASEC
             </h1>
-            <p className="text-slate-600">{sessionName}</p>
+            <p className="font-medium text-slate-700">{schoolName}</p>
+            <p className="text-sm text-slate-500 mt-0.5">{sessionName}</p>
           </div>
 
           <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">

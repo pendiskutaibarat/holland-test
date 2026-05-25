@@ -29,6 +29,7 @@ export default async function TestPage({
     <TestPageClient
       sessionId={session.id}
       sessionName={session.name}
+      schoolName={session.school_name}
       sessionMode={session.mode}
       isActive={session.is_active}
     />

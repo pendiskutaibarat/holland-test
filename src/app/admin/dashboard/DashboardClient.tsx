@@ -9,6 +9,7 @@ interface Session {
   id: string;
   code: string;
   name: string;
+  school_name: string;
   description: string | null;
   mode: string;
   is_active: boolean;
@@ -126,6 +127,7 @@ export default function DashboardClient({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: formData.get("name"),
+        school_name: formData.get("school_name"),
         mode: formData.get("mode"),
         description: formData.get("description"),
       }),
@@ -318,6 +320,18 @@ export default function DashboardClient({
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nama Sekolah / Madrasah
+                    </label>
+                    <input
+                      name="school_name"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Contoh: MA Negeri 1 Bandung"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Mode
                     </label>
                     <select
@@ -388,7 +402,8 @@ export default function DashboardClient({
                         </Link>
                       </h3>
                       <p className="text-sm text-gray-500 mt-1">
-                        Mode: <span className="capitalize">{session.mode}</span> ·{" "}
+                        {session.school_name} · Mode:{" "}
+                        <span className="capitalize">{session.mode}</span> ·{" "}
                         {session.result_count} hasil ·{" "}
                         {new Date(session.created_at).toLocaleDateString("id-ID")}
                       </p>

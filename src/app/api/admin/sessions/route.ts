@@ -6,11 +6,21 @@ import { generateSessionSlug } from "@/lib/code";
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await requireAuth();
-    const { name, mode, description } = await request.json();
+    const { name, school_name, mode, description } = await request.json();
 
-    if (!name || !mode) {
+    if (!name || !school_name || !mode) {
       return NextResponse.json(
-        { error: "Nama dan mode wajib diisi" },
+        { error: "Nama, sekolah/madrasah, dan mode wajib diisi" },
+        { status: 400 },
+      );
+    }
+
+    const sessionName = String(name).trim();
+    const schoolName = String(school_name).trim();
+
+    if (!sessionName || !schoolName) {
+      return NextResponse.json(
+        { error: "Nama dan sekolah/madrasah wajib diisi" },
         { status: 400 },
       );
     }
@@ -22,7 +32,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const baseSlug = generateSessionSlug(name);
+    const baseSlug = generateSessionSlug(sessionName);
     let code = baseSlug;
     let existing = await prisma.session.findUnique({ where: { code } });
     let suffix = 2;
@@ -43,7 +53,8 @@ export async function POST(request: NextRequest) {
       data: {
         user_id: userId,
         code,
-        name,
+        name: sessionName,
+        school_name: schoolName,
         description: description || null,
         mode,
       },
