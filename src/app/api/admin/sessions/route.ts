@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import { generateSessionSlug } from "@/lib/code";
+import {
+  buildTeacherSessionWhere,
+  getSessionAccessType,
+} from "@/lib/session-access";
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,9 +62,23 @@ export async function POST(request: NextRequest) {
         description: description || null,
         mode,
       },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json(session, { status: 201 });
+    return NextResponse.json(
+      {
+        ...session,
+        owner_name: session.user.name,
+        access_type: "OWNED",
+      },
+      { status: 201 },
+    );
   } catch (error) {
     if (error instanceof Error && error.message === "Unauthorized") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -74,12 +92,20 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const { userId } = await requireAuth();
+    const { userId, role } = await requireAuth();
+
+    const where =
+      role === "ADMIN" ? { user_id: userId } : buildTeacherSessionWhere(userId);
 
     const sessions = await prisma.session.findMany({
-      where: { user_id: userId },
+      where,
       orderBy: { created_at: "desc" },
       include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
         _count: {
           select: { results: true },
         },
@@ -90,6 +116,8 @@ export async function GET() {
       sessions.map((s) => ({
         ...s,
         result_count: s._count.results,
+        owner_name: s.user.name,
+        access_type: getSessionAccessType(s.user_id, userId),
       })),
     );
   } catch (error) {

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAuthToken, verifyToken } from "@/lib/auth";
+import { buildSessionDetailWhere } from "@/lib/session-access";
 import SessionDetailClient from "./SessionDetailClient";
 
 function isValidUUID(id: string): boolean {
@@ -34,11 +35,29 @@ export default async function SessionDetailPage({
   }
 
   const session = await prisma.session.findFirst({
-    where: {
-      id: sessionId,
-      user_id: userId,
-    },
+    where: buildSessionDetailWhere(userId, payload.role, sessionId),
     include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      collaborators: {
+        orderBy: { created_at: "asc" },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              status: true,
+              created_at: true,
+            },
+          },
+        },
+      },
       results: {
         orderBy: { created_at: "desc" },
       },
@@ -48,6 +67,24 @@ export default async function SessionDetailPage({
   if (!session) {
     redirect("/admin/dashboard");
   }
+
+  const teachers =
+    payload.role === "ADMIN"
+      ? await prisma.user.findMany({
+          where: {
+            role: "TEACHER",
+            status: "ACTIVE",
+          },
+          orderBy: { name: "asc" },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            status: true,
+            created_at: true,
+          },
+        })
+      : [];
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -59,7 +96,11 @@ export default async function SessionDetailPage({
           ← Kembali ke Dashboard
         </Link>
       </div>
-      <SessionDetailClient session={session} />
+      <SessionDetailClient
+        session={session}
+        canManageSharing={payload.role === "ADMIN"}
+        teachers={teachers}
+      />
     </div>
   );
 }

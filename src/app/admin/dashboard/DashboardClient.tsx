@@ -15,6 +15,8 @@ interface Session {
   is_active: boolean;
   created_at: Date;
   result_count: number;
+  owner_name: string;
+  access_type: "OWNED" | "SHARED";
 }
 
 interface Teacher {
@@ -407,6 +409,22 @@ export default function DashboardClient({
                         {session.result_count} hasil ·{" "}
                         {new Date(session.created_at).toLocaleDateString("id-ID")}
                       </p>
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                        <span
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 font-medium ${
+                            session.access_type === "OWNED"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
+                          {session.access_type === "OWNED"
+                            ? "Milik Saya"
+                            : "Dibagikan"}
+                        </span>
+                        {session.access_type === "SHARED" && (
+                          <span>Dari {session.owner_name}</span>
+                        )}
+                      </div>
                       {session.description && (
                         <p className="text-sm text-gray-500 mt-1">
                           {session.description}

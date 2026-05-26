@@ -16,6 +16,7 @@ model User {
   status        String    @default("PENDING")
   created_at    DateTime  @default(now())
   sessions      Session[]
+  session_shares SessionCollaborator[]
 
   @@map("users")
 }
@@ -33,6 +34,7 @@ model Session {
   created_at  DateTime      @default(now())
   expires_at  DateTime?
   results     TestResult[]
+  collaborators SessionCollaborator[]
 
   @@map("sessions")
 }
@@ -71,4 +73,18 @@ model ResultAnswer {
   answer     String     @default("Selected")
 
   @@map("result_answers")
+}
+
+model SessionCollaborator {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id String   @db.Uuid
+  user_id    String   @db.Uuid
+  created_at  DateTime @default(now())
+
+  session Session @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([session_id, user_id])
+  @@index([user_id, session_id])
+  @@map("session_collaborators")
 }
