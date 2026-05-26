@@ -70,7 +70,7 @@ export async function DELETE(
       rawUserId,
     );
 
-    if (!sessionId || !isValidUUID(userId)) {
+    if (!isValidUUID(sessionId) || !isValidUUID(userId)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 

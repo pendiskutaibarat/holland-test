@@ -60,7 +60,7 @@ export async function GET(
     const { sessionId: rawSessionId } = await params;
     const sessionId = extractSessionId(request, rawSessionId);
 
-    if (!sessionId) {
+    if (!isValidUUID(sessionId)) {
       return NextResponse.json({ error: "Invalid session ID" }, { status: 400 });
     }
 
@@ -104,7 +104,7 @@ export async function POST(
     const { sessionId: rawSessionId } = await params;
     const sessionId = extractSessionId(request, rawSessionId);
 
-    if (!sessionId) {
+    if (!isValidUUID(sessionId)) {
       return NextResponse.json({ error: "Invalid session ID" }, { status: 400 });
     }
 
