@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
+import {
+  buildTeacherSessionWhere,
+  getSessionAccessType,
+} from "@/lib/session-access";
 
 export async function GET(
   _request: Request,
@@ -11,9 +15,14 @@ export async function GET(
     const { userId } = await params;
 
     const sessions = await prisma.session.findMany({
-      where: { user_id: userId },
+      where: buildTeacherSessionWhere(userId),
       orderBy: { created_at: "desc" },
       include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
         _count: {
           select: { results: true },
         },
@@ -24,6 +33,8 @@ export async function GET(
       sessions.map((s) => ({
         ...s,
         result_count: s._count.results,
+        owner_name: s.user.name,
+        access_type: getSessionAccessType(s.user_id, userId),
       })),
     );
   } catch (error) {

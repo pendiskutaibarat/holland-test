@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAuthToken, verifyToken } from "@/lib/auth";
+import { buildTeacherSessionWhere, getSessionAccessType } from "@/lib/session-access";
 import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
@@ -19,10 +20,18 @@ export default async function DashboardPage() {
   const userId = payload.userId;
   const role = payload.role;
 
+  const where =
+    role === "ADMIN" ? { user_id: userId } : buildTeacherSessionWhere(userId);
+
   const sessions = await prisma.session.findMany({
-    where: { user_id: userId },
+    where,
     orderBy: { created_at: "desc" },
     include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
       _count: {
         select: { results: true },
       },
@@ -34,6 +43,8 @@ export default async function DashboardPage() {
       sessions={sessions.map((s) => ({
         ...s,
         result_count: s._count.results,
+        owner_name: s.user.name,
+        access_type: getSessionAccessType(s.user_id, userId),
       }))}
       role={role}
     />

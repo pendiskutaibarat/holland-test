@@ -2,6 +2,10 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getAuthToken, verifyToken } from "@/lib/auth";
+import {
+  buildTeacherSessionWhere,
+  getSessionAccessType,
+} from "@/lib/session-access";
 
 function isValidUUID(id: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
@@ -39,9 +43,14 @@ export default async function TeacherDetailPage({
   }
 
   const sessions = await prisma.session.findMany({
-    where: { user_id: userId },
+    where: buildTeacherSessionWhere(userId),
     orderBy: { created_at: "desc" },
     include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
       _count: {
         select: { results: true },
       },
@@ -88,7 +97,7 @@ export default async function TeacherDetailPage({
 
       {sessions.length === 0 ? (
         <div className="bg-white p-8 rounded-lg shadow-sm text-center text-gray-500">
-          Guru ini belum membuat sesi.
+          Guru ini belum memiliki sesi yang dapat diakses.
         </div>
       ) : (
         <div className="grid gap-4">
@@ -107,6 +116,22 @@ export default async function TeacherDetailPage({
                     {session._count.results} hasil ·{" "}
                     {new Date(session.created_at).toLocaleDateString("id-ID")}
                   </p>
+                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 font-medium ${
+                        getSessionAccessType(session.user_id, userId) === "OWNED"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-blue-100 text-blue-800"
+                      }`}
+                    >
+                      {getSessionAccessType(session.user_id, userId) === "OWNED"
+                        ? "Milik Guru"
+                        : "Dibagikan"}
+                    </span>
+                    {session.user_id !== userId && (
+                      <span>Dari {session.user.name}</span>
+                    )}
+                  </div>
                   {session.description && (
                     <p className="text-sm text-gray-500 mt-1">
                       {session.description}

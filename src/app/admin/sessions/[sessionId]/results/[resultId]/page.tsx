@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAuthToken, verifyToken } from "@/lib/auth";
+import { buildSessionDetailWhere } from "@/lib/session-access";
 import ResultViewClient from "./ResultViewClient";
 
 function isValidUUID(id: string): boolean {
@@ -33,10 +34,7 @@ export default async function ResultViewPage({
   }
 
   const session = await prisma.session.findFirst({
-    where: {
-      id: sessionId,
-      user_id: userId,
-    },
+    where: buildSessionDetailWhere(userId, payload.role, sessionId),
   });
 
   if (!session) {

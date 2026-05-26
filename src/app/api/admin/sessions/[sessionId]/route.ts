@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { buildSessionDetailWhere } from "@/lib/session-access";
 
 function isValidUUID(id: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
@@ -11,7 +12,7 @@ export async function GET(
   { params }: { params: Promise<{ sessionId: string }> },
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, role } = await requireAuth();
     const { sessionId } = await params;
 
     if (!isValidUUID(sessionId)) {
@@ -19,15 +20,33 @@ export async function GET(
     }
 
     const session = await prisma.session.findFirst({
-      where: {
-        id: sessionId,
-        user_id: userId,
-      },
+      where: buildSessionDetailWhere(userId, role, sessionId),
       include: {
         results: {
           orderBy: { created_at: "desc" },
           include: {
             answers: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        collaborators: {
+          orderBy: { created_at: "asc" },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                status: true,
+                created_at: true,
+              },
+            },
           },
         },
       },
@@ -57,7 +76,7 @@ export async function PATCH(
   { params }: { params: Promise<{ sessionId: string }> },
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, role } = await requireAuth();
     const { sessionId } = await params;
     const body = await request.json();
 
@@ -66,10 +85,7 @@ export async function PATCH(
     }
 
     const session = await prisma.session.findFirst({
-      where: {
-        id: sessionId,
-        user_id: userId,
-      },
+      where: buildSessionDetailWhere(userId, role, sessionId),
     });
 
     if (!session) {
@@ -105,7 +121,7 @@ export async function DELETE(
   { params }: { params: Promise<{ sessionId: string }> },
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, role } = await requireAuth();
     const { sessionId } = await params;
 
     if (!isValidUUID(sessionId)) {
@@ -113,10 +129,7 @@ export async function DELETE(
     }
 
     const session = await prisma.session.findFirst({
-      where: {
-        id: sessionId,
-        user_id: userId,
-      },
+      where: buildSessionDetailWhere(userId, role, sessionId),
     });
 
     if (!session) {
