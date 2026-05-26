@@ -6,6 +6,7 @@ import {
   buildTeacherSessionWhere,
   getSessionAccessType,
 } from "@/lib/session-access";
+import SessionCard from "@/components/admin/SessionCard";
 
 function isValidUUID(id: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
@@ -102,64 +103,41 @@ export default async function TeacherDetailPage({
       ) : (
         <div className="grid gap-4">
           {sessions.map((session) => (
-            <div
+            <SessionCard
               key={session.id}
-              className="bg-white p-5 rounded-lg shadow-sm border border-gray-100"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-800">
-                    {session.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Mode: <span className="capitalize">{session.mode}</span> ·{" "}
-                    {session._count.results} hasil ·{" "}
-                    {new Date(session.created_at).toLocaleDateString("id-ID")}
-                  </p>
-                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                    <span
-                      className={`inline-flex items-center rounded-full px-2 py-0.5 font-medium ${
-                        getSessionAccessType(session.user_id, userId) === "OWNED"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-blue-100 text-blue-800"
-                      }`}
-                    >
-                      {getSessionAccessType(session.user_id, userId) === "OWNED"
-                        ? "Milik Guru"
-                        : "Dibagikan"}
-                    </span>
-                    {session.user_id !== userId && (
-                      <span>Dari {session.user.name}</span>
-                    )}
-                  </div>
-                  {session.description && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      {session.description}
-                    </p>
-                  )}
-                  <div className="mt-3 flex items-center gap-3">
-                    <code className="bg-gray-100 px-2 py-1 rounded text-sm">
-                      /test/{session.code}
-                    </code>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded ${
-                        session.is_active
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-600"
-                      }`}
-                    >
-                      {session.is_active ? "Aktif" : "Tidak Aktif"}
-                    </span>
-                  </div>
-                </div>
-                <Link
-                  href={`/admin/sessions/${session.id}`}
-                  className="text-blue-600 hover:text-blue-800 text-sm"
-                >
-                  Lihat Detail
-                </Link>
-              </div>
-            </div>
+              session={{
+                id: session.id,
+                code: session.code,
+                name: session.name,
+                school_name: session.school_name,
+                description: session.description,
+                mode: session.mode,
+                created_at: session.created_at,
+                result_count: session._count.results,
+                owner_name: session.user.name,
+                access_type: getSessionAccessType(session.user_id, userId),
+              }}
+              ownedLabel="Milik Guru"
+              actions={
+                <>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded ${
+                      session.is_active
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {session.is_active ? "Aktif" : "Tidak Aktif"}
+                  </span>
+                  <Link
+                    href={`/admin/sessions/${session.id}`}
+                    className="text-blue-600 hover:text-blue-800 text-sm"
+                  >
+                    Lihat Detail
+                  </Link>
+                </>
+              }
+            />
           ))}
         </div>
       )}
