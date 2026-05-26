@@ -85,5 +85,6 @@ model SessionCollaborator {
   user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([session_id, user_id])
+  @@index([user_id, session_id])
   @@map("session_collaborators")
 }
