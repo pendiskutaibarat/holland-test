@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import LoadingButton from "@/components/LoadingButton";
 import { calculatePeminatanPercentages } from "@/utils/peminatan";
+import { getAssessmentTestHref } from "@/lib/test-route";
 import type { PeminatanType, TestResult } from "@/data/types";
 
 type PeminatanPercentages = Record<PeminatanType, number>;
@@ -24,6 +25,25 @@ interface Result {
   ipa_pct: number | null;
   ips_pct: number | null;
   bahasa_pct: number | null;
+  created_at: Date;
+}
+
+interface GenericRankedCategory {
+  rank: number;
+  category_code: string;
+  category_name?: string;
+  score: number;
+}
+
+interface AssessmentResult {
+  id: string;
+  student_name: string;
+  student_class: string;
+  birth_date: Date | null;
+  total_score: number;
+  category_scores: Record<string, number>;
+  ranked_categories: GenericRankedCategory[];
+  top_categories: GenericRankedCategory[];
   created_at: Date;
 }
 
@@ -49,6 +69,10 @@ interface Session {
   name: string;
   school_name: string;
   mode: string;
+  assessment: {
+    slug: string;
+    name: string;
+  };
   is_active: boolean;
   user: {
     id: string;
@@ -57,6 +81,7 @@ interface Session {
   };
   collaborators: Collaborator[];
   results: Result[];
+  assessment_results: AssessmentResult[];
 }
 
 function resultToTestResults(result: Result): TestResult[] {
@@ -362,6 +387,10 @@ export default function SessionDetailClient({
     session.collaborators,
   );
   const results = session.results;
+  const genericResults = session.assessment_results;
+  const isMinatHobi = session.assessment.slug === "minat_hobi";
+  const displayedResultCount = isMinatHobi ? genericResults.length : results.length;
+  const testHref = getAssessmentTestHref(session.assessment.slug, session.code);
   const peminatanResults = results.filter((r) => r.mode === "peminatan");
 
   const avgR = results.length
@@ -413,7 +442,7 @@ export default function SessionDetailClient({
     shareTargetId || visibleTeacherOptions[0]?.id || "";
 
   function handleCopyLink() {
-    navigator.clipboard.writeText(`${window.location.origin}/test/${session.code}`);
+    navigator.clipboard.writeText(`${window.location.origin}${testHref}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -492,6 +521,57 @@ export default function SessionDetailClient({
 
   async function exportExcel() {
     setExporting(true);
+
+    if (isMinatHobi) {
+      const categoryKeys = Array.from(
+        new Set(
+          genericResults.flatMap((result) => Object.keys(result.category_scores)),
+        ),
+      );
+      const rows: ExcelCell[][] = [
+        [`Hasil ${session.assessment.name}`],
+        ["Sesi", session.name],
+        ["Sekolah / Madrasah", session.school_name],
+        ["Kode", session.code],
+        ["Total Siswa", genericResults.length],
+        [],
+        [
+          "Nama",
+          "Tanggal Lahir",
+          "Total Skor",
+          "Top 1",
+          "Top 2",
+          "Top 3",
+          ...categoryKeys,
+        ],
+        ...genericResults.map((result) => [
+          result.student_name,
+          result.student_class,
+          result.total_score,
+          result.top_categories[0]?.category_name ??
+            result.top_categories[0]?.category_code ??
+            "",
+          result.top_categories[1]?.category_name ??
+            result.top_categories[1]?.category_code ??
+            "",
+          result.top_categories[2]?.category_name ??
+            result.top_categories[2]?.category_code ??
+            "",
+          ...categoryKeys.map((key) => result.category_scores[key] ?? 0),
+        ]),
+      ];
+
+      const blob = buildWorkbook(rows);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${safeFileName(`hasil-${session.name}`)}.xlsx`;
+      link.click();
+      URL.revokeObjectURL(url);
+      setExporting(false);
+      return;
+    }
+
     const headers = [
       "Nama",
       "Kelas",
@@ -562,7 +642,8 @@ export default function SessionDetailClient({
           <p className="text-gray-600 mt-1">{session.school_name}</p>
           <p className="text-gray-500 mt-1">
             Kode: <code className="bg-gray-100 px-1 rounded">{session.code}</code> ·{" "}
-            {results.length} hasil · Mode: {session.mode}
+            {displayedResultCount} hasil · Asesmen: {session.assessment.name}
+            {!isMinatHobi && <> · Mode: {session.mode}</>}
           </p>
           <p className="text-sm text-gray-500 mt-1">
             Pemilik: {session.user.name} ({session.user.email})
@@ -570,7 +651,7 @@ export default function SessionDetailClient({
         </div>
         <div className="flex items-center gap-3">
           <Link
-            href={`/test/${session.code}`}
+            href={testHref}
             target="_blank"
             rel="noreferrer"
             className="px-4 py-2 rounded-md border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors text-sm"
@@ -758,7 +839,7 @@ export default function SessionDetailClient({
         </div>
       )}
 
-      {results.length > 0 && (
+      {!isMinatHobi && results.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
             <p className="text-sm text-gray-500">Total Siswa</p>
@@ -795,7 +876,7 @@ export default function SessionDetailClient({
         </div>
       )}
 
-      {results.length > 0 && (
+      {!isMinatHobi && results.length > 0 && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
           <div className="p-4 bg-gray-50 border-b border-gray-100">
             <h2 className="font-semibold text-gray-800">
@@ -822,7 +903,7 @@ export default function SessionDetailClient({
         </div>
       )}
 
-      {results.length === 0 ? (
+      {displayedResultCount === 0 ? (
         <div className="bg-white p-8 rounded-lg shadow-sm text-center text-gray-500">
           Belum ada hasil. Bagikan link sesi kepada siswa.
           <div className="mt-3 flex items-center justify-center">
@@ -830,9 +911,9 @@ export default function SessionDetailClient({
               onClick={handleCopyLink}
               className="relative"
             >
-              <code className="bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition-colors">
-                {`${window.location.origin}/test/${session.code}`}
-              </code>
+                <code className="bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition-colors">
+                {`${window.location.origin}${testHref}`}
+                </code>
               {copied && (
                 <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
                   Tersalin!
@@ -840,6 +921,68 @@ export default function SessionDetailClient({
               )}
             </button>
           </div>
+        </div>
+      ) : isMinatHobi ? (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">
+                  Nama
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">
+                  Tanggal Lahir
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">
+                  Total Skor
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">
+                  Minat Teratas
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">
+                  Tanggal
+                </th>
+                <th className="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {genericResults.map((result) => (
+                <tr
+                  key={result.id}
+                  className="border-b border-gray-50 hover:bg-gray-50"
+                >
+                  <td className="px-4 py-3 font-medium text-gray-800">
+                    {result.student_name}
+                  </td>
+                  <td className="px-4 py-3 text-gray-600">
+                    {result.student_class}
+                  </td>
+                  <td className="px-4 py-3 text-gray-600">
+                    {result.total_score}
+                  </td>
+                  <td className="px-4 py-3 text-gray-600">
+                    {result.top_categories
+                      .map(
+                        (category) =>
+                          category.category_name ?? category.category_code,
+                      )
+                      .join(", ")}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500">
+                    {new Date(result.created_at).toLocaleDateString("id-ID")}
+                  </td>
+                  <td className="px-4 py-3">
+                    <Link
+                      href={`/admin/sessions/${session.id}/results/${result.id}`}
+                      className="text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      Lihat Detail
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">

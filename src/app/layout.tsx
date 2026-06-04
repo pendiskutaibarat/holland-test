@@ -12,9 +12,9 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Tes Bakat Holland RIASEC",
+  title: "Platform Asesmen Siswa",
   description:
-    "Tes Kepribadian Holland RIASEC - Temukan tipe kepribadian dan karir yang cocok untukmu",
+    "Platform asesmen siswa untuk Holland RIASEC, Minat Hobi, dan asesmen lain.",
   icons: {
     icon: "favicon.ico",
   },

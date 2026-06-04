@@ -27,13 +27,15 @@ export default async function DashboardPage() {
     where,
     orderBy: { created_at: "desc" },
     include: {
+      assessment: true,
+      assessment_version: true,
       user: {
         select: {
           name: true,
         },
       },
       _count: {
-        select: { results: true },
+        select: { results: true, assessment_results: true },
       },
     },
   });
@@ -42,7 +44,10 @@ export default async function DashboardPage() {
     <DashboardClient
       sessions={sessions.map((s) => ({
         ...s,
-        result_count: s._count.results,
+        result_count:
+          s.assessment.slug === "minat_hobi"
+            ? s._count.assessment_results
+            : s._count.results,
         owner_name: s.user.name,
         access_type: getSessionAccessType(s.user_id, userId),
       }))}

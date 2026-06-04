@@ -3,12 +3,16 @@
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import WizardContainer from "@/components/WizardContainer";
+import MinatHobiAssessment from "@/components/MinatHobiAssessment";
+import { ASSESSMENT_SLUGS } from "@/data/assessments";
 
 interface TestPageClientProps {
   sessionId: string;
   sessionName: string;
   schoolName: string;
   sessionMode: string;
+  assessmentSlug: string;
+  assessmentName: string;
   isActive: boolean;
 }
 
@@ -43,6 +47,8 @@ export default function TestPageClient({
   sessionName,
   schoolName,
   sessionMode,
+  assessmentSlug,
+  assessmentName,
   isActive,
 }: TestPageClientProps) {
   const [studentName, setStudentName] = useState("");
@@ -112,7 +118,7 @@ export default function TestPageClient({
         <div className="w-full max-w-md rounded-xl border border-white/35 bg-white/88 p-8 shadow-xl backdrop-blur-md">
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-slate-800 mb-1">
-              Tes Holland RIASEC
+              {assessmentName}
             </h1>
             <p className="font-medium text-slate-700">{schoolName}</p>
             <p className="text-sm text-slate-500 mt-0.5">{sessionName}</p>
@@ -127,7 +133,9 @@ export default function TestPageClient({
                 <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Asesmen ini menggunakan model Holland Occupational Themes (RIASEC).
+                {assessmentSlug === ASSESSMENT_SLUGS.minatHobi
+                  ? "Asesmen ini memetakan 10 area minat dan hobi dari aktivitas sehari-hari."
+                  : "Asesmen ini menggunakan model Holland Occupational Themes (RIASEC)."}
               </li>
               <li className="flex items-start gap-2">
                 <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -139,13 +147,17 @@ export default function TestPageClient({
                 <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Pilihan jawaban bisa dipilih lebih dari satu.
+                {assessmentSlug === ASSESSMENT_SLUGS.minatHobi
+                  ? "Setiap pernyataan memiliki satu pilihan jawaban: Sangat Suka, Suka, Kurang Suka, atau Tidak Suka."
+                  : "Pilihan jawaban bisa dipilih lebih dari satu."}
               </li>
               <li className="flex items-start gap-2">
                 <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Waktu pengerjaan kira-kira 7–12 menit.
+                {assessmentSlug === ASSESSMENT_SLUGS.minatHobi
+                  ? "Waktu pengerjaan kira-kira 12-18 menit."
+                  : "Waktu pengerjaan kira-kira 7-12 menit."}
               </li>
               <li className="flex items-start gap-2">
                 <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -232,11 +244,21 @@ export default function TestPageClient({
               type="submit"
               className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
             >
-              Mulai Tes
+              Mulai Asesmen
             </button>
           </form>
         </div>
       </TestPageBackgroundShell>
+    );
+  }
+
+  if (assessmentSlug === ASSESSMENT_SLUGS.minatHobi) {
+    return (
+      <MinatHobiAssessment
+        sessionId={sessionId}
+        studentName={studentName}
+        birthDate={birthDate}
+      />
     );
   }
 

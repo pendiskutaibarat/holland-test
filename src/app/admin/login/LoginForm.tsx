@@ -31,7 +31,7 @@ export default function LoginForm() {
         return;
       }
 
-      router.push("/admin/dashboard");
+      router.push("/admin/assessments");
       router.refresh();
     } catch {
       setError("Terjadi kesalahan. Silakan coba lagi.");

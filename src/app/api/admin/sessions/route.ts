@@ -6,15 +6,22 @@ import {
   buildTeacherSessionWhere,
   getSessionAccessType,
 } from "@/lib/session-access";
+import { ASSESSMENT_SLUGS } from "@/data/assessments";
 
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await requireAuth();
-    const { name, school_name, mode, description } = await request.json();
+    const {
+      name,
+      school_name,
+      mode,
+      description,
+      assessment_slug = ASSESSMENT_SLUGS.holland,
+    } = await request.json();
 
-    if (!name || !school_name || !mode) {
+    if (!name || !school_name || !assessment_slug) {
       return NextResponse.json(
-        { error: "Nama, sekolah/madrasah, dan mode wajib diisi" },
+        { error: "Nama, sekolah/madrasah, dan asesmen wajib diisi" },
         { status: 400 },
       );
     }
@@ -29,7 +36,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!["peminatan", "karir", "bebas"].includes(mode)) {
+    const assessment = await prisma.assessment.findUnique({
+      where: { slug: String(assessment_slug) },
+      include: {
+        versions: {
+          where: { is_active: true },
+          orderBy: { created_at: "desc" },
+          take: 1,
+        },
+      },
+    });
+
+    if (!assessment || !assessment.is_active || assessment.versions.length === 0) {
+      return NextResponse.json(
+        { error: "Asesmen tidak tersedia" },
+        { status: 400 },
+      );
+    }
+
+    const sessionMode =
+      assessment.slug === ASSESSMENT_SLUGS.holland ? String(mode || "bebas") : assessment.slug;
+
+    if (
+      assessment.slug === ASSESSMENT_SLUGS.holland &&
+      !["peminatan", "karir", "bebas"].includes(sessionMode)
+    ) {
       return NextResponse.json(
         { error: "Mode tidak valid" },
         { status: 400 },
@@ -56,13 +87,17 @@ export async function POST(request: NextRequest) {
     const session = await prisma.session.create({
       data: {
         user_id: userId,
+        assessment_id: assessment.id,
+        assessment_version_id: assessment.versions[0].id,
         code,
         name: sessionName,
         school_name: schoolName,
         description: description || null,
-        mode,
+        mode: sessionMode,
       },
       include: {
+        assessment: true,
+        assessment_version: true,
         user: {
           select: {
             name: true,
@@ -74,6 +109,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         ...session,
+        result_count: 0,
         owner_name: session.user.name,
         access_type: "OWNED",
       },
@@ -101,13 +137,15 @@ export async function GET() {
       where,
       orderBy: { created_at: "desc" },
       include: {
+        assessment: true,
+        assessment_version: true,
         user: {
           select: {
             name: true,
           },
         },
         _count: {
-          select: { results: true },
+          select: { results: true, assessment_results: true },
         },
       },
     });
@@ -115,7 +153,10 @@ export async function GET() {
     return NextResponse.json(
       sessions.map((s) => ({
         ...s,
-        result_count: s._count.results,
+        result_count:
+          s.assessment.slug === ASSESSMENT_SLUGS.minatHobi
+            ? s._count.assessment_results
+            : s._count.results,
         owner_name: s.user.name,
         access_type: getSessionAccessType(s.user_id, userId),
       })),

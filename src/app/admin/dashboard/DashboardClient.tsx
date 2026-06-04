@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingButton from "@/components/LoadingButton";
+import { ASSESSMENT_SLUGS } from "@/data/assessments";
 import SessionCard, {
   type SessionCardAccessType,
   type SessionCardData,
@@ -26,12 +27,19 @@ interface Teacher {
 export default function DashboardClient({
   sessions: initialSessions,
   role,
+  assessmentContext,
 }: {
   sessions: Session[];
   role: string;
+  assessmentContext?: {
+    slug: string;
+    name: string;
+    backHref: string;
+  };
 }) {
   const router = useRouter();
   const isAdmin = role === "ADMIN";
+  const isAssessmentScoped = !!assessmentContext;
   const [activeTab, setActiveTab] = useState<"sesi" | "guru">("sesi");
 
   const [sessions, setSessions] = useState<Session[]>(initialSessions);
@@ -116,9 +124,14 @@ export default function DashboardClient({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        assessment_slug: assessmentContext?.slug ?? ASSESSMENT_SLUGS.holland,
         name: formData.get("name"),
         school_name: formData.get("school_name"),
-        mode: formData.get("mode"),
+        mode:
+          (assessmentContext?.slug ?? ASSESSMENT_SLUGS.holland) ===
+          ASSESSMENT_SLUGS.holland
+            ? formData.get("mode")
+            : assessmentContext?.slug,
         description: formData.get("description"),
       }),
     });
@@ -195,7 +208,16 @@ export default function DashboardClient({
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard Admin</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">
+            {assessmentContext ? assessmentContext.name : "Dashboard Admin"}
+          </h1>
+          {assessmentContext && (
+            <p className="mt-1 text-sm text-gray-500">
+              Kelola sesi untuk asesmen yang dipilih.
+            </p>
+          )}
+        </div>
         <LoadingButton
           onClick={handleLogout}
           loading={logoutLoading}
@@ -205,7 +227,7 @@ export default function DashboardClient({
         </LoadingButton>
       </div>
 
-      {isAdmin && (
+      {isAdmin && !isAssessmentScoped && (
         <div className="flex gap-1 mb-6 bg-gray-100 p-1 rounded-lg w-fit">
           <button
             onClick={() => setActiveTab("sesi")}
@@ -233,12 +255,22 @@ export default function DashboardClient({
       {activeTab === "sesi" && (
         <>
           <div className="mb-6">
-            <button
-              onClick={() => setShowForm(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              + Buat Sesi Baru
-            </button>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => setShowForm(true)}
+                className="px-4 py-2 border border-blue-200 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors"
+              >
+                + Buat Sesi Baru
+              </button>
+              {assessmentContext && (
+                <Link
+                  href={assessmentContext.backHref}
+                  className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                >
+                  Kembali
+                </Link>
+              )}
+            </div>
           </div>
 
           {showForm && (
@@ -264,7 +296,9 @@ export default function DashboardClient({
                     id="create-session-title"
                     className="text-lg font-semibold text-gray-800"
                   >
-                    Buat Sesi Baru
+                    {assessmentContext
+                      ? `Buat Sesi ${assessmentContext.name}`
+                      : "Buat Sesi Baru"}
                   </h2>
                   <button
                     type="button"
@@ -320,20 +354,23 @@ export default function DashboardClient({
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Mode
-                    </label>
-                    <select
-                      name="mode"
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="bebas">Bebas (siswa memilih)</option>
-                      <option value="peminatan">Peminatan SMA/MA</option>
-                      <option value="karir">Karir & Program Studi</option>
-                    </select>
-                  </div>
+                  {(assessmentContext?.slug ?? ASSESSMENT_SLUGS.holland) ===
+                    ASSESSMENT_SLUGS.holland && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Mode
+                      </label>
+                      <select
+                        name="mode"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="bebas">Bebas (siswa memilih)</option>
+                        <option value="peminatan">Peminatan SMA/MA</option>
+                        <option value="karir">Karir & Program Studi</option>
+                      </select>
+                    </div>
+                  )}
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -372,7 +409,9 @@ export default function DashboardClient({
 
           {sessions.length === 0 ? (
             <div className="bg-white p-8 rounded-lg shadow-sm text-center text-gray-500">
-              Belum ada sesi. Klik &ldquo;Buat Sesi Baru&rdquo; untuk memulai.
+              {assessmentContext
+                ? 'Belum ada sesi untuk asesmen ini. Klik "Buat Sesi Baru" untuk memulai.'
+                : 'Belum ada sesi. Klik "Buat Sesi Baru" untuk memulai.'}
             </div>
           ) : (
             <div className="grid gap-4">

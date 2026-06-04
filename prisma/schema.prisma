@@ -22,21 +22,104 @@ model User {
 }
 
 model Session {
-  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id     String        @db.Uuid
-  user        User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  code        String        @unique @db.VarChar(100)
-  name        String
-  school_name String
-  description String?
-  mode        String        @default("bebas")
-  is_active   Boolean       @default(true)
-  created_at  DateTime      @default(now())
-  expires_at  DateTime?
-  results     TestResult[]
-  collaborators SessionCollaborator[]
+  id                    String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id               String             @db.Uuid
+  user                  User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  assessment_id         String             @db.Uuid
+  assessment            Assessment         @relation(fields: [assessment_id], references: [id], onDelete: Restrict)
+  assessment_version_id String             @db.Uuid
+  assessment_version    AssessmentVersion  @relation(fields: [assessment_version_id], references: [id], onDelete: Restrict)
+  code                  String             @unique @db.VarChar(100)
+  name                  String
+  school_name           String
+  description           String?
+  mode                  String             @default("bebas")
+  is_active             Boolean            @default(true)
+  created_at            DateTime           @default(now())
+  expires_at            DateTime?
+  results               TestResult[]
+  assessment_results    AssessmentResult[]
+  collaborators         SessionCollaborator[]
 
   @@map("sessions")
+}
+
+model Assessment {
+  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug        String              @unique
+  name        String
+  description String?
+  engine_key  String
+  is_active   Boolean             @default(true)
+  created_at  DateTime            @default(now())
+  versions    AssessmentVersion[]
+  categories  AssessmentCategory[]
+  sessions    Session[]
+
+  @@map("assessments")
+}
+
+model AssessmentVersion {
+  id             String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assessment_id  String                  @db.Uuid
+  assessment     Assessment              @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
+  version        String
+  title          String
+  description    String?
+  scoring_key    String
+  question_count Int                     @default(0)
+  is_active      Boolean                 @default(true)
+  created_at     DateTime                @default(now())
+  questions      AssessmentQuestion[]
+  scale_options  AssessmentScaleOption[]
+  sessions       Session[]
+  results        AssessmentResult[]
+
+  @@unique([assessment_id, version])
+  @@map("assessment_versions")
+}
+
+model AssessmentCategory {
+  id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assessment_id String               @db.Uuid
+  assessment    Assessment           @relation(fields: [assessment_id], references: [id], onDelete: Cascade)
+  code          String
+  name          String
+  description   String?
+  activities    Json?
+  display_order Int
+  questions     AssessmentQuestion[]
+
+  @@unique([assessment_id, code])
+  @@map("assessment_categories")
+}
+
+model AssessmentQuestion {
+  id                    String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assessment_version_id String             @db.Uuid
+  assessment_version    AssessmentVersion  @relation(fields: [assessment_version_id], references: [id], onDelete: Cascade)
+  category_id           String?            @db.Uuid
+  category              AssessmentCategory? @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  question_number       Int
+  statement             String
+  display_order         Int
+  is_active             Boolean            @default(true)
+
+  @@unique([assessment_version_id, question_number])
+  @@map("assessment_questions")
+}
+
+model AssessmentScaleOption {
+  id                    String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assessment_version_id String            @db.Uuid
+  assessment_version    AssessmentVersion @relation(fields: [assessment_version_id], references: [id], onDelete: Cascade)
+  code                  String
+  label                 String
+  score                 Int
+  display_order         Int
+
+  @@unique([assessment_version_id, code])
+  @@map("assessment_scale_options")
 }
 
 model TestResult {
@@ -73,6 +156,41 @@ model ResultAnswer {
   answer     String     @default("Selected")
 
   @@map("result_answers")
+}
+
+model AssessmentResult {
+  id                    String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id            String               @db.Uuid
+  session               Session              @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  assessment_version_id String               @db.Uuid
+  assessment_version    AssessmentVersion    @relation(fields: [assessment_version_id], references: [id], onDelete: Restrict)
+  legacy_result_id      String?              @db.Uuid
+  student_name          String
+  student_class         String
+  birth_date            DateTime?            @db.Date
+  total_score           Int                  @default(0)
+  category_scores       Json
+  ranked_categories     Json
+  top_categories        Json
+  created_at            DateTime             @default(now())
+  responses             AssessmentResponse[]
+
+  @@unique([session_id, student_name, student_class])
+  @@map("assessment_results")
+}
+
+model AssessmentResponse {
+  id                 String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assessment_result_id String         @db.Uuid
+  assessment_result AssessmentResult  @relation(fields: [assessment_result_id], references: [id], onDelete: Cascade)
+  question_id        String?          @db.Uuid
+  question_number    Int
+  question           String
+  answer_code        String
+  score              Int
+  category_code      String?
+
+  @@map("assessment_responses")
 }
 
 model SessionCollaborator {
