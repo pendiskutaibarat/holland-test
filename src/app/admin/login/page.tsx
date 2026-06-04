@@ -16,7 +16,7 @@ export default async function AdminLoginPage() {
   }
 
   if (shouldRedirect) {
-    redirect("/admin/dashboard");
+    redirect("/admin/assessments");
   }
 
   return <LoginForm />;

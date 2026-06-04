@@ -18,13 +18,15 @@ export async function GET(
       where: buildTeacherSessionWhere(userId),
       orderBy: { created_at: "desc" },
       include: {
+        assessment: true,
+        assessment_version: true,
         user: {
           select: {
             name: true,
           },
         },
         _count: {
-          select: { results: true },
+          select: { results: true, assessment_results: true },
         },
       },
     });
@@ -32,7 +34,10 @@ export async function GET(
     return NextResponse.json(
       sessions.map((s) => ({
         ...s,
-        result_count: s._count.results,
+        result_count:
+          s.assessment.slug === "minat_hobi"
+            ? s._count.assessment_results
+            : s._count.results,
         owner_name: s.user.name,
         access_type: getSessionAccessType(s.user_id, userId),
       })),

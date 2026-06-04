@@ -16,17 +16,17 @@ export default async function Home() {
   }
 
   if (shouldRedirect) {
-    redirect("/admin/dashboard");
+    redirect("/admin/assessments");
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Tes Bakat Holland RIASEC
+          Platform Asesmen Siswa
         </h1>
         <p className="text-gray-600 mb-8">
-          Platform tes kepribadian dan pemetaan peminatan
+          Kelola sesi Holland RIASEC, Minat Hobi, dan asesmen lain.
         </p>
         <Link
           href="/admin/login"

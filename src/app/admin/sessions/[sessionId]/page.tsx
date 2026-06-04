@@ -44,6 +44,8 @@ export default async function SessionDetailPage({
           email: true,
         },
       },
+      assessment: true,
+      assessment_version: true,
       collaborators: {
         orderBy: { created_at: "asc" },
         include: {
@@ -59,6 +61,9 @@ export default async function SessionDetailPage({
         },
       },
       results: {
+        orderBy: { created_at: "desc" },
+      },
+      assessment_results: {
         orderBy: { created_at: "desc" },
       },
     },
@@ -90,14 +95,32 @@ export default async function SessionDetailPage({
     <div className="max-w-6xl mx-auto p-6">
       <div className="mb-6">
         <Link
-          href="/admin/dashboard"
+          href={`/admin/assessments/${session.assessment.slug}`}
           className="text-blue-600 hover:text-blue-800 text-sm"
         >
-          ← Kembali ke Dashboard
+          ← Kembali ke Daftar Sesi
         </Link>
       </div>
       <SessionDetailClient
-        session={session}
+        session={{
+          ...session,
+          assessment_results: session.assessment_results.map((result) => ({
+            ...result,
+            category_scores: result.category_scores as Record<string, number>,
+            ranked_categories: result.ranked_categories as Array<{
+              rank: number;
+              category_code: string;
+              category_name?: string;
+              score: number;
+            }>,
+            top_categories: result.top_categories as Array<{
+              rank: number;
+              category_code: string;
+              category_name?: string;
+              score: number;
+            }>,
+          })),
+        }}
         canManageSharing={payload.role === "ADMIN"}
         teachers={teachers}
       />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { getAssessmentTestHref } from "@/lib/test-route";
 
 export type SessionCardAccessType = "OWNED" | "SHARED";
 
@@ -13,6 +14,10 @@ export interface SessionCardData {
   school_name: string;
   description: string | null;
   mode: string;
+  assessment?: {
+    slug: string;
+    name: string;
+  } | null;
   created_at: Date | string;
   result_count: number;
   owner_name: string;
@@ -33,9 +38,15 @@ export default function SessionCard({
   actions,
 }: SessionCardProps) {
   const [copied, setCopied] = useState(false);
+  const assessmentName = session.assessment?.name ?? "Holland RIASEC";
+  const showMode = session.assessment?.slug !== "minat_hobi";
+  const testHref = getAssessmentTestHref(
+    session.assessment?.slug ?? "holland_riasec",
+    session.code,
+  );
 
   function handleCopyLink() {
-    navigator.clipboard.writeText(`${window.location.origin}/test/${session.code}`);
+    navigator.clipboard.writeText(`${window.location.origin}${testHref}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -50,8 +61,14 @@ export default function SessionCard({
             </Link>
           </h3>
           <p className="text-sm text-gray-500 mt-1">
-            {session.school_name} · Mode:{" "}
-            <span className="capitalize">{session.mode}</span> · {session.result_count} hasil ·{" "}
+            {session.school_name} · {assessmentName}
+            {showMode && (
+              <>
+                {" "}
+                · Mode: <span className="capitalize">{session.mode}</span>
+              </>
+            )}{" "}
+            · {session.result_count} hasil ·{" "}
             {new Date(session.created_at).toLocaleDateString("id-ID")}
           </p>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
@@ -72,7 +89,7 @@ export default function SessionCard({
           <div className="mt-3 flex items-center gap-3">
             <button type="button" onClick={handleCopyLink} className="relative">
               <code className="bg-gray-100 px-2 py-1 rounded text-sm hover:bg-gray-200 cursor-pointer transition-colors">
-                /test/{session.code}
+                {testHref}
               </code>
               {copied && (
                 <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
@@ -81,7 +98,7 @@ export default function SessionCard({
               )}
             </button>
             <a
-              href={`/test/${session.code}`}
+              href={testHref}
               target="_blank"
               rel="noopener noreferrer"
               title="Buka Halaman Tes"

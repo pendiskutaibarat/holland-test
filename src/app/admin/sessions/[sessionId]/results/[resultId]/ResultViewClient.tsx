@@ -4,6 +4,8 @@ import Link from "next/link";
 import { TestResult, Mode, PersonalityType } from "@/data/types";
 import KarirResults from "@/components/KarirResults";
 import PeminatanResults from "@/components/PeminatanResults";
+import MinatHobiResults from "@/components/MinatHobiResults";
+import type { RankedMinatHobiCategory } from "@/utils/minatHobi";
 
 interface DbAnswer {
   section: string;
@@ -29,13 +31,43 @@ interface DbResult {
   answers: DbAnswer[];
 }
 
+interface GenericDbResult {
+  student_name: string;
+  student_class: string;
+  birth_date: Date | null;
+  total_score: number;
+  category_scores: Record<string, number>;
+  ranked_categories: RankedMinatHobiCategory[];
+  top_categories: RankedMinatHobiCategory[];
+}
+
 export default function ResultViewClient({
   result,
   sessionId,
 }: {
-  result: DbResult;
+  result: DbResult | GenericDbResult;
   sessionId: string;
 }) {
+  if ("category_scores" in result) {
+    return (
+      <div className="max-w-[1000px] mx-auto p-5">
+        <div className="mb-4">
+          <Link
+            href={`/admin/sessions/${sessionId}`}
+            className="text-blue-600 hover:text-blue-800 text-sm"
+          >
+            ← Kembali ke Detail Sesi
+          </Link>
+        </div>
+        <MinatHobiResults
+          studentName={result.student_name}
+          birthDate={result.student_class}
+          result={result}
+        />
+      </div>
+    );
+  }
+
   const results: TestResult[] = [
     { type: "realistic" as PersonalityType, score: result.r_score },
     { type: "investigative" as PersonalityType, score: result.i_score },

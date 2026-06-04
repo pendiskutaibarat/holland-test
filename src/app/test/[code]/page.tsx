@@ -1,12 +1,12 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import TestPageClient from "./TestPageClient";
+import { getAssessmentTestHref } from "@/lib/test-route";
 
 function isValidSessionSlug(code: string): boolean {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(code) && code.length <= 100;
 }
 
-export default async function TestPage({
+export default async function LegacyTestPage({
   params,
 }: {
   params: Promise<{ code: string }>;
@@ -19,19 +19,14 @@ export default async function TestPage({
 
   const session = await prisma.session.findUnique({
     where: { code },
+    include: {
+      assessment: true,
+    },
   });
 
   if (!session) {
     notFound();
   }
 
-  return (
-    <TestPageClient
-      sessionId={session.id}
-      sessionName={session.name}
-      schoolName={session.school_name}
-      sessionMode={session.mode}
-      isActive={session.is_active}
-    />
-  );
+  redirect(getAssessmentTestHref(session.assessment.slug, session.code));
 }

@@ -22,11 +22,16 @@ export async function GET(
     const session = await prisma.session.findFirst({
       where: buildSessionDetailWhere(userId, role, sessionId),
       include: {
+        assessment: true,
+        assessment_version: true,
         results: {
           orderBy: { created_at: "desc" },
           include: {
             answers: true,
           },
+        },
+        assessment_results: {
+          orderBy: { created_at: "desc" },
         },
         user: {
           select: {

@@ -51,9 +51,43 @@ export default async function ResultViewPage({
     },
   });
 
-  if (!result) {
+  if (result) {
+    return <ResultViewClient result={result} sessionId={sessionId} />;
+  }
+
+  const assessmentResult = await prisma.assessmentResult.findFirst({
+    where: {
+      id: resultId,
+      session_id: sessionId,
+    },
+    include: {
+      responses: true,
+    },
+  });
+
+  if (!assessmentResult) {
     redirect(`/admin/sessions/${sessionId}`);
   }
 
-  return <ResultViewClient result={result} sessionId={sessionId} />;
+  return (
+    <ResultViewClient
+      result={{
+        ...assessmentResult,
+        category_scores: assessmentResult.category_scores as Record<string, number>,
+        ranked_categories: assessmentResult.ranked_categories as Array<{
+          rank: number;
+          category_code: string;
+          category_name: string;
+          score: number;
+        }>,
+        top_categories: assessmentResult.top_categories as Array<{
+          rank: number;
+          category_code: string;
+          category_name: string;
+          score: number;
+        }>,
+      }}
+      sessionId={sessionId}
+    />
+  );
 }
