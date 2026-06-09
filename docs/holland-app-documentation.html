@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Dokumentasi Produk Holland Test</title>
+<meta name="author" content="Kami">
+<meta name="description" content="Dokumentasi lengkap aplikasi Holland Test untuk PRD, alur produk, arsitektur, API, data, dan operasional.">
+<meta name="keywords" content="Holland Test, PRD, RIASEC, Next.js, Prisma">
+<meta name="generator" content="Kami">
+<style>
+  @font-face { font-family: "Newsreader"; src: url("fonts/Newsreader.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Newsreader"; src: url("fonts/Newsreader.woff2") format("woff2"); font-weight: 500; font-style: normal; }
+  @font-face { font-family: "Inter"; src: url("fonts/Inter.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Inter"; src: url("fonts/Inter-500.woff2") format("woff2"); font-weight: 500; font-style: normal; }
+  @font-face { font-family: "Inter"; src: url("fonts/Inter-600.woff2") format("woff2"); font-weight: 600; font-style: normal; }
+  @font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory: #faf9f5;
+    --near-black: #141413;
+    --dark-warm: #3d3d3a;
+    --charcoal: #4d4c48;
+    --olive: #5e5d59;
+    --stone: #87867f;
+    --brand: #1B365D;
+    --border: #e8e6dc;
+    --border-soft: #e5e3d8;
+    --tag-bg: #E4ECF5;
+    --serif: "Newsreader", "Source Serif 4", "Charter", Georgia, "Times New Roman", serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", Consolas, Monaco, monospace;
+  }
+
+  html, body { background: var(--parchment); }
+  @media screen {
+    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm 22mm; }
+  }
+
+  body {
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.2pt;
+    line-height: 1.53;
+  }
+
+  .cover {
+    min-height: 240mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 36mm;
+    break-after: page;
+  }
+  .cover-eyebrow {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 1.8pt;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 18pt;
+  }
+  .cover-title {
+    font-size: 39pt;
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.4pt;
+    margin-bottom: 14pt;
+  }
+  .cover-sub {
+    font-family: var(--sans);
+    font-size: 13pt;
+    color: var(--olive);
+    line-height: 1.45;
+    max-width: 92%;
+  }
+  .cover-meta {
+    font-family: var(--sans);
+    font-size: 9.6pt;
+    color: var(--stone);
+    line-height: 1.55;
+    font-variant-numeric: tabular-nums;
+  }
+  .cover-meta strong { color: var(--dark-warm); font-weight: 600; }
+
+  .toc { break-after: page; }
+  .toc h2, h1 {
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 8pt;
+  }
+  .toc h2 {
+    font-size: 22pt;
+    font-weight: 500;
+    margin-bottom: 14pt;
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6pt 0;
+    border-bottom: 0.3pt dotted var(--border);
+    font-size: 11pt;
+  }
+  .toc-num { color: var(--brand); font-weight: 500; min-width: 28pt; }
+  .toc-title { flex: 1; padding-left: 8pt; }
+  .toc-page { color: var(--stone); font-variant-numeric: tabular-nums; }
+
+  .chapter { break-before: page; }
+  .chapter-num {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 1.7pt;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6pt;
+  }
+  h1 {
+    font-size: 23pt;
+    font-weight: 500;
+    line-height: 1.16;
+    letter-spacing: -0.2pt;
+    margin-bottom: 10pt;
+  }
+  h2 {
+    font-size: 15pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 23pt 0 6pt;
+    break-after: avoid;
+  }
+  h3 {
+    font-size: 12pt;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 15pt 0 4pt;
+    color: var(--dark-warm);
+    break-after: avoid;
+  }
+  p { margin-bottom: 9pt; }
+  .lead {
+    font-size: 11.5pt;
+    line-height: 1.52;
+    color: var(--dark-warm);
+    margin-bottom: 13pt;
+  }
+  .hl { color: var(--brand); font-weight: 500; }
+  .sans { font-family: var(--sans); }
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-family: var(--sans);
+    font-size: 7.8pt;
+    font-weight: 600;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    letter-spacing: 0.35pt;
+    text-transform: uppercase;
+    margin: 0 4pt 4pt 0;
+  }
+  ul, ol { margin: 6pt 0 10pt 0; padding-left: 20pt; }
+  li { margin-bottom: 3pt; }
+  li::marker { color: var(--brand); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.3pt;
+    margin: 11pt 0;
+    break-inside: avoid;
+  }
+  th {
+    text-align: left;
+    font-family: var(--sans);
+    font-weight: 600;
+    color: var(--charcoal);
+    padding: 6pt 8pt;
+    border-bottom: 1pt solid var(--brand);
+    background: var(--ivory);
+  }
+  td {
+    padding: 5pt 8pt;
+    border-bottom: 0.3pt solid var(--border-soft);
+    vertical-align: top;
+  }
+  code {
+    font-family: var(--mono);
+    font-size: 8.5pt;
+    background: var(--ivory);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+  }
+  pre {
+    font-family: var(--mono);
+    font-size: 8.3pt;
+    line-height: 1.45;
+    background: var(--ivory);
+    border: 0.5pt solid var(--border-soft);
+    border-radius: 4pt;
+    padding: 10pt 12pt;
+    margin: 9pt 0;
+    white-space: pre-wrap;
+    break-inside: avoid;
+  }
+  .callout, .takeaway {
+    background: var(--ivory);
+    border-left: 2pt solid var(--brand);
+    padding: 10pt 13pt;
+    border-radius: 3pt;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+  .takeaway-label {
+    font-family: var(--sans);
+    font-size: 7.8pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4pt;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+  .card {
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 6pt;
+    padding: 11pt 13pt;
+    break-inside: avoid;
+  }
+  .metric {
+    font-family: var(--sans);
+    color: var(--olive);
+    font-size: 8.8pt;
+  }
+  .metric strong {
+    display: block;
+    font-family: var(--serif);
+    color: var(--brand);
+    font-size: 17pt;
+    font-weight: 500;
+    line-height: 1.1;
+    margin-bottom: 2pt;
+  }
+  .small { font-family: var(--sans); font-size: 8.7pt; color: var(--olive); }
+  .flow {
+    font-family: var(--sans);
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    margin: 10pt 0;
+    break-inside: avoid;
+  }
+  .flow span {
+    display: inline-block;
+    margin: 2pt 3pt 2pt 0;
+    padding: 2pt 6pt;
+    border-radius: 3pt;
+    background: #EEF2F7;
+    color: var(--brand);
+    font-size: 8.2pt;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div>
+    <div class="cover-eyebrow">Dokumentasi Produk dan Teknis</div>
+    <div class="cover-title">Holland Test<br>App Documentation</div>
+    <div class="cover-sub">PRD, alur pengguna, kebutuhan fungsional, arsitektur sistem, model data, API, dan panduan operasional untuk aplikasi tes Holland RIASEC berbasis sesi.</div>
+  </div>
+  <div class="cover-meta">
+    <strong>Holland Test</strong><br>
+    Versi dokumentasi 1.0 · 2026.05.26<br>
+    Disusun dari source code repository <code>D:\Pandu\project\holland-test</code>
+  </div>
+</section>
+
+<section class="toc">
+  <h2>Daftar Isi</h2>
+  <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">PRD: Product Requirements Document</span><span class="toc-page">03</span></div>
+  <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">Ruang Lingkup Produk dan Pengguna</span><span class="toc-page">06</span></div>
+  <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">Alur Produk dan Kebutuhan Fungsional</span><span class="toc-page">08</span></div>
+  <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">Metodologi Holland RIASEC</span><span class="toc-page">12</span></div>
+  <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">Arsitektur Sistem</span><span class="toc-page">14</span></div>
+  <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">Model Data dan API</span><span class="toc-page">17</span></div>
+  <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">Keamanan, Operasional, dan Deployment</span><span class="toc-page">21</span></div>
+  <div class="toc-item"><span class="toc-num">08</span><span class="toc-title">Lampiran</span><span class="toc-page">24</span></div>
+</section>
+
+<section>
+  <div class="chapter-num">01 · PRD</div>
+  <h1>Product Requirements Document</h1>
+  <p class="lead">
+    Holland Test adalah platform asesmen minat dan kecenderungan karir berbasis teori Holland RIASEC. Produk ini memindahkan asesmen dari pengalaman tunggal di browser menjadi <span class="hl">platform berbasis sesi</span>, tempat admin atau guru membuat link tes, siswa mengisi asesmen, dan hasil tersimpan di PostgreSQL untuk ditinjau, dibagikan, dan diekspor.
+  </p>
+
+  <h2>Ringkasan Produk</h2>
+  <p>
+    Aplikasi menyediakan tes Holland RIASEC untuk dua kebutuhan utama: pemetaan peminatan SMA/MA dan eksplorasi karir/program studi. Siswa mengakses tes dari link sesi, mengisi identitas awal, memilih atau mengikuti mode yang ditentukan guru, menjawab pertanyaan RIASEC, lalu langsung menerima hasil. Guru melihat agregasi hasil di dashboard, membuka detail siswa, mengunduh rekap Excel, dan dapat membagikan akses sesi ke guru lain melalui fitur kolaborator.
+  </p>
+
+  <div class="grid-2">
+    <div class="card metric"><strong>6</strong> dimensi RIASEC: Realistic, Investigative, Artistic, Social, Enterprising, Conventional.</div>
+    <div class="card metric"><strong>2</strong> mode hasil utama: Peminatan SMA/MA dan Karir & Program Studi.</div>
+    <div class="card metric"><strong>8</strong> langkah wizard pada implementasi saat ini: pemilihan mode atau mode terkunci, enam bagian RIASEC, dan hasil.</div>
+    <div class="card metric"><strong>5</strong> model data inti: User, Session, TestResult, ResultAnswer, SessionCollaborator.</div>
+  </div>
+
+  <h2>Masalah yang Diselesaikan</h2>
+  <p>
+    Sebelum rework platform, asesmen berjalan sebagai aplikasi client-side dan penyimpanan hasil diarahkan ke Google Sheets/Apps Script. Pola itu membuat guru sulit mengelola banyak sesi, memisahkan hasil per kelas/sekolah, mengontrol akses tes, atau melihat riwayat siswa dari satu dashboard. Sistem saat ini menyelesaikan masalah tersebut dengan otentikasi, sesi tes unik, penyimpanan database, dan tampilan detail hasil.
+  </p>
+
+  <div class="callout">
+    Tujuan produk bukan menggantikan konseling, melainkan menyediakan bahan awal yang rapi, terukur, dan mudah dibahas oleh guru BK bersama siswa.
+  </div>
+
+  <h2>Tujuan</h2>
+  <ul>
+    <li>Guru dapat membuat sesi tes dengan nama sesi, nama sekolah/madrasah, mode tes, dan deskripsi opsional.</li>
+    <li>Siswa dapat mengerjakan tes melalui link unik tanpa akun siswa.</li>
+    <li>Hasil siswa tersimpan di PostgreSQL dengan skor RIASEC, mode, persentase peminatan bila relevan, dan jawaban pertanyaan.</li>
+    <li>Admin dapat mengelola akun guru melalui status PENDING, ACTIVE, dan REJECTED.</li>
+    <li>Guru atau admin dapat melihat ringkasan hasil, detail hasil, kolaborator sesi, dan ekspor Excel.</li>
+  </ul>
+
+  <h2>Non-Tujuan</h2>
+  <ul>
+    <li>Aplikasi tidak menyediakan akun siswa atau autentikasi siswa.</li>
+    <li>Aplikasi tidak menggunakan SSO, LMS sekolah, atau integrasi email.</li>
+    <li>Aplikasi tidak menyediakan realtime dashboard; guru melihat hasil setelah refresh atau navigasi ulang.</li>
+    <li>Aplikasi bukan alat diagnosis psikologis final; hasilnya eksploratif dan perlu pendampingan guru BK/konselor.</li>
+  </ul>
+
+  <h2>Metrik Keberhasilan</h2>
+  <table>
+    <thead>
+      <tr><th>Dimensi</th><th>Target Produk</th><th>Indikator</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Adopsi guru</td><td>Guru mampu membuat dan membagikan sesi tanpa bantuan teknis.</td><td>Sesi baru muncul di dashboard dan link dapat disalin.</td></tr>
+      <tr><td>Keberhasilan siswa</td><td>Siswa menyelesaikan tes dan melihat hasil langsung.</td><td>Record <code>test_results</code> dibuat dan halaman hasil tampil.</td></tr>
+      <tr><td>Kualitas data</td><td>Duplikasi siswa pada sesi yang sama dicegah.</td><td>Constraint unik <code>session_id + student_name + student_class</code> aktif.</td></tr>
+      <tr><td>Operasional sekolah</td><td>Guru dapat mengunduh rekap hasil per sesi.</td><td>File <code>.xlsx</code> berisi metadata sesi, ringkasan, dan daftar siswa.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="chapter">
+  <div class="chapter-num">02 · Scope</div>
+  <h1>Ruang Lingkup Produk dan Pengguna</h1>
+  <p class="lead">
+    Produk memiliki tiga kelompok pengguna: admin, guru, dan siswa. Admin memegang kontrol akun guru; guru menjalankan asesmen; siswa hanya memakai link sesi untuk mengerjakan tes.
+  </p>
+
+  <h2>Persona Utama</h2>
+  <table>
+    <thead>
+      <tr><th>Persona</th><th>Kebutuhan</th><th>Fitur Terkait</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Admin</td><td>Mengelola guru, menyetujui/menolak registrasi, dan melihat sesi.</td><td>Login, dashboard tab Guru, approve/reject user.</td></tr>
+      <tr><td>Guru BK atau wali kelas</td><td>Membuat sesi, membagikan link, memantau hasil, dan mengekspor rekap.</td><td>Dashboard sesi, detail sesi, copy link, Excel export.</td></tr>
+      <tr><td>Siswa</td><td>Mengisi asesmen dengan instruksi sederhana dan menerima hasil langsung.</td><td>Halaman <code>/test/[code]</code>, wizard RIASEC, halaman hasil.</td></tr>
+      <tr><td>Guru kolaborator</td><td>Mengakses sesi yang dibagikan tanpa menjadi pemilik sesi.</td><td><code>SessionCollaborator</code>, akses OWNED/SHARED.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Ruang Lingkup MVP Saat Ini</h2>
+  <p>
+    Scope aktif meliputi autentikasi email/password, registrasi guru dengan persetujuan admin, pembuatan sesi tes, halaman tes publik berdasarkan kode sesi, penyimpanan hasil ke database, tampilan detail hasil per siswa, ringkasan sesi, kolaborasi antar guru, dan ekspor Excel. PDF hasil siswa di implementasi saat ini memakai mekanisme cetak browser dari halaman hasil; library <code>html2pdf.js</code> masih tercatat sebagai dependency dan utilitas pendukung, tetapi tombol utama yang terlihat pada komponen hasil adalah <code>Cetak Hasil</code>.
+  </p>
+
+  <h2>Aturan Produk Penting</h2>
+  <ul>
+    <li>Sesi memiliki mode <code>bebas</code>, <code>peminatan</code>, atau <code>karir</code>. Mode bebas membuat siswa memilih mode; mode lain mengunci pilihan.</li>
+    <li>Sesi hanya dapat dikerjakan saat <code>is_active</code> bernilai true.</li>
+    <li>Guru berstatus PENDING atau REJECTED tidak boleh masuk ke dashboard.</li>
+    <li>Admin memiliki akses pengelolaan guru dan dapat melihat sesi; guru biasa hanya melihat sesi miliknya dan sesi yang dibagikan.</li>
+    <li>Hasil duplikat dicegah berdasarkan kombinasi sesi, nama siswa, dan field <code>student_class</code>.</li>
+  </ul>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Catatan Implementasi</div>
+    Pada flow siswa saat ini, form awal meminta nama lengkap dan tanggal lahir. Nilai tanggal lahir diteruskan ke prop bernama <code>studentClass</code> dan ikut masuk ke payload sebagai <code>student_class</code> sekaligus <code>birth_date</code>. Dokumen ini mencatat perilaku aktual tersebut sebagai risiko data yang perlu dirapikan bila aplikasi membutuhkan kelas siswa sebagai field terpisah.
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="chapter-num">03 · Functional Flow</div>
+  <h1>Alur Produk dan Kebutuhan Fungsional</h1>
+  <p class="lead">
+    Aplikasi dibangun sebagai rangkaian flow yang jelas: admin/guru login, guru membuat sesi, siswa mengerjakan tes, hasil disimpan, lalu guru meninjau dan mengekspor data.
+  </p>
+
+  <h2>Flow Admin dan Guru</h2>
+  <div class="flow">
+    <span>Registrasi Guru</span>
+    <span>Persetujuan Admin</span>
+    <span>Login</span>
+    <span>Dashboard</span>
+    <span>Buat Sesi</span>
+    <span>Bagikan Link</span>
+    <span>Lihat Hasil</span>
+  </div>
+  <ul>
+    <li>Guru baru mendaftar melalui <code>/admin/register</code> dan dibuat sebagai role TEACHER dengan status PENDING.</li>
+    <li>Admin membuka dashboard tab Guru, lalu menyetujui atau menolak akun melalui endpoint approve/reject.</li>
+    <li>Guru aktif login di <code>/admin/login</code>; token JWT disimpan pada cookie httpOnly bernama <code>auth-token</code>.</li>
+    <li>Guru membuat sesi dengan nama sesi, nama sekolah/madrasah, mode, dan deskripsi.</li>
+    <li>Sesi tampil sebagai kartu dengan jumlah hasil, status aktif, owner, dan tindakan melihat detail.</li>
+  </ul>
+
+  <h2>Flow Siswa</h2>
+  <div class="flow">
+    <span>Buka /test/[code]</span>
+    <span>Validasi Sesi</span>
+    <span>Isi Identitas</span>
+    <span>Pilih atau Ikuti Mode</span>
+    <span>Jawab RIASEC</span>
+    <span>Simpan Hasil</span>
+    <span>Lihat Hasil</span>
+  </div>
+  <ul>
+    <li>Halaman server <code>/test/[code]</code> mengambil metadata sesi melalui kode sesi.</li>
+    <li>Jika sesi tidak aktif, siswa melihat pesan sesi ditutup.</li>
+    <li>Jika sesi aktif, siswa mengisi nama lengkap dan tanggal lahir.</li>
+    <li>Wizard menampilkan pemilihan mode bila mode sesi <code>bebas</code>; jika mode dikunci, wizard langsung menampilkan mode yang ditentukan.</li>
+    <li>Pada tahap hasil, aplikasi mengirim <code>POST /api/results</code> satu kali dan menampilkan status sukses, duplikat, error, atau sedang mengirim.</li>
+  </ul>
+
+  <h2>Flow Detail Sesi</h2>
+  <p>
+    Halaman detail sesi menyajikan metadata sesi, link tes, daftar kolaborator, ringkasan jumlah hasil, rata-rata skor RIASEC, rata-rata persentase peminatan, daftar hasil siswa, dan tombol unduh Excel. Admin dapat menambah atau menghapus kolaborator sesi; guru kolaborator melihat akses sebagai SHARED.
+  </p>
+
+  <h2>Kebutuhan Fungsional</h2>
+  <table>
+    <thead>
+      <tr><th>Kode</th><th>Kebutuhan</th><th>Status Implementasi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>FR-01</td><td>Autentikasi admin/guru dengan email dan password.</td><td>Sudah ada via JWT, bcryptjs, cookie httpOnly.</td></tr>
+      <tr><td>FR-02</td><td>Registrasi guru dengan approval admin.</td><td>Sudah ada: TEACHER dibuat PENDING, admin approve/reject.</td></tr>
+      <tr><td>FR-03</td><td>Pembuatan sesi tes dengan sekolah/madrasah wajib.</td><td>Sudah ada di API dan UI dashboard.</td></tr>
+      <tr><td>FR-04</td><td>Link sesi publik untuk siswa.</td><td>Sudah ada di <code>/test/[code]</code>.</td></tr>
+      <tr><td>FR-05</td><td>Mode tes bebas atau terkunci.</td><td>Sudah ada di WizardContainer dan API result validation.</td></tr>
+      <tr><td>FR-06</td><td>Penyimpanan skor RIASEC dan jawaban pertanyaan.</td><td>Sudah ada di <code>TestResult</code> dan <code>ResultAnswer</code>.</td></tr>
+      <tr><td>FR-07</td><td>Ekspor hasil per sesi.</td><td>Sudah ada sebagai ekspor Excel client-side.</td></tr>
+      <tr><td>FR-08</td><td>Berbagi sesi ke guru lain.</td><td>Sudah ada melalui <code>SessionCollaborator</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Kebutuhan Non-Fungsional</h2>
+  <ul>
+    <li>Keamanan: password disimpan sebagai bcrypt hash, JWT wajib memakai <code>JWT_SECRET</code>, dan cookie bersifat httpOnly.</li>
+    <li>Reliabilitas data: database memakai foreign key cascade dan unique constraint untuk mencegah duplikasi hasil.</li>
+    <li>Performa: wizard tetap client-side agar interaksi pertanyaan cepat tanpa round-trip per langkah.</li>
+    <li>Keterbacaan hasil: halaman hasil langsung memuat narasi profil, skor, rekomendasi, dan tombol cetak.</li>
+    <li>Operasional: migrasi database dikelola dengan Prisma migration dan seed admin tersedia.</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <div class="chapter-num">04 · RIASEC</div>
+  <h1>Metodologi Holland RIASEC</h1>
+  <p class="lead">
+    Tes menggunakan enam domain Holland Occupational Themes. Setiap domain memiliki kumpulan pernyataan; skor dihitung dari jumlah pilihan siswa pada domain tersebut.
+  </p>
+
+  <h2>Enam Domain</h2>
+  <table>
+    <thead>
+      <tr><th>Domain</th><th>Label Indonesia</th><th>Makna Produk</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Realistic</td><td>Realistis</td><td>Cenderung pada aktivitas praktis, alat, mesin, fisik, atau teknis.</td></tr>
+      <tr><td>Investigative</td><td>Investigatif</td><td>Cenderung pada analisis, riset, pemecahan masalah, dan penalaran.</td></tr>
+      <tr><td>Artistic</td><td>Artistik</td><td>Cenderung pada ekspresi kreatif, desain, bahasa, dan ide orisinal.</td></tr>
+      <tr><td>Social</td><td>Sosial</td><td>Cenderung pada membantu, mengajar, mendampingi, dan berinteraksi.</td></tr>
+      <tr><td>Enterprising</td><td>Wirausaha</td><td>Cenderung pada memimpin, memengaruhi, menjual, dan mengambil inisiatif.</td></tr>
+      <tr><td>Conventional</td><td>Konvensional</td><td>Cenderung pada struktur, administrasi, data, prosedur, dan ketelitian.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Mode Peminatan SMA/MA</h2>
+  <p>
+    Mode peminatan mengubah skor enam domain menjadi persentase IPA, IPS, dan Bahasa & Budaya memakai bobot pada <code>PEMINATAN_WEIGHTS</code>. Jika semua skor kosong, sistem mengembalikan distribusi default 33.33%, 33.33%, dan 33.34% agar tampilan tidak rusak. Hasil menampilkan urutan peminatan, narasi bidang, mata pelajaran relevan, dan dua profil RIASEC dominan.
+  </p>
+
+  <h2>Mode Karir & Program Studi</h2>
+  <p>
+    Mode karir mengurutkan skor RIASEC, membentuk kode Holland tiga huruf teratas melalui utilitas badge, lalu menampilkan lencana profil bila tersedia. Halaman hasil juga memuat grafik bar horizontal, tiga kepribadian dominan, tabel profesi, dan rekomendasi program studi berdasarkan data <code>careers</code> serta <code>personalities</code>.
+  </p>
+
+  <h2>Pengumpulan Jawaban</h2>
+  <p>
+    Jawaban siswa disimpan sebagai baris individual pada <code>ResultAnswer</code> dengan field <code>section</code>, <code>question</code>, dan <code>answer</code>. Nilai jawaban default adalah "Selected". Pola ini membuat hasil tidak hanya berisi skor agregat, tetapi juga bisa ditelusuri sampai pertanyaan yang dipilih.
+  </p>
+</section>
+
+<section class="chapter">
+  <div class="chapter-num">05 · Architecture</div>
+  <h1>Arsitektur Sistem</h1>
+  <p class="lead">
+    Aplikasi adalah full-stack Next.js App Router dengan React client components untuk wizard dan dashboard interaktif, API route handlers untuk operasi server, Prisma Client untuk akses PostgreSQL, serta utilitas domain untuk scoring dan ekspor.
+  </p>
+
+  <h2>Stack Teknologi</h2>
+  <table>
+    <thead>
+      <tr><th>Lapisan</th><th>Teknologi</th><th>Catatan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Framework</td><td>Next.js 16.2.2, App Router</td><td>Server components untuk halaman admin; route handlers untuk API.</td></tr>
+      <tr><td>UI</td><td>React 19.2.4, TypeScript, Tailwind CSS 4</td><td>Client components untuk wizard, chart, form, dan ekspor.</td></tr>
+      <tr><td>Database</td><td>PostgreSQL</td><td>Connection string dari <code>DATABASE_URL</code>.</td></tr>
+      <tr><td>ORM</td><td>Prisma 7.8.0 + <code>@prisma/adapter-pg</code></td><td>Client generated ke <code>prisma/generated/client</code>.</td></tr>
+      <tr><td>Auth</td><td>jsonwebtoken, bcryptjs</td><td>JWT 24 jam, password bcrypt cost 12.</td></tr>
+      <tr><td>Chart</td><td>Chart.js, react-chartjs-2</td><td>Dipakai pada visualisasi hasil.</td></tr>
+      <tr><td>Export</td><td>Browser print, custom XLSX generator</td><td>Excel dibuat client-side dari XML dan ZIP minimal.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Struktur Direktori</h2>
+  <pre><code>src/app/admin              Halaman login, register, dashboard, detail sesi, detail hasil
+src/app/api                API auth, admin users, sessions, collaborators, results
+src/app/test/[code]        Entry point tes siswa berdasarkan kode sesi
+src/components             Wizard, hasil peminatan/karir, navigasi, chart/table
+src/data                   Pertanyaan, kepribadian, karir, badge, bobot peminatan
+src/lib                    Auth, Prisma, generator kode, session access
+src/utils                  Scoring peminatan dan utilitas PDF
+prisma                     Schema, migration, seed admin</code></pre>
+
+  <h2>Boundary Server dan Client</h2>
+  <ul>
+    <li>Server membaca cookie auth dan mengambil data Prisma untuk halaman dashboard/detail.</li>
+    <li>Client component mengelola interaksi form, toggle, modal, wizard, chart, dan ekspor.</li>
+    <li>API admin memanggil <code>requireAuth</code> atau <code>requireAdmin</code> sebelum membaca atau mengubah data.</li>
+    <li>API siswa untuk session lookup dan result submission tidak memerlukan login, tetapi dibatasi oleh kode sesi, status aktif, dan mode sesi.</li>
+  </ul>
+
+  <h2>Keputusan Arsitektur</h2>
+  <ul>
+    <li>Prisma dipilih agar schema, migration, dan type generation berada dalam workflow yang sama.</li>
+    <li>JWT custom dipakai karena kebutuhan auth sederhana: email/password, role, status, dan cookie server-side.</li>
+    <li>Wizard tetap client-side agar siswa tidak menunggu request server di setiap langkah pertanyaan.</li>
+    <li>Jawaban pertanyaan dinormalisasi ke tabel terpisah agar analitik pertanyaan bisa ditambahkan di masa depan.</li>
+    <li>Session sharing dipisah lewat tabel junction <code>SessionCollaborator</code> agar owner dan akses bersama tetap jelas.</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <div class="chapter-num">06 · Data and API</div>
+  <h1>Model Data dan API</h1>
+  <p class="lead">
+    Model data berpusat pada akun pengguna, sesi tes, hasil siswa, jawaban detail, dan akses kolaborator. API mengikuti pola Next.js route handler di bawah <code>src/app/api</code>.
+  </p>
+
+  <h2>Model Data</h2>
+  <table>
+    <thead>
+      <tr><th>Model</th><th>Field Kunci</th><th>Relasi dan Aturan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>User</td><td><code>email</code>, <code>password_hash</code>, <code>role</code>, <code>status</code></td><td>Memiliki banyak sesi; role ADMIN/TEACHER; status PENDING/ACTIVE/REJECTED.</td></tr>
+      <tr><td>Session</td><td><code>code</code>, <code>name</code>, <code>school_name</code>, <code>mode</code>, <code>is_active</code></td><td>Milik satu user; punya banyak hasil; dapat dibagikan ke guru lain.</td></tr>
+      <tr><td>TestResult</td><td><code>student_name</code>, <code>student_class</code>, skor RIASEC, persentase peminatan</td><td>Unik per sesi + nama + class; menyimpan hasil agregat siswa.</td></tr>
+      <tr><td>ResultAnswer</td><td><code>section</code>, <code>question</code>, <code>answer</code></td><td>Detail jawaban yang terhubung ke satu hasil.</td></tr>
+      <tr><td>SessionCollaborator</td><td><code>session_id</code>, <code>user_id</code></td><td>Unique constraint mencegah guru yang sama dibagikan dua kali.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>API Auth</h2>
+  <table>
+    <thead>
+      <tr><th>Endpoint</th><th>Method</th><th>Fungsi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>/api/auth/register</code></td><td>POST</td><td>Mendaftarkan guru baru sebagai TEACHER/PENDING.</td></tr>
+      <tr><td><code>/api/auth/login</code></td><td>POST</td><td>Validasi email/password, status akun, lalu set cookie JWT.</td></tr>
+      <tr><td><code>/api/auth/logout</code></td><td>POST</td><td>Menghapus cookie auth.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>API Admin dan Session</h2>
+  <table>
+    <thead>
+      <tr><th>Endpoint</th><th>Method</th><th>Fungsi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>/api/admin/users</code></td><td>GET</td><td>Admin mengambil daftar guru dan jumlah sesi.</td></tr>
+      <tr><td><code>/api/admin/users/[userId]/approve</code></td><td>PATCH</td><td>Admin mengaktifkan guru.</td></tr>
+      <tr><td><code>/api/admin/users/[userId]/reject</code></td><td>PATCH</td><td>Admin menolak guru.</td></tr>
+      <tr><td><code>/api/admin/sessions</code></td><td>GET</td><td>Mengambil sesi milik user atau sesi shared; admin hanya mengambil sesi miliknya pada implementasi route ini.</td></tr>
+      <tr><td><code>/api/admin/sessions</code></td><td>POST</td><td>Membuat sesi baru dan menghasilkan kode slug unik.</td></tr>
+      <tr><td><code>/api/admin/sessions/[sessionId]</code></td><td>GET</td><td>Mengambil detail sesi, hasil, owner, dan kolaborator.</td></tr>
+      <tr><td><code>/api/admin/sessions/[sessionId]</code></td><td>PATCH</td><td>Mengubah status aktif, nama, atau deskripsi sesi.</td></tr>
+      <tr><td><code>/api/admin/sessions/[sessionId]</code></td><td>DELETE</td><td>Menghapus sesi dan data turunannya via cascade.</td></tr>
+      <tr><td><code>/api/admin/sessions/[sessionId]/collaborators</code></td><td>GET/POST</td><td>Admin membaca atau menambah guru kolaborator aktif.</td></tr>
+      <tr><td><code>/api/admin/sessions/[sessionId]/collaborators/[userId]</code></td><td>DELETE</td><td>Admin menghapus akses kolaborator.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>API Publik Siswa</h2>
+  <table>
+    <thead>
+      <tr><th>Endpoint</th><th>Method</th><th>Fungsi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>/api/sessions/[code]</code></td><td>GET</td><td>Mengembalikan metadata sesi publik: id, name, school_name, mode, is_active.</td></tr>
+      <tr><td><code>/api/results</code></td><td>POST</td><td>Menyimpan hasil siswa, validasi sesi aktif dan mode, lalu membuat jawaban detail.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Payload Hasil Siswa</h2>
+  <pre><code>{
+  "session_code": "uuid-session-id",
+  "student_name": "Nama Siswa",
+  "student_class": "nilai yang dikirim UI saat ini",
+  "mode": "peminatan | karir",
+  "birth_date": "YYYY-MM-DD",
+  "r_score": 0,
+  "i_score": 0,
+  "a_score": 0,
+  "s_score": 0,
+  "e_score": 0,
+  "c_score": 0,
+  "holland_code": null,
+  "ipa_pct": null,
+  "ips_pct": null,
+  "bahasa_pct": null,
+  "answers": [
+    { "section": "Kepribadian 1", "question": "...", "answer": "Selected" }
+  ]
+}</code></pre>
+
+  <h2>Catatan Konsistensi Spesifikasi</h2>
+  <ul>
+    <li>OpenSpec awal menyebut kode sesi 8 karakter base62, tetapi implementasi sekarang memakai slug dari nama sesi dengan suffix numerik bila terjadi bentrok.</li>
+    <li>OpenSpec awal menyebut identitas siswa nama dan kelas, tetapi UI saat ini meminta nama dan tanggal lahir.</li>
+    <li>Schema saat ini memakai model <code>User</code> yang dipetakan ke tabel <code>users</code>, bukan model <code>Admin</code> terpisah.</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <div class="chapter-num">07 · Operations</div>
+  <h1>Keamanan, Operasional, dan Deployment</h1>
+  <p class="lead">
+    Aplikasi membutuhkan Node.js, PostgreSQL, environment variable database dan JWT, migrasi Prisma yang sudah diterapkan, serta seed admin pertama sebelum dipakai oleh sekolah.
+  </p>
+
+  <h2>Environment Variable</h2>
+  <table>
+    <thead>
+      <tr><th>Nama</th><th>Wajib</th><th>Fungsi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>DATABASE_URL</code></td><td>Ya</td><td>Connection string PostgreSQL untuk Prisma dan seed.</td></tr>
+      <tr><td><code>JWT_SECRET</code></td><td>Ya</td><td>Secret penandatangan JWT; aplikasi akan error bila tidak tersedia saat auth dipakai.</td></tr>
+      <tr><td><code>ADMIN_EMAIL</code></td><td>Tidak</td><td>Email admin awal saat seed; default <code>admin@example.com</code>.</td></tr>
+      <tr><td><code>ADMIN_PASSWORD</code></td><td>Tidak</td><td>Password admin awal saat seed; default <code>admin123</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Perintah Lokal</h2>
+  <pre><code>npm install
+npx prisma migrate deploy
+npx prisma db seed
+npm run dev
+npm run build
+npm run start
+npm run lint</code></pre>
+
+  <h2>Checklist Deployment</h2>
+  <ol>
+    <li>Siapkan PostgreSQL dan isi <code>DATABASE_URL</code>.</li>
+    <li>Isi <code>JWT_SECRET</code> dengan nilai panjang dan acak.</li>
+    <li>Jalankan <code>npx prisma migrate deploy</code> di environment target.</li>
+    <li>Jalankan <code>npx prisma db seed</code> sekali untuk membuat admin awal bila belum ada.</li>
+    <li>Build aplikasi dengan <code>npm run build</code>.</li>
+    <li>Login sebagai admin, approve guru, buat sesi uji, buka link tes, submit hasil, dan cek dashboard.</li>
+  </ol>
+
+  <h2>Keamanan dan Kontrol Akses</h2>
+  <ul>
+    <li>Password tidak disimpan plaintext; hash dibuat dengan bcrypt.</li>
+    <li>Cookie JWT memakai httpOnly, sameSite lax, dan secure saat production.</li>
+    <li><code>requireAuth</code> menolak token kosong, token invalid, akun PENDING, dan akun REJECTED.</li>
+    <li><code>requireAdmin</code> membatasi endpoint pengelolaan guru dan kolaborator.</li>
+    <li>Akses detail sesi untuk guru dibatasi oleh ownership atau kolaborasi; admin memakai aturan khusus pada helper session access.</li>
+  </ul>
+
+  <h2>Risiko dan Rekomendasi Lanjutan</h2>
+  <table>
+    <thead>
+      <tr><th>Area</th><th>Risiko</th><th>Rekomendasi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Data siswa</td><td>Field kelas dan tanggal lahir belum dipisahkan rapi di flow siswa.</td><td>Tambahkan input kelas, kirim kelas ke <code>student_class</code>, dan tanggal lahir hanya ke <code>birth_date</code>.</td></tr>
+      <tr><td>Kode sesi</td><td>Slug dari nama sesi mudah ditebak dibanding kode acak.</td><td>Gunakan kode acak base62 atau tambahkan token acak pendek pada slug.</td></tr>
+      <tr><td>Rate limiting</td><td>Endpoint publik <code>/api/results</code> belum memiliki throttling.</td><td>Tambahkan rate limit per IP/session untuk mencegah spam.</td></tr>
+      <tr><td>Audit</td><td>Perubahan sesi dan approval guru belum memiliki audit log.</td><td>Tambahkan tabel audit untuk aksi admin penting.</td></tr>
+      <tr><td>Export</td><td>Excel dibuat di client; data besar dapat membebani browser.</td><td>Pindahkan ekspor besar ke endpoint server bila jumlah siswa meningkat.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="chapter">
+  <div class="chapter-num">08 · Appendix</div>
+  <h1>Lampiran</h1>
+
+  <h2>Peta File Penting</h2>
+  <table>
+    <thead>
+      <tr><th>File</th><th>Peran</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>prisma/schema.prisma</code></td><td>Definisi model User, Session, TestResult, ResultAnswer, dan SessionCollaborator.</td></tr>
+      <tr><td><code>src/lib/auth.ts</code></td><td>Hash password, JWT, cookie auth, requireAuth, requireAdmin.</td></tr>
+      <tr><td><code>src/lib/session-access.ts</code></td><td>Aturan akses owner/shared untuk sesi guru.</td></tr>
+      <tr><td><code>src/app/api/admin/sessions/route.ts</code></td><td>List dan create session.</td></tr>
+      <tr><td><code>src/app/api/results/route.ts</code></td><td>Submit hasil siswa ke database.</td></tr>
+      <tr><td><code>src/app/test/[code]/TestPageClient.tsx</code></td><td>Halaman awal siswa, validasi input, dan pemanggilan wizard.</td></tr>
+      <tr><td><code>src/components/WizardContainer.tsx</code></td><td>State wizard, scoring dasar, pengiriman hasil, dan pemilihan komponen hasil.</td></tr>
+      <tr><td><code>src/components/PeminatanResults.tsx</code></td><td>Tampilan hasil peminatan SMA/MA.</td></tr>
+      <tr><td><code>src/components/KarirResults.tsx</code></td><td>Tampilan hasil karir dan program studi.</td></tr>
+      <tr><td><code>src/app/admin/sessions/[sessionId]/SessionDetailClient.tsx</code></td><td>Ringkasan sesi, kolaborator, daftar hasil, dan ekspor Excel.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Glosarium</h2>
+  <p><strong>RIASEC</strong> - Enam domain Holland: Realistic, Investigative, Artistic, Social, Enterprising, Conventional.</p>
+  <p><strong>Sesi</strong> - Ruang tes yang dibuat guru untuk kelompok siswa tertentu, memiliki kode/link dan mode tes.</p>
+  <p><strong>Mode bebas</strong> - Siswa memilih sendiri antara peminatan atau karir.</p>
+  <p><strong>Mode terkunci</strong> - Guru menentukan mode pada sesi, siswa tidak memilih mode.</p>
+  <p><strong>Kolaborator</strong> - Guru aktif yang diberi akses ke sesi milik guru/admin lain.</p>
+
+  <h2>Sumber Internal yang Dipakai</h2>
+  <ul>
+    <li>Source code aplikasi di <code>D:\Pandu\project\holland-test</code>.</li>
+    <li>OpenSpec <code>admin-platform-rework</code>, <code>mode-selection</code>, dan <code>pdf-export</code>.</li>
+    <li>README aplikasi Holland Test.</li>
+    <li>Prisma schema dan route handlers aktif pada tanggal 2026.05.26.</li>
+  </ul>
+</section>
+
+</body>
+</html>
