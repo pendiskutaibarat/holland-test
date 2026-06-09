@@ -1,14 +1,23 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { Geist } from "next/font/google";
+import localFont from "next/font/local";
 import { Suspense } from "react";
 import TopLoadingBar from "@/components/TopLoadingBar";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const inter = localFont({
+  src: [
+    { path: "../../docs/fonts/Inter.woff2", weight: "400" },
+    { path: "../../docs/fonts/Inter-500.woff2", weight: "500" },
+    { path: "../../docs/fonts/Inter-600.woff2", weight: "600" },
+  ],
+  variable: "--font-inter",
+});
+
+const newsreader = localFont({
+  src: "../../docs/fonts/Newsreader.woff2",
+  variable: "--font-newsreader",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${geistSans.variable} antialiased`} suppressHydrationWarning>
+    <html lang="id" className={`${inter.variable} ${newsreader.variable} antialiased`} suppressHydrationWarning>
       <body className="min-h-screen bg-gray-100 text-gray-800 font-sans">
         <Suspense fallback={null}>
           <TopLoadingBar />

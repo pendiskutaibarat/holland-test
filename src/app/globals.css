@@ -2,7 +2,7 @@
 
 @theme inline {
   --font-sans:
-    var(--font-geist-sans), "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    var(--font-inter), "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -10,6 +10,263 @@ body {
   color: #1e293b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.landing-page {
+  --teal: #0f8993;
+  --purple: #ad2ef3;
+  overflow: hidden;
+  background: white;
+  color: var(--teal);
+}
+
+.landing-hero {
+  position: relative;
+  min-height: min(1000px, 62.5vw);
+  isolation: isolate;
+  overflow: hidden;
+  background: #eef5f1;
+}
+
+.hero-photo,
+.hero-wash {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-photo {
+  z-index: -4;
+  background: url("/foto-belajar.png") center 43% / cover no-repeat;
+  filter: saturate(0.82);
+}
+
+.hero-wash {
+  z-index: -3;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.82) 44%, rgba(255, 255, 255, 0.66) 100%),
+    rgba(245, 250, 247, 0.44);
+}
+
+.landing-header {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(88%, 1760px);
+  margin: 0 auto;
+  padding-top: clamp(24px, 3.2vw, 64px);
+}
+
+.landing-brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.1vw, 22px);
+  color: var(--teal);
+}
+
+.landing-brand-logo {
+  width: clamp(110px, 9vw, 185px);
+  height: auto;
+  object-fit: contain;
+}
+
+.landing-brand-title {
+  padding-left: clamp(10px, 1vw, 20px);
+  border-left: 1px solid rgba(15, 137, 147, 0.24);
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-size: clamp(16px, 1.7vw, 34px);
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.landing-nav {
+  display: flex;
+  gap: clamp(28px, 3.4vw, 68px);
+  font-size: clamp(14px, 1.35vw, 27px);
+  font-weight: 600;
+}
+
+.landing-nav a {
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.landing-nav a:hover {
+  color: var(--purple);
+  transform: translateY(-2px);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 4;
+  width: min(47%, 940px);
+  margin-left: 6.2%;
+  padding-top: clamp(160px, 14vw, 280px);
+  padding-bottom: clamp(110px, 9vw, 180px);
+}
+
+.hero-eyebrow {
+  margin: 0;
+  font-size: clamp(40px, 5.5vw, 110px);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.hero-content h1 {
+  margin: 0.06em 0 0;
+  font-size: clamp(65px, 7vw, 140px);
+  font-weight: 700;
+  letter-spacing: -0.075em;
+  line-height: 0.78;
+}
+
+.hero-description {
+  max-width: 930px;
+  margin: clamp(28px, 3vw, 60px) 0 0;
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-size: clamp(18px, 1.7vw, 34px);
+  line-height: 1.18;
+}
+
+.hero-actions {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  gap: clamp(20px, 2vw, 40px);
+  margin-top: clamp(46px, 5vw, 100px);
+}
+
+.hero-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(60px, 5.6vw, 112px);
+  padding: 0 clamp(24px, 3vw, 60px);
+  border: 4px solid var(--purple);
+  border-radius: 999px;
+  color: var(--purple);
+  font-size: clamp(17px, 1.7vw, 34px);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.hero-actions a:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px rgba(121, 30, 180, 0.18);
+}
+
+.hero-actions .button-primary {
+  color: white;
+  background: linear-gradient(100deg, #9f2df0, #bd31f5);
+}
+
+.education-art {
+  position: absolute;
+  right: 3%;
+  top: 20%;
+  z-index: 1;
+  width: 43%;
+  aspect-ratio: 1;
+  filter: drop-shadow(0 30px 20px rgba(51, 37, 69, 0.12));
+}
+
+.education-art-image {
+  object-fit: contain;
+}
+
+.hero-curve {
+  position: absolute;
+  z-index: 2;
+  left: -5%;
+  right: -5%;
+  bottom: -18%;
+  height: 25%;
+  border-radius: 50% 50% 0 0;
+  background: white;
+}
+
+.landing-section {
+  padding: 110px max(6%, calc((100% - 1500px) / 2));
+  text-align: center;
+}
+
+.landing-section-muted {
+  background: #eff9f8;
+}
+
+.section-kicker {
+  color: var(--purple);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.landing-section h2 {
+  margin: 8px 0 20px;
+  color: var(--teal);
+  font-size: clamp(36px, 4vw, 64px);
+  letter-spacing: -0.05em;
+}
+
+.landing-section > p:last-child {
+  max-width: 760px;
+  margin: auto;
+  color: #4b6d70;
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+.test-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 50px;
+}
+
+.test-grid article {
+  padding: 42px 30px;
+  border: 1px solid #d4eeee;
+  border-radius: 30px;
+  background: white;
+  box-shadow: 0 20px 50px rgba(11, 116, 124, 0.08);
+}
+
+.test-grid span { font-size: 48px; }
+.test-grid h3 { margin: 18px 0 10px; color: var(--teal); font-size: 24px; }
+.test-grid p { color: #5b7477; line-height: 1.6; }
+
+@media (max-width: 1050px) {
+  .landing-hero { min-height: 900px; }
+  .landing-header { width: 90%; }
+  .landing-brand-title { display: none; }
+  .landing-nav { gap: 20px; }
+  .hero-content { width: 60%; padding-top: 180px; padding-bottom: 150px; }
+  .education-art { right: -12%; top: 30%; width: 54%; opacity: 0.8; }
+}
+
+@media (max-width: 760px) {
+  .landing-hero { min-height: 860px; }
+  .landing-header { align-items: flex-start; }
+  .landing-brand-logo { width: 118px; }
+  .landing-nav { display: none; }
+  .hero-photo { background-position: 55% center; }
+  .hero-wash { background: rgba(255, 255, 255, 0.84); }
+  .hero-content { width: auto; margin: 0 24px; padding-top: 105px; padding-bottom: 330px; text-align: center; }
+  .hero-eyebrow { font-size: 38px; }
+  .hero-content h1 { font-size: 66px; line-height: 0.86; }
+  .hero-description { margin-top: 26px; font-size: 19px; line-height: 1.35; }
+  .hero-actions { flex-direction: column; gap: 12px; margin-top: 30px; }
+  .hero-actions a { min-height: 58px; border-width: 3px; font-size: 17px; }
+  .education-art { right: 7%; top: auto; bottom: 6%; width: 86%; opacity: 0.68; }
+  .hero-curve { bottom: -9%; height: 12%; }
+  .landing-section { padding: 75px 24px; }
+  .test-grid { grid-template-columns: 1fr; }
 }
 
 :where(button:not(:disabled)),
