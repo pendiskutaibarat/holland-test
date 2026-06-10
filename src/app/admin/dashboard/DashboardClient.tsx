@@ -9,6 +9,9 @@ import SessionCard, {
   type SessionCardAccessType,
   type SessionCardData,
 } from "@/components/admin/SessionCard";
+import AssessmentCards, {
+  type AssessmentCardData,
+} from "@/components/admin/AssessmentCards";
 
 interface Session extends SessionCardData {
   is_active: boolean;
@@ -26,10 +29,12 @@ interface Teacher {
 
 export default function DashboardClient({
   sessions: initialSessions,
+  assessments = [],
   role,
   assessmentContext,
 }: {
   sessions: Session[];
+  assessments?: AssessmentCardData[];
   role: string;
   assessmentContext?: {
     slug: string;
@@ -237,7 +242,7 @@ export default function DashboardClient({
                 : "text-gray-600 hover:text-gray-800"
             }`}
           >
-            Sesi
+            Asesmen
           </button>
           <button
             onClick={() => setActiveTab("guru")}
@@ -254,242 +259,254 @@ export default function DashboardClient({
 
       {activeTab === "sesi" && (
         <>
-          <div className="mb-6">
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => setShowForm(true)}
-                className="px-4 py-2 border border-blue-200 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors"
-              >
-                + Buat Sesi Baru
-              </button>
-              {assessmentContext && (
+          {!isAssessmentScoped && (
+            <section className="mb-8">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Pilih Asesmen
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Pilih asesmen untuk melihat dan mengelola sesi.
+                </p>
+              </div>
+              <AssessmentCards assessments={assessments} />
+            </section>
+          )}
+
+          {isAssessmentScoped && (
+            <>
+              <div className="mb-6">
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="px-4 py-2 border border-blue-200 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors"
+                  >
+                    + Buat Sesi Baru
+                  </button>
                 <Link
                   href={assessmentContext.backHref}
                   className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
                 >
                   Kembali
                 </Link>
-              )}
-            </div>
-          </div>
+                </div>
+              </div>
 
-          {showForm && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-              role="presentation"
-            >
-              <button
-                type="button"
-                className="absolute inset-0 cursor-default"
-                aria-label="Tutup dialog"
-                disabled={loading}
-                onClick={() => setShowForm(false)}
-              />
-              <div
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="create-session-title"
-                className="relative w-full max-w-lg rounded-lg bg-white shadow-xl"
-              >
-                <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-                  <h2
-                    id="create-session-title"
-                    className="text-lg font-semibold text-gray-800"
-                  >
-                    {assessmentContext
-                      ? `Buat Sesi ${assessmentContext.name}`
-                      : "Buat Sesi Baru"}
-                  </h2>
+              {showForm && (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+                  role="presentation"
+                >
                   <button
                     type="button"
-                    onClick={() => setShowForm(false)}
+                    className="absolute inset-0 cursor-default"
+                    aria-label="Tutup dialog"
                     disabled={loading}
-                    title="Tutup"
-                    aria-label="Tutup"
-                    className="p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-800 rounded-md transition-colors disabled:opacity-50"
+                    onClick={() => setShowForm(false)}
+                  />
+                  <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="create-session-title"
+                    className="relative w-full max-w-lg rounded-lg bg-white shadow-xl"
                   >
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-
-                <form
-                  onSubmit={handleCreateSession}
-                  className={`space-y-4 p-6 ${loading ? "opacity-50 pointer-events-none" : ""}`}
-                >
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Nama Sesi
-                    </label>
-                    <input
-                      name="name"
-                      required
-                      autoFocus
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Contoh: Kelas 10A"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Nama Sekolah / Madrasah
-                    </label>
-                    <input
-                      name="school_name"
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Contoh: MA Negeri 1 Bandung"
-                    />
-                  </div>
-
-                  {(assessmentContext?.slug ?? ASSESSMENT_SLUGS.holland) ===
-                    ASSESSMENT_SLUGS.holland && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Mode
-                      </label>
-                      <select
-                        name="mode"
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+                      <h2
+                        id="create-session-title"
+                        className="text-lg font-semibold text-gray-800"
                       >
-                        <option value="bebas">Bebas (siswa memilih)</option>
-                        <option value="peminatan">Peminatan SMA/MA</option>
-                        <option value="karir">Karir & Program Studi</option>
-                      </select>
+                        {`Buat Sesi ${assessmentContext.name}`}
+                      </h2>
+                      <button
+                        type="button"
+                        onClick={() => setShowForm(false)}
+                        disabled={loading}
+                        title="Tutup"
+                        aria-label="Tutup"
+                        className="p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-800 rounded-md transition-colors disabled:opacity-50"
+                      >
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
                     </div>
-                  )}
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Deskripsi (opsional)
-                    </label>
-                    <textarea
-                      name="description"
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Deskripsi sesi..."
-                    />
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowForm(false)}
-                      disabled={loading}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    <form
+                      onSubmit={handleCreateSession}
+                      className={`space-y-4 p-6 ${loading ? "opacity-50 pointer-events-none" : ""}`}
                     >
-                      Batal
-                    </button>
-                    <LoadingButton
-                      type="submit"
-                      loading={loading}
-                      loadingText="Membuat..."
-                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-300"
-                    >
-                      Buat Sesi
-                    </LoadingButton>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-
-          {sessions.length === 0 ? (
-            <div className="bg-white p-8 rounded-lg shadow-sm text-center text-gray-500">
-              {assessmentContext
-                ? 'Belum ada sesi untuk asesmen ini. Klik "Buat Sesi Baru" untuk memulai.'
-                : 'Belum ada sesi. Klik "Buat Sesi Baru" untuk memulai.'}
-            </div>
-          ) : (
-            <div className="grid gap-4">
-              {sessions.map((session) => (
-                <SessionCard
-                  key={session.id}
-                  session={session}
-                  actions={
-                    <>
-                      <label className={`flex items-center gap-2 text-sm mr-1 ${toggleLoadingId === session.id ? "" : "cursor-pointer"}`}>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Nama Sesi
+                        </label>
                         <input
-                          type="checkbox"
-                          checked={session.is_active}
-                          disabled={toggleLoadingId === session.id}
-                          onChange={() =>
-                            handleToggleActive(session.id, session.is_active)
-                          }
-                          className="w-4 h-4"
+                          name="name"
+                          required
+                          autoFocus
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Contoh: Kelas 10A"
                         />
-                        Aktif
-                        {toggleLoadingId === session.id && (
-                          <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                        )}
-                      </label>
-                      <Link
-                        href={`/admin/sessions/${session.id}`}
-                        title="Lihat Detail"
-                        aria-label="Lihat Detail"
-                        className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          aria-hidden="true"
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Nama Sekolah / Madrasah
+                        </label>
+                        <input
+                          name="school_name"
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Contoh: MA Negeri 1 Bandung"
+                        />
+                      </div>
+
+                      {assessmentContext.slug === ASSESSMENT_SLUGS.holland && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Mode
+                          </label>
+                          <select
+                            name="mode"
+                            required
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="bebas">Bebas (siswa memilih)</option>
+                            <option value="peminatan">Peminatan SMA/MA</option>
+                            <option value="karir">Karir & Program Studi</option>
+                          </select>
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Deskripsi (opsional)
+                        </label>
+                        <textarea
+                          name="description"
+                          rows={3}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Deskripsi sesi..."
+                        />
+                      </div>
+
+                      <div className="flex justify-end gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setShowForm(false)}
+                          disabled={loading}
+                          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                          />
-                        </svg>
-                      </Link>
-                      <LoadingButton
-                        onClick={() => handleDeleteSession(session.id)}
-                        loading={deleteLoadingId === session.id}
-                        title="Hapus Sesi"
-                        aria-label="Hapus Sesi"
-                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          aria-hidden="true"
+                          Batal
+                        </button>
+                        <LoadingButton
+                          type="submit"
+                          loading={loading}
+                          loadingText="Membuat..."
+                          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-300"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </LoadingButton>
-                    </>
-                  }
-                />
-              ))}
-            </div>
+                          Buat Sesi
+                        </LoadingButton>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+
+              {sessions.length === 0 ? (
+                <div className="bg-white p-8 rounded-lg shadow-sm text-center text-gray-500">
+                  Belum ada sesi untuk asesmen ini. Klik &quot;Buat Sesi
+                  Baru&quot; untuk memulai.
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {sessions.map((session) => (
+                    <SessionCard
+                      key={session.id}
+                      session={session}
+                      actions={
+                        <>
+                          <label className={`flex items-center gap-2 text-sm mr-1 ${toggleLoadingId === session.id ? "" : "cursor-pointer"}`}>
+                            <input
+                              type="checkbox"
+                              checked={session.is_active}
+                              disabled={toggleLoadingId === session.id}
+                              onChange={() =>
+                                handleToggleActive(session.id, session.is_active)
+                              }
+                              className="w-4 h-4"
+                            />
+                            Aktif
+                            {toggleLoadingId === session.id && (
+                              <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                            )}
+                          </label>
+                          <Link
+                            href={`/admin/sessions/${session.id}`}
+                            title="Lihat Detail"
+                            aria-label="Lihat Detail"
+                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                              />
+                            </svg>
+                          </Link>
+                          <LoadingButton
+                            onClick={() => handleDeleteSession(session.id)}
+                            loading={deleteLoadingId === session.id}
+                            title="Hapus Sesi"
+                            aria-label="Hapus Sesi"
+                            className="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          </LoadingButton>
+                        </>
+                      }
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </>
       )}

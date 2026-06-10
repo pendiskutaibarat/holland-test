@@ -95,7 +95,7 @@ export default async function SessionDetailPage({
     <div className="max-w-6xl mx-auto p-6">
       <div className="mb-6">
         <Link
-          href={`/admin/assessments/${session.assessment.slug}`}
+          href={`/admin/dashboard/assessments/${session.assessment.slug}`}
           className="text-blue-600 hover:text-blue-800 text-sm"
         >
           ← Kembali ke Daftar Sesi

@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAuthToken, verifyToken } from "@/lib/auth";
-import { buildTeacherSessionWhere, getSessionAccessType } from "@/lib/session-access";
 import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
@@ -17,40 +16,32 @@ export default async function DashboardPage() {
     redirect("/admin/login");
   }
 
-  const userId = payload.userId;
   const role = payload.role;
 
-  const where =
-    role === "ADMIN" ? { user_id: userId } : buildTeacherSessionWhere(userId);
-
-  const sessions = await prisma.session.findMany({
-    where,
-    orderBy: { created_at: "desc" },
+  const assessments = await prisma.assessment.findMany({
+    where: { is_active: true },
+    orderBy: { created_at: "asc" },
     include: {
-      assessment: true,
-      assessment_version: true,
-      user: {
-        select: {
-          name: true,
-        },
-      },
-      _count: {
-        select: { results: true, assessment_results: true },
+      versions: {
+        where: { is_active: true },
+        orderBy: { created_at: "desc" },
+        take: 1,
       },
     },
   });
 
   return (
     <DashboardClient
-      sessions={sessions.map((s) => ({
-        ...s,
-        result_count:
-          s.assessment.slug === "minat_hobi"
-            ? s._count.assessment_results
-            : s._count.results,
-        owner_name: s.user.name,
-        access_type: getSessionAccessType(s.user_id, userId),
-      }))}
+      sessions={[]}
+      assessments={assessments
+        .filter((assessment) => assessment.versions.length > 0)
+        .map((assessment) => ({
+          id: assessment.id,
+          slug: assessment.slug,
+          name: assessment.name,
+          description: assessment.description,
+          question_count: assessment.versions[0].question_count,
+        }))}
       role={role}
     />
   );

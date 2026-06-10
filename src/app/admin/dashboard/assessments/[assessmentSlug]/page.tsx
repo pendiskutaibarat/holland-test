@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAuthToken, verifyToken } from "@/lib/auth";
 import { buildTeacherSessionWhere, getSessionAccessType } from "@/lib/session-access";
-import DashboardClient from "../../dashboard/DashboardClient";
+import DashboardClient from "../../DashboardClient";
 
 export default async function AssessmentSessionsPage({
   params,
@@ -72,7 +72,7 @@ export default async function AssessmentSessionsPage({
       assessmentContext={{
         slug: assessment.slug,
         name: assessment.name,
-        backHref: "/admin/assessments",
+        backHref: "/admin/dashboard",
       }}
     />
   );
