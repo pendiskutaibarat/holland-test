@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getAuthToken, verifyToken } from "@/lib/auth";
 
 const navigation = [
@@ -43,20 +42,18 @@ function EducationArtwork() {
 
 export default async function Home() {
   const token = await getAuthToken();
-  let shouldRedirect = false;
+  let isActiveUser = false;
 
   if (token) {
     try {
       const payload = verifyToken(token);
-      shouldRedirect = payload.status === "ACTIVE";
+      isActiveUser = payload.status === "ACTIVE";
     } catch {
       // Invalid token, stay on home page
     }
   }
 
-  if (shouldRedirect) {
-    redirect("/admin/assessments");
-  }
+  const assessmentHref = isActiveUser ? "/admin/dashboard" : "/admin/login";
 
   return (
     <main className="landing-page">
@@ -88,7 +85,7 @@ export default async function Home() {
             Kenali dirimu lebih dalam hanya dalam beberapa menit.
           </p>
           <div className="hero-actions">
-            <Link href="#pilihan-tes" className="button-primary">
+            <Link href={assessmentHref} className="button-primary">
               <span aria-hidden="true">🚀</span> Mulai Asesmen
             </Link>
             <Link href="#panduan" className="button-secondary">
