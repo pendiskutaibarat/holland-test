@@ -20,14 +20,14 @@ const MODES: {
     label: "Peminatan SMA/MA",
     description:
       "Temukan kecenderunganmu antara IPA, IPS, atau Bahasa & Budaya untuk menentukan peminatan di jenjang menengah atas.",
-    icon: "🏫",
+    icon: "Sekolah",
   },
   {
     value: "karir",
     label: "Karir & Program Studi",
     description:
       "Temukan kombinasi kepribadian RIASEC-mu, lencana profil, dan rekomendasi program studi serta profesi yang cocok untukmu.",
-    icon: "🎓",
+    icon: "Karir",
   },
 ];
 
@@ -38,7 +38,7 @@ export default function ModeSelectorStep({
   hasSavedState,
 }: ModeSelectorStepProps) {
   return (
-    <div className="space-y-8 max-w-[800px] mx-auto">
+    <div className="mx-auto max-w-[800px] space-y-8">
       <div className="text-center">
         <img
           src="/banner.png"
@@ -48,7 +48,7 @@ export default function ModeSelectorStep({
       </div>
 
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-blue-700 mb-2">
+        <h1 className="mb-2 text-2xl font-bold text-brand-700">
           TES BAKAT HOLLAND RIASEC
         </h1>
         <p className="text-slate-600">
@@ -58,16 +58,13 @@ export default function ModeSelectorStep({
 
       {hasSavedState && (
         <div className="text-center">
-          <button
-            onClick={onRestart}
-            className="px-5 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
-          >
+          <button onClick={onRestart} className="app-button-danger px-5 py-2">
             Mulai Ulang (Hapus data tersimpan)
           </button>
         </div>
       )}
 
-      <fieldset className="grid md:grid-cols-2 gap-4">
+      <fieldset className="grid gap-4 md:grid-cols-2">
         <legend className="sr-only">Pilih mode tes</legend>
         {MODES.map((mode) => {
           const isSelected = selectedMode === mode.value;
@@ -78,20 +75,20 @@ export default function ModeSelectorStep({
               onClick={() => onSelectMode(mode.value)}
               aria-pressed={isSelected}
               aria-describedby={`mode-desc-${mode.value}`}
-              className={`relative p-6 rounded-xl border-2 text-left transition-all group focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${
+              className={`group relative rounded-[var(--radius-card)] border-2 p-6 text-left transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
                 isSelected
-                  ? "border-blue-700 bg-blue-50 shadow-md"
-                  : "border-slate-200 bg-white hover:border-blue-400 hover:shadow-md"
+                  ? "border-brand-600 bg-brand-50 shadow-soft"
+                  : "border-slate-200 bg-white hover:border-brand-300 hover:shadow-soft"
               }`}
             >
-              <div className="text-4xl mb-3" aria-hidden="true">
+              <div className="mb-3 inline-flex rounded-full bg-brand-100 px-3 py-1 text-sm font-semibold text-brand-800">
                 {mode.icon}
               </div>
               <h2
-                className={`text-lg font-bold mb-2 ${
+                className={`mb-2 text-lg font-bold ${
                   isSelected
-                    ? "text-blue-700"
-                    : "text-slate-800 group-hover:text-blue-700"
+                    ? "text-brand-700"
+                    : "text-slate-800 group-hover:text-brand-700"
                 }`}
               >
                 {mode.label}
@@ -104,22 +101,10 @@ export default function ModeSelectorStep({
               </p>
               {isSelected && (
                 <div
-                  className="absolute top-4 right-4 w-6 h-6 bg-blue-700 rounded-full flex items-center justify-center"
+                  className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white"
                   aria-hidden="true"
                 >
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  OK
                 </div>
               )}
             </button>

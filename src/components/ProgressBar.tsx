@@ -13,16 +13,16 @@ export default function ProgressBar({
 
   return (
     <div className="mb-6">
-      <div className="flex justify-between text-sm mb-1.5">
+      <div className="mb-1.5 flex justify-between text-sm">
         <span className="font-medium text-slate-600">
           Langkah {currentStep + 1} dari {totalSteps}
         </span>
-        <span className="font-semibold text-blue-700">
+        <span className="font-semibold text-brand-700">
           {Math.round(progress)}%
         </span>
       </div>
       <div
-        className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden"
+        className="h-2.5 w-full overflow-hidden rounded-full bg-slate-200"
         role="progressbar"
         aria-valuenow={Math.round(progress)}
         aria-valuemin={0}
@@ -30,7 +30,7 @@ export default function ProgressBar({
         aria-label={`Progres tes: ${Math.round(progress)}%`}
       >
         <div
-          className="bg-blue-700 h-2.5 rounded-full transition-[width] duration-300 ease-in-out"
+          className="h-2.5 rounded-full bg-brand-600 transition-[width] duration-300 ease-in-out"
           style={{ width: `${progress}%` }}
         />
       </div>

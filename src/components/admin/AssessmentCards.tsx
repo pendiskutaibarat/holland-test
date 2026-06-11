@@ -19,24 +19,22 @@ export default function AssessmentCards({
         <Link
           key={assessment.id}
           href={`/admin/dashboard/assessments/${assessment.slug}`}
-          className="rounded-lg border border-gray-200 bg-white p-5 text-left shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50/40"
+          className="app-card-link p-5 text-left"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-slate-900">
                 {assessment.name}
               </h3>
-              <p className="mt-2 text-sm leading-6 text-gray-600">
+              <p className="mt-2 text-sm leading-6 text-slate-600">
                 {assessment.description}
               </p>
             </div>
-            <span className="shrink-0 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+            <span className="app-badge-brand shrink-0">
               {assessment.question_count} soal
             </span>
           </div>
-          <span className="mt-5 inline-flex rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white">
-            Lihat Sesi
-          </span>
+          <span className="app-button-primary mt-5">Lihat Sesi</span>
         </Link>
       ))}
     </div>

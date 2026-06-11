@@ -211,14 +211,14 @@ export default function DashboardClient({
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="app-shell">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="app-page-title">
             {assessmentContext ? assessmentContext.name : "Dashboard Admin"}
           </h1>
           {assessmentContext && (
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="app-page-subtitle">
               Kelola sesi untuk asesmen yang dipilih.
             </p>
           )}
@@ -226,20 +226,20 @@ export default function DashboardClient({
         <LoadingButton
           onClick={handleLogout}
           loading={logoutLoading}
-          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm"
+          className="app-button-danger"
         >
           Keluar
         </LoadingButton>
       </div>
 
       {isAdmin && !isAssessmentScoped && (
-        <div className="flex gap-1 mb-6 bg-gray-100 p-1 rounded-lg w-fit">
+        <div className="app-tab-list mb-6 w-fit">
           <button
             onClick={() => setActiveTab("sesi")}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === "sesi"
-                ? "bg-white text-gray-800 shadow-sm"
-                : "text-gray-600 hover:text-gray-800"
+                ? "app-tab app-tab-active"
+                : "app-tab"
             }`}
           >
             Asesmen
@@ -248,8 +248,8 @@ export default function DashboardClient({
             onClick={() => setActiveTab("guru")}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === "guru"
-                ? "bg-white text-gray-800 shadow-sm"
-                : "text-gray-600 hover:text-gray-800"
+                ? "app-tab app-tab-active"
+                : "app-tab"
             }`}
           >
             Guru
@@ -262,10 +262,10 @@ export default function DashboardClient({
           {!isAssessmentScoped && (
             <section className="mb-8">
               <div className="mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">
+                <h2 className="app-section-title">
                   Pilih Asesmen
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="app-page-subtitle">
                   Pilih asesmen untuk melihat dan mengelola sesi.
                 </p>
               </div>
@@ -279,13 +279,13 @@ export default function DashboardClient({
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => setShowForm(true)}
-                    className="px-4 py-2 border border-blue-200 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors"
+                    className="app-button-secondary"
                   >
                     + Buat Sesi Baru
                   </button>
                 <Link
                   href={assessmentContext.backHref}
-                  className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  className="app-button-ghost"
                 >
                   Kembali
                 </Link>
@@ -308,12 +308,12 @@ export default function DashboardClient({
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="create-session-title"
-                    className="relative w-full max-w-lg rounded-lg bg-white shadow-xl"
+                    className="app-card relative w-full max-w-lg"
                   >
-                    <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
                       <h2
                         id="create-session-title"
-                        className="text-lg font-semibold text-gray-800"
+                        className="text-lg font-semibold text-slate-900"
                       >
                         {`Buat Sesi ${assessmentContext.name}`}
                       </h2>
@@ -323,7 +323,7 @@ export default function DashboardClient({
                         disabled={loading}
                         title="Tutup"
                         aria-label="Tutup"
-                        className="p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-800 rounded-md transition-colors disabled:opacity-50"
+                        className="app-icon-button text-slate-500 hover:bg-slate-100 hover:text-slate-800 disabled:opacity-50"
                       >
                         <svg
                           className="h-5 w-5"
@@ -347,39 +347,39 @@ export default function DashboardClient({
                       className={`space-y-4 p-6 ${loading ? "opacity-50 pointer-events-none" : ""}`}
                     >
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="app-label">
                           Nama Sesi
                         </label>
                         <input
                           name="name"
                           required
                           autoFocus
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="app-input"
                           placeholder="Contoh: Kelas 10A"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="app-label">
                           Nama Sekolah / Madrasah
                         </label>
                         <input
                           name="school_name"
                           required
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="app-input"
                           placeholder="Contoh: MA Negeri 1 Bandung"
                         />
                       </div>
 
                       {assessmentContext.slug === ASSESSMENT_SLUGS.holland && (
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="app-label">
                             Mode
                           </label>
                           <select
                             name="mode"
                             required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="app-select"
                           >
                             <option value="bebas">Bebas (siswa memilih)</option>
                             <option value="peminatan">Peminatan SMA/MA</option>
@@ -389,13 +389,13 @@ export default function DashboardClient({
                       )}
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="app-label">
                           Deskripsi (opsional)
                         </label>
                         <textarea
                           name="description"
                           rows={3}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="app-textarea"
                           placeholder="Deskripsi sesi..."
                         />
                       </div>
@@ -405,7 +405,7 @@ export default function DashboardClient({
                           type="button"
                           onClick={() => setShowForm(false)}
                           disabled={loading}
-                          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+                          className="app-button-ghost disabled:opacity-50"
                         >
                           Batal
                         </button>
@@ -413,7 +413,7 @@ export default function DashboardClient({
                           type="submit"
                           loading={loading}
                           loadingText="Membuat..."
-                          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-300"
+                          className="app-button-success"
                         >
                           Buat Sesi
                         </LoadingButton>
@@ -424,7 +424,7 @@ export default function DashboardClient({
               )}
 
               {sessions.length === 0 ? (
-                <div className="bg-white p-8 rounded-lg shadow-sm text-center text-gray-500">
+                <div className="app-empty-state">
                   Belum ada sesi untuk asesmen ini. Klik &quot;Buat Sesi
                   Baru&quot; untuk memulai.
                 </div>

@@ -11,7 +11,11 @@ const navigation = [
 
 function Brand() {
   return (
-    <Link href="#beranda" className="landing-brand" aria-label="Asesmen Pendis Kutai Barat">
+    <Link
+      href="#beranda"
+      className="landing-brand"
+      aria-label="Asesmen Pendis Kutai Barat"
+    >
       <Image
         src="/pendis_logo.png"
         alt="Pendis"
@@ -65,7 +69,7 @@ export default async function Home() {
           <Brand />
           <nav className="landing-nav" aria-label="Navigasi utama">
             {navigation.map((item) => (
-              <Link key={item.label} href={item.href}>
+              <Link key={item.label} href={item.href} className="landing-nav-link">
                 {item.label}
               </Link>
             ))}
@@ -85,11 +89,11 @@ export default async function Home() {
             Kenali dirimu lebih dalam hanya dalam beberapa menit.
           </p>
           <div className="hero-actions">
-            <Link href={assessmentHref} className="button-primary">
-              <span aria-hidden="true">🚀</span> Mulai Asesmen
+            <Link href={assessmentHref} className="landing-cta landing-cta-primary">
+              Mulai Asesmen
             </Link>
-            <Link href="#panduan" className="button-secondary">
-              <span aria-hidden="true">📖</span> Pelajari Jenis Tes
+            <Link href="#panduan" className="landing-cta landing-cta-secondary">
+              Pelajari Jenis Tes
             </Link>
           </div>
         </div>
@@ -102,18 +106,18 @@ export default async function Home() {
         <p className="section-kicker">Pilihan Tes</p>
         <h2>Temukan potensi terbaikmu</h2>
         <div className="test-grid">
-          <article>
-            <span>🧭</span>
+          <article className="landing-feature-card">
+            <span className="landing-feature-badge">RIASEC</span>
             <h3>Holland RIASEC</h3>
             <p>Kenali kepribadian kerja dan bidang karir yang paling cocok.</p>
           </article>
-          <article>
-            <span>🎨</span>
+          <article className="landing-feature-card">
+            <span className="landing-feature-badge">Minat</span>
             <h3>Minat &amp; Hobi</h3>
             <p>Petakan aktivitas, ketertarikan, dan bakat yang kamu nikmati.</p>
           </article>
-          <article>
-            <span>🎓</span>
+          <article className="landing-feature-card">
+            <span className="landing-feature-badge">Karir</span>
             <h3>Rekomendasi Karir</h3>
             <p>Dapatkan arahan pendidikan dan profesi berdasarkan hasilmu.</p>
           </article>

@@ -41,44 +41,39 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-sm w-full max-w-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="app-card w-full max-w-md p-8">
+        <h1 className="mb-6 text-center text-2xl font-bold text-slate-900">
           Login Admin
         </h1>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
-            {error}
-          </div>
-        )}
+        {error && <div className="app-status-error px-3 py-3">{error}</div>}
 
-        <form onSubmit={handleSubmit} className={`space-y-4 ${loading ? "opacity-50 pointer-events-none" : ""}`}>
+        <form
+          onSubmit={handleSubmit}
+          className={`space-y-4 ${loading ? "pointer-events-none opacity-50" : ""}`}
+        >
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
+            <label className="app-label">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="app-input"
               placeholder="admin@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Kata Sandi
-            </label>
+            <label className="app-label">Kata Sandi</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
+              className="app-input"
+              placeholder="Masukkan kata sandi"
             />
           </div>
 
@@ -86,15 +81,15 @@ export default function LoginForm() {
             type="submit"
             loading={loading}
             loadingText="Masuk..."
-            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-300"
+            className="app-button-primary w-full"
           >
             Masuk
           </LoadingButton>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-4 text-center text-sm text-slate-600">
           Belum punya akun?{" "}
-          <Link href="/admin/register" className="text-blue-600 hover:text-blue-800">
+          <Link href="/admin/register" className="app-link font-medium">
             Daftar
           </Link>
         </p>

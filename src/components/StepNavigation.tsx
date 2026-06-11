@@ -20,18 +20,15 @@ export default function StepNavigation({
 
   return (
     <nav
-      className="flex justify-between items-center mt-8 print:hidden"
+      className="mt-8 flex items-center justify-between print:hidden"
       aria-label="Navigasi langkah tes"
     >
       <div>
         {!isFirstStep && (
-          <button
-            onClick={onBack}
-            className="px-6 py-2.5 bg-white text-slate-600 font-semibold rounded-lg border border-slate-300 hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-          >
+          <button onClick={onBack} className="app-button-ghost px-6">
             <span aria-hidden="true" className="mr-1">
-              ←
-            </span>{" "}
+              Back
+            </span>
             Kembali
           </button>
         )}
@@ -39,23 +36,9 @@ export default function StepNavigation({
       <button
         onClick={onNext}
         disabled={!canProceed}
-        className="px-8 py-2.5 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+        className="app-button-primary px-8"
       >
-        {isLastStep ? (
-          <>
-            Lihat Hasil{" "}
-            <span aria-hidden="true" className="ml-1">
-              →
-            </span>
-          </>
-        ) : (
-          <>
-            Lanjut{" "}
-            <span aria-hidden="true" className="ml-1">
-              →
-            </span>
-          </>
-        )}
+        {isLastStep ? "Lihat Hasil" : "Lanjut"}
       </button>
     </nav>
   );

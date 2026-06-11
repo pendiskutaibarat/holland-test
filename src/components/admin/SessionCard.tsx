@@ -52,15 +52,15 @@ export default function SessionCard({
   }
 
   return (
-    <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
-      <div className="flex justify-between items-start gap-4">
+    <div className="app-card p-5">
+      <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="font-semibold text-lg text-gray-800">
-            <Link href={detailHref} className="hover:text-blue-600 transition-colors">
+          <h3 className="text-lg font-semibold text-slate-900">
+            <Link href={detailHref} className="transition-colors hover:text-brand-600">
               {session.name}
             </Link>
           </h3>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="mt-1 text-sm text-slate-500">
             {session.school_name} · {assessmentName}
             {showMode && (
               <>
@@ -71,12 +71,12 @@ export default function SessionCard({
             · {session.result_count} hasil ·{" "}
             {new Date(session.created_at).toLocaleDateString("id-ID")}
           </p>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
             <span
-              className={`inline-flex items-center rounded-full px-2 py-0.5 font-medium ${
+              className={`inline-flex items-center rounded-full px-2.5 py-1 font-semibold ${
                 session.access_type === "OWNED"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-blue-100 text-blue-800"
+                  ? "bg-success-100 text-success-700"
+                  : "bg-brand-50 text-brand-800"
               }`}
             >
               {session.access_type === "OWNED" ? ownedLabel : "Dibagikan"}
@@ -84,15 +84,13 @@ export default function SessionCard({
             {session.access_type === "SHARED" && <span>Dari {session.owner_name}</span>}
           </div>
           {session.description && (
-            <p className="text-sm text-gray-500 mt-1">{session.description}</p>
+            <p className="mt-1 text-sm text-slate-500">{session.description}</p>
           )}
           <div className="mt-3 flex items-center gap-3">
             <button type="button" onClick={handleCopyLink} className="relative">
-              <code className="bg-gray-100 px-2 py-1 rounded text-sm hover:bg-gray-200 cursor-pointer transition-colors">
-                {testHref}
-              </code>
+              <code className="app-code-chip cursor-pointer">{testHref}</code>
               {copied && (
-                <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white">
                   Tersalin!
                 </span>
               )}
@@ -103,10 +101,10 @@ export default function SessionCard({
               rel="noopener noreferrer"
               title="Buka Halaman Tes"
               aria-label="Buka Halaman Tes"
-              className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+              className="app-icon-button text-success-600 hover:bg-success-50"
             >
               <svg
-                className="w-4 h-4"
+                className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

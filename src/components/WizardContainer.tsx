@@ -196,7 +196,7 @@ export default function WizardContainer({
       <div className="max-w-[1000px] mx-auto p-4 md:p-6 print:max-w-none print:p-4">
         {submissionStatus === "success" && (
           <div
-            className="mb-4 p-4 bg-green-50 border border-green-200 text-green-800 rounded-lg text-sm text-center font-medium"
+            className="app-status-success text-center font-medium"
             role="status"
             aria-live="polite"
           >
@@ -219,7 +219,7 @@ export default function WizardContainer({
         )}
         {submissionStatus === "duplicate" && (
           <div
-            className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-sm text-center font-medium"
+            className="app-status-warning text-center font-medium"
             role="status"
             aria-live="polite"
           >
@@ -242,7 +242,7 @@ export default function WizardContainer({
         )}
         {submissionStatus === "error" && (
           <div
-            className="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm text-center flex flex-col items-center gap-2"
+            className="app-status-error flex flex-col items-center gap-2 text-center"
             role="alert"
           >
             <span>Gagal menyimpan hasil.</span>
@@ -251,7 +251,7 @@ export default function WizardContainer({
                 hasSubmitted.current = false;
                 setSubmissionStatus("idle");
               }}
-              className="px-4 py-1.5 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+              className="app-button-danger"
             >
               Coba Lagi
             </button>
@@ -259,12 +259,12 @@ export default function WizardContainer({
         )}
         {submissionStatus === "submitting" && (
           <div
-            className="mb-4 p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg text-sm text-center flex items-center justify-center gap-2"
+            className="app-status-info flex items-center justify-center gap-2 text-center"
             role="status"
             aria-live="polite"
           >
             <span
-              className="inline-block w-4 h-4 border-2 border-blue-300 border-t-blue-700 rounded-full animate-spin"
+              className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-brand-200 border-t-brand-700"
               aria-hidden="true"
             />
             Mengirim hasil...
@@ -306,7 +306,7 @@ export default function WizardContainer({
               />
             </div>
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-blue-700 mb-2">
+              <h1 className="mb-2 text-2xl font-bold text-brand-700">
                 TES BAKAT HOLLAND RIASEC
               </h1>
               <p className="text-slate-600">
@@ -317,8 +317,8 @@ export default function WizardContainer({
               <div
                 className={`p-6 rounded-xl border-2 text-left ${
                   forcedMode === "peminatan"
-                    ? "border-blue-700 bg-blue-50"
-                    : "border-purple-700 bg-purple-50"
+                    ? "border-brand-700 bg-brand-50"
+                    : "border-accent-700 bg-accent-50"
                 }`}
               >
                 <div className="text-4xl mb-3" aria-hidden="true">
@@ -327,8 +327,8 @@ export default function WizardContainer({
                 <h2
                   className={`text-lg font-bold mb-2 ${
                     forcedMode === "peminatan"
-                      ? "text-blue-700"
-                      : "text-purple-700"
+                      ? "text-brand-700"
+                      : "text-accent-700"
                   }`}
                 >
                   {forcedMode === "peminatan"
@@ -345,7 +345,7 @@ export default function WizardContainer({
             <div className="text-center mt-8">
               <button
                 onClick={handleNext}
-                className="px-8 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+                className="app-button-primary px-8 py-3"
               >
                 Mulai Tes
               </button>
@@ -363,7 +363,7 @@ export default function WizardContainer({
               <button
                 onClick={handleNext}
                 disabled={!mode}
-                className="px-8 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+                className="app-button-primary px-8 py-3"
               >
                 Mulai Tes
               </button>
