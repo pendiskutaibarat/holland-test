@@ -3,6 +3,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import localFont from "next/font/local";
 import { Suspense } from "react";
+import { getAuthToken, verifyToken } from "@/lib/auth";
+import GlobalNav from "@/components/GlobalNav";
 import TopLoadingBar from "@/components/TopLoadingBar";
 import "./globals.css";
 
@@ -29,17 +31,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const token = await getAuthToken();
+  let isActiveUser = false;
+
+  if (token) {
+    try {
+      isActiveUser = verifyToken(token).status === "ACTIVE";
+    } catch {
+      isActiveUser = false;
+    }
+  }
+
   return (
     <html lang="id" className={`${inter.variable} ${newsreader.variable} antialiased`} suppressHydrationWarning>
       <body className="min-h-screen bg-gray-100 text-gray-800 font-sans">
         <Suspense fallback={null}>
           <TopLoadingBar />
         </Suspense>
+        <GlobalNav isActiveUser={isActiveUser} />
         {children}
         <Analytics />
         <SpeedInsights />

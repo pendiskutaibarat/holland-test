@@ -10,6 +10,17 @@ export function getAssessmentRouteSegment(assessmentSlug: string): string {
   }
 }
 
+export function getAssessmentSlugFromRouteSegment(segment: string): string | null {
+  switch (segment) {
+    case "minat-hobi":
+      return ASSESSMENT_SLUGS.minatHobi;
+    case "holland-riasec":
+      return ASSESSMENT_SLUGS.holland;
+    default:
+      return null;
+  }
+}
+
 export function getAssessmentTestHref(
   assessmentSlug: string,
   code: string,

@@ -1,33 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getAuthToken, verifyToken } from "@/lib/auth";
-
-const navigation = [
-  { href: "#beranda", label: "Beranda" },
-  { href: "#pilihan-tes", label: "Pilihan Tes" },
-  { href: "#panduan", label: "Panduan Pengisian" },
-  { href: "#tentang-kami", label: "Tentang Kami" },
-] as const;
-
-function Brand() {
-  return (
-    <Link
-      href="#beranda"
-      className="landing-brand"
-      aria-label="Asesmen Pendis Kutai Barat"
-    >
-      <Image
-        src="/pendis_logo.png"
-        alt="Pendis"
-        width={1772}
-        height={597}
-        priority
-        className="landing-brand-logo"
-      />
-      <span className="landing-brand-title">Asesmen Pendis Kutai Barat</span>
-    </Link>
-  );
-}
 
 function EducationArtwork() {
   return (
@@ -45,36 +17,13 @@ function EducationArtwork() {
 }
 
 export default async function Home() {
-  const token = await getAuthToken();
-  let isActiveUser = false;
-
-  if (token) {
-    try {
-      const payload = verifyToken(token);
-      isActiveUser = payload.status === "ACTIVE";
-    } catch {
-      // Invalid token, stay on home page
-    }
-  }
-
-  const assessmentHref = isActiveUser ? "/admin/dashboard" : "/admin/login";
+  const assessmentHref = "/test/public";
 
   return (
     <main className="landing-page">
       <section id="beranda" className="landing-hero">
         <div className="hero-photo" aria-hidden="true" />
         <div className="hero-wash" aria-hidden="true" />
-
-        <header className="landing-header">
-          <Brand />
-          <nav className="landing-nav" aria-label="Navigasi utama">
-            {navigation.map((item) => (
-              <Link key={item.label} href={item.href} className="landing-nav-link">
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </header>
 
         <div className="hero-content">
           <p className="hero-eyebrow">Minat Terarah,</p>
