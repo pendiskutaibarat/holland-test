@@ -5,6 +5,11 @@ import type { FormEvent, ReactNode } from "react";
 import WizardContainer from "@/components/WizardContainer";
 import MinatHobiAssessment from "@/components/MinatHobiAssessment";
 import { ASSESSMENT_SLUGS } from "@/data/assessments";
+import {
+  MINAT_HOBI_ANSWER_INSTRUCTION,
+  MINAT_HOBI_ESTIMATED_DURATION,
+  MINAT_HOBI_SUMMARY_TEXT,
+} from "@/data/minatHobi";
 
 interface TestPageClientProps {
   sessionId: string;
@@ -13,6 +18,7 @@ interface TestPageClientProps {
   sessionMode: string;
   assessmentSlug: string;
   assessmentName: string;
+  assessmentVersion?: string;
   isActive: boolean;
 }
 
@@ -82,12 +88,12 @@ export default function TestPageClient({
     return (
       <TestPageBackgroundShell>
         <div
-          className="w-full max-w-md rounded-xl border border-white/35 bg-white/88 p-8 text-center shadow-xl backdrop-blur-md"
+          className="app-card w-full max-w-md border-white/35 bg-white/88 p-8 text-center shadow-soft-lg backdrop-blur-md"
           role="alert"
         >
-          <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-danger-50">
             <svg
-              className="w-7 h-7 text-red-600"
+              className="h-7 w-7 text-danger-600"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -101,7 +107,7 @@ export default function TestPageClient({
               />
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-slate-800 mb-3">
+          <h1 className="mb-3 text-xl font-bold text-slate-800">
             Sesi Ditutup
           </h1>
           <p className="text-slate-600">
@@ -115,66 +121,61 @@ export default function TestPageClient({
   if (!started) {
     return (
       <TestPageBackgroundShell>
-        <div className="w-full max-w-md rounded-xl border border-white/35 bg-white/88 p-8 shadow-xl backdrop-blur-md">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-slate-800 mb-1">
+        <div className="app-card w-full max-w-md border-white/35 bg-white/88 p-8 shadow-soft-lg backdrop-blur-md">
+          <div className="mb-6 text-center">
+            <h1 className="mb-1 text-2xl font-bold text-slate-800">
               {assessmentName}
             </h1>
             <p className="font-medium text-slate-700">{schoolName}</p>
-            <p className="text-sm text-slate-500 mt-0.5">{sessionName}</p>
+            <p className="mt-0.5 text-sm text-slate-500">{sessionName}</p>
           </div>
 
-          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-            <h2 className="text-sm font-semibold text-slate-800 mb-3">
+          <div className="app-card-muted mb-6 p-4">
+            <h2 className="mb-3 text-sm font-semibold text-slate-800">
               Perlu diketahui
             </h2>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {assessmentSlug === ASSESSMENT_SLUGS.minatHobi
-                  ? "Asesmen ini memetakan 10 area minat dan hobi dari aktivitas sehari-hari."
-                  : "Asesmen ini menggunakan model Holland Occupational Themes (RIASEC)."}
-              </li>
-              <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Semua jawaban valid — pilih sesuai minatmu, tanpa jawaban benar atau salah.
-              </li>
-              <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {assessmentSlug === ASSESSMENT_SLUGS.minatHobi
-                  ? "Setiap pernyataan memiliki satu pilihan jawaban: Sangat Suka, Suka, Kurang Suka, atau Tidak Suka."
-                  : "Pilihan jawaban bisa dipilih lebih dari satu."}
-              </li>
-              <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {assessmentSlug === ASSESSMENT_SLUGS.minatHobi
-                  ? "Waktu pengerjaan kira-kira 12-18 menit."
-                  : "Waktu pengerjaan kira-kira 7-12 menit."}
-              </li>
-              <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Hasil tes bersifat eksploratif — disarankan untuk dibahas bersama guru BK atau konselor.
-              </li>
+              {[
+                assessmentSlug === ASSESSMENT_SLUGS.minatHobi
+                  ? MINAT_HOBI_SUMMARY_TEXT
+                  : "Asesmen ini menggunakan model Holland Occupational Themes (RIASEC).",
+                "Semua jawaban valid - pilih sesuai minatmu, tanpa jawaban benar atau salah.",
+                assessmentSlug === ASSESSMENT_SLUGS.minatHobi
+                  ? MINAT_HOBI_ANSWER_INSTRUCTION
+                  : "Pilihan jawaban bisa dipilih lebih dari satu.",
+                assessmentSlug === ASSESSMENT_SLUGS.minatHobi
+                  ? `Waktu pengerjaan kira-kira ${MINAT_HOBI_ESTIMATED_DURATION}.`
+                  : "Waktu pengerjaan kira-kira 7-12 menit.",
+                "Hasil tes bersifat eksploratif - disarankan untuk dibahas bersama guru BK atau konselor.",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <svg
+                    className="mt-0.5 h-4 w-4 shrink-0 text-brand-700"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>{item}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
           <form onSubmit={handleStart} className="space-y-5" noValidate>
             <div>
-              <label
-                htmlFor="studentName"
-                className="block text-sm font-semibold text-slate-800 mb-1.5"
-              >
-                Nama Lengkap <span className="text-red-600" aria-hidden="true">*</span>
+              <label htmlFor="studentName" className="app-label">
+                Nama Lengkap{" "}
+                <span className="text-danger-600" aria-hidden="true">
+                  *
+                </span>
               </label>
               <input
                 id="studentName"
@@ -182,23 +183,29 @@ export default function TestPageClient({
                 value={studentName}
                 onChange={(e) => {
                   setStudentName(e.target.value);
-                  if (errors.name)
-                    setErrors((err) => ({ ...err, name: undefined }));
+                  if (errors.name) {
+                    setErrors((current) => ({ ...current, name: undefined }));
+                  }
                 }}
                 aria-required="true"
                 aria-invalid={!!errors.name}
                 aria-describedby={errors.name ? "name-error" : undefined}
-                className="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-800 placeholder:text-slate-400 transition-colors hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                className="app-input"
                 placeholder="Contoh: Budi Santoso"
               />
               {errors.name && (
-                <p
-                  id="name-error"
-                  role="alert"
-                  className="mt-1.5 text-sm text-red-600 flex items-center gap-1"
-                >
-                  <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                <p id="name-error" role="alert" className="app-field-error">
+                  <svg
+                    className="h-4 w-4 shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   {errors.name}
                 </p>
@@ -206,11 +213,11 @@ export default function TestPageClient({
             </div>
 
             <div>
-              <label
-                htmlFor="birthDate"
-                className="block text-sm font-semibold text-slate-800 mb-1.5"
-              >
-                Tanggal Lahir <span className="text-red-600" aria-hidden="true">*</span>
+              <label htmlFor="birthDate" className="app-label">
+                Tanggal Lahir{" "}
+                <span className="text-danger-600" aria-hidden="true">
+                  *
+                </span>
               </label>
               <input
                 id="birthDate"
@@ -218,32 +225,44 @@ export default function TestPageClient({
                 value={birthDate}
                 onChange={(e) => {
                   setBirthDate(e.target.value);
-                  if (errors.birthDate)
-                    setErrors((err) => ({ ...err, birthDate: undefined }));
+                  if (errors.birthDate) {
+                    setErrors((current) => ({
+                      ...current,
+                      birthDate: undefined,
+                    }));
+                  }
                 }}
                 aria-required="true"
                 aria-invalid={!!errors.birthDate}
-                aria-describedby={errors.birthDate ? "birthdate-error" : undefined}
-                className="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-800 transition-colors hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                aria-describedby={
+                  errors.birthDate ? "birthdate-error" : undefined
+                }
+                className="app-input"
               />
               {errors.birthDate && (
                 <p
                   id="birthdate-error"
                   role="alert"
-                  className="mt-1.5 text-sm text-red-600 flex items-center gap-1"
+                  className="app-field-error"
                 >
-                  <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  <svg
+                    className="h-4 w-4 shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   {errors.birthDate}
                 </p>
               )}
             </div>
 
-<button
-              type="submit"
-              className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-            >
+            <button type="submit" className="app-button-primary w-full">
               Mulai Asesmen
             </button>
           </form>
@@ -265,7 +284,11 @@ export default function TestPageClient({
   return (
     <WizardContainer
       sessionId={sessionId}
-      forcedMode={sessionMode === "bebas" ? null : (sessionMode as "peminatan" | "karir")}
+      forcedMode={
+        sessionMode === "bebas"
+          ? null
+          : (sessionMode as "peminatan" | "karir")
+      }
       studentName={studentName}
       studentClass={birthDate}
     />

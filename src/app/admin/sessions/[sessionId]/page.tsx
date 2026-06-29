@@ -1,13 +1,14 @@
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAuthToken, verifyToken } from "@/lib/auth";
 import { buildSessionDetailWhere } from "@/lib/session-access";
 import SessionDetailClient from "./SessionDetailClient";
 
 function isValidUUID(id: string): boolean {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    id,
+  );
 }
 
 export default async function SessionDetailPage({
@@ -92,13 +93,13 @@ export default async function SessionDetailPage({
       : [];
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="app-shell">
       <div className="mb-6">
         <Link
           href={`/admin/dashboard/assessments/${session.assessment.slug}`}
-          className="text-blue-600 hover:text-blue-800 text-sm"
+          className="app-back-link"
         >
-          ← Kembali ke Daftar Sesi
+          {"<-"} Kembali ke Daftar Sesi
         </Link>
       </div>
       <SessionDetailClient

@@ -38,22 +38,29 @@ export default async function RootLayout({
 }>) {
   const token = await getAuthToken();
   let isActiveUser = false;
+  let activeUserEmail: string | null = null;
 
   if (token) {
     try {
-      isActiveUser = verifyToken(token).status === "ACTIVE";
+      const payload = verifyToken(token);
+      isActiveUser = payload.status === "ACTIVE";
+      activeUserEmail = isActiveUser ? payload.email : null;
     } catch {
       isActiveUser = false;
+      activeUserEmail = null;
     }
   }
 
   return (
     <html lang="id" className={`${inter.variable} ${newsreader.variable} antialiased`} suppressHydrationWarning>
-      <body className="min-h-screen bg-gray-100 text-gray-800 font-sans">
+      <body className="min-h-screen bg-slate-50 font-sans text-slate-800">
         <Suspense fallback={null}>
           <TopLoadingBar />
         </Suspense>
-        <GlobalNav isActiveUser={isActiveUser} />
+        <GlobalNav
+          isActiveUser={isActiveUser}
+          activeUserEmail={activeUserEmail}
+        />
         {children}
         <Analytics />
         <SpeedInsights />

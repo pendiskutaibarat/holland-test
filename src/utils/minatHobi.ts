@@ -2,7 +2,7 @@ import {
   minatHobiCategories,
   minatHobiQuestions,
   minatHobiScale,
-} from "@/data/minatHobi";
+} from "../data/minatHobi.ts";
 
 export interface MinatHobiAnswerInput {
   question_number: number;
@@ -32,14 +32,6 @@ export interface MinatHobiScoreResult {
   responses: MinatHobiResponseRecord[];
 }
 
-const scoreByCode = new Map<string, number>(
-  minatHobiScale.map((scale) => [scale.code, scale.score]),
-);
-
-const questionByNumber = new Map(
-  minatHobiQuestions.map((question) => [question.number, question] as const),
-);
-
 const categoryNameByCode = new Map(
   minatHobiCategories.map((category) => [category.code, category.name] as const),
 );
@@ -47,6 +39,13 @@ const categoryNameByCode = new Map(
 export function calculateMinatHobiResult(
   answers: MinatHobiAnswerInput[],
 ): MinatHobiScoreResult {
+  const scoreByCode = new Map<string, number>(
+    minatHobiScale.map((item) => [item.code, item.score]),
+  );
+  const questionByNumber = new Map(
+    minatHobiQuestions.map((question) => [question.number, question] as const),
+  );
+
   if (answers.length !== minatHobiQuestions.length) {
     throw new Error("MINAT_HOBI_INCOMPLETE");
   }

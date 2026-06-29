@@ -71,6 +71,7 @@ async function getPublicSession(assessmentSlug: string) {
     },
     include: {
       assessment: true,
+      assessment_version: true,
     },
   });
 }
@@ -97,6 +98,7 @@ export default async function PublicAssessmentPage({
       sessionMode={session.mode}
       assessmentSlug={session.assessment.slug}
       assessmentName={session.assessment.name}
+      assessmentVersion={session.assessment_version.version}
       isActive={session.is_active}
     />
   );

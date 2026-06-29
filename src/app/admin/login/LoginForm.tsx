@@ -44,7 +44,7 @@ export default function LoginForm() {
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <div className="app-card w-full max-w-md p-8">
         <h1 className="mb-6 text-center text-2xl font-bold text-slate-900">
-          Login Admin
+          Login Admin / Guru
         </h1>
 
         {error && <div className="app-status-error px-3 py-3">{error}</div>}

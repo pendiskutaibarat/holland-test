@@ -6,6 +6,7 @@ import type { MinatHobiScoreResult } from "@/utils/minatHobi";
 interface MinatHobiResultsProps {
   studentName: string;
   birthDate?: string;
+  assessmentVersion?: string;
   result: Pick<
     MinatHobiScoreResult,
     "total_score" | "category_scores" | "ranked_categories" | "top_categories"
@@ -23,34 +24,38 @@ export default function MinatHobiResults({
     : null;
 
   return (
-    <div className="rounded-lg bg-white p-5 shadow-sm">
-      <div className="mb-6 border-b border-gray-100 pb-4">
-        <p className="text-sm text-gray-500">Hasil Asesmen Minat Hobi</p>
-        <h1 className="mt-1 text-2xl font-bold text-gray-800">{studentName}</h1>
-        {birthDate && <p className="mt-1 text-sm text-gray-500">{birthDate}</p>}
+    <div className="app-card p-5">
+      <div className="mb-6 border-b border-slate-100 pb-4">
+        <p className="text-sm text-slate-500">Hasil Asesmen Minat Hobi (RMIB)</p>
+        <h1 className="mt-1 text-2xl font-bold text-slate-900">{studentName}</h1>
+        {birthDate && <p className="mt-1 text-sm text-slate-500">{birthDate}</p>}
+        <p className="mt-3 text-sm leading-6 text-slate-600">
+          Skor tiap kategori berada pada rentang 0 sampai 6. Jika ada skor teratas yang seri,
+          hasil ini sebaiknya dikonfirmasi lagi melalui obrolan singkat dengan guru BK.
+        </p>
       </div>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-lg font-semibold text-gray-800">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900">
           Tiga Minat Teratas
         </h2>
         <div className="space-y-3">
           {topCategory && (
             <div
               key={topCategory.category_code}
-              className="rounded-lg border border-blue-100 bg-blue-50 p-5 md:p-6"
+              className="app-card-muted p-5 md:p-6"
             >
-              <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
+              <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
                 Peringkat {topCategory.rank}
               </p>
-              <h3 className="mt-2 text-2xl font-bold text-gray-800 md:text-3xl">
+              <h3 className="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">
                 {topCategory.category_name}
               </h3>
-              <p className="mt-2 text-base font-medium text-gray-700">
-                Skor {topCategory.score}
+              <p className="mt-2 text-base font-medium text-slate-700">
+                Skor {topCategory.score}/6
               </p>
               {topCategoryDetail && (
-                <p className="mt-4 max-w-3xl text-sm leading-6 text-gray-600">
+                <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-600">
                   {topCategoryDetail.description}
                 </p>
               )}
@@ -66,19 +71,19 @@ export default function MinatHobiResults({
                 return (
                   <div
                     key={category.category_code}
-                    className="rounded-lg border border-blue-100 bg-blue-50 p-4"
+                    className="app-card-muted p-4"
                   >
-                    <p className="text-sm font-medium text-blue-700">
+                    <p className="text-sm font-medium text-brand-700">
                       Peringkat {category.rank}
                     </p>
-                    <h3 className="mt-1 text-lg font-bold text-gray-800">
+                    <h3 className="mt-1 text-lg font-bold text-slate-900">
                       {category.category_name}
                     </h3>
-                    <p className="mt-1 text-sm text-gray-600">
-                      Skor {category.score}
+                    <p className="mt-1 text-sm text-slate-600">
+                      Skor {category.score}/6
                     </p>
                     {detail && (
-                      <p className="mt-3 text-sm leading-6 text-gray-600">
+                      <p className="mt-3 text-sm leading-6 text-slate-600">
                         {detail.description}
                       </p>
                     )}
@@ -91,7 +96,7 @@ export default function MinatHobiResults({
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-lg font-semibold text-gray-800">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900">
           Rekomendasi Aktivitas
         </h2>
         <div className="grid gap-3 md:grid-cols-3">
@@ -102,12 +107,12 @@ export default function MinatHobiResults({
             return (
               <div
                 key={category.category_code}
-                className="rounded-lg border border-gray-100 p-4"
+                className="app-section-card p-4"
               >
-                <h3 className="font-semibold text-gray-800">
+                <h3 className="font-semibold text-slate-900">
                   {category.category_name}
                 </h3>
-                <ul className="mt-3 space-y-2 text-sm text-gray-600">
+                <ul className="mt-3 space-y-2 text-sm text-slate-600">
                   {(detail?.activities ?? []).map((activity) => (
                     <li key={activity}>- {activity}</li>
                   ))}
@@ -119,35 +124,32 @@ export default function MinatHobiResults({
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-gray-800">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900">
           Semua Kategori
         </h2>
-        <div className="overflow-hidden rounded-lg border border-gray-100">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50">
+        <div className="app-table-wrap">
+          <table className="app-table">
+            <thead>
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">
+                <th>
                   Peringkat
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">
+                <th>
                   Kategori
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-gray-600">
+                <th>
                   Skor
                 </th>
               </tr>
             </thead>
             <tbody>
               {result.ranked_categories.map((category) => (
-                <tr
-                  key={category.category_code}
-                  className="border-t border-gray-50"
-                >
-                  <td className="px-4 py-3 text-gray-600">{category.rank}</td>
-                  <td className="px-4 py-3 font-medium text-gray-800">
+                <tr key={category.category_code}>
+                  <td>{category.rank}</td>
+                  <td className="font-medium text-slate-900">
                     {category.category_name}
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{category.score}</td>
+                  <td>{category.score}/6</td>
                 </tr>
               ))}
             </tbody>

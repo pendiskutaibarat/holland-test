@@ -41,30 +41,53 @@ interface GenericDbResult {
   top_categories: RankedMinatHobiCategory[];
 }
 
+function ResultShell({
+  children,
+  sessionId,
+  title,
+}: {
+  children: React.ReactNode;
+  sessionId: string;
+  title?: string;
+}) {
+  return (
+    <div className="app-shell max-w-[1000px]">
+      <div className="mb-6">
+        <Link href={`/admin/sessions/${sessionId}`} className="app-back-link">
+          {"<-"} Kembali ke Detail Sesi
+        </Link>
+      </div>
+      {title ? (
+        <div className="app-page-header">
+          <div className="app-page-header-copy">
+            <h1 className="app-page-title">{title}</h1>
+          </div>
+        </div>
+      ) : null}
+      {children}
+    </div>
+  );
+}
+
 export default function ResultViewClient({
   result,
   sessionId,
+  assessmentVersion,
 }: {
   result: DbResult | GenericDbResult;
   sessionId: string;
+  assessmentVersion?: string;
 }) {
   if ("category_scores" in result) {
     return (
-      <div className="max-w-[1000px] mx-auto p-5">
-        <div className="mb-4">
-          <Link
-            href={`/admin/sessions/${sessionId}`}
-            className="text-blue-600 hover:text-blue-800 text-sm"
-          >
-            ← Kembali ke Detail Sesi
-          </Link>
-        </div>
+      <ResultShell sessionId={sessionId}>
         <MinatHobiResults
           studentName={result.student_name}
           birthDate={result.student_class}
+          assessmentVersion={assessmentVersion}
           result={result}
         />
-      </div>
+      </ResultShell>
     );
   }
 
@@ -90,22 +113,10 @@ export default function ResultViewClient({
   const mode = result.mode as Mode;
 
   return (
-    <div className="max-w-[1000px] mx-auto p-5">
-      <div className="mb-4">
-        <Link
-          href={`/admin/sessions/${sessionId}`}
-          className="text-blue-600 hover:text-blue-800 text-sm"
-        >
-          ← Kembali ke Detail Sesi
-        </Link>
-      </div>
-
-      <div className="mb-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-gray-800">
-          Hasil: {result.student_name} ({result.student_class})
-        </h1>
-      </div>
-
+    <ResultShell
+      sessionId={sessionId}
+      title={`Hasil: ${result.student_name} (${result.student_class})`}
+    >
       {mode === "peminatan" ? (
         <PeminatanResults
           name={result.student_name}
@@ -123,6 +134,6 @@ export default function ResultViewClient({
           mode={mode}
         />
       )}
-    </div>
+    </ResultShell>
   );
 }

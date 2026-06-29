@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAuthToken, verifyToken } from "@/lib/auth";
+import { getAssessmentCatalogItem } from "@/data/assessments";
 import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
@@ -35,13 +36,18 @@ export default async function DashboardPage() {
       sessions={[]}
       assessments={assessments
         .filter((assessment) => assessment.versions.length > 0)
-        .map((assessment) => ({
-          id: assessment.id,
-          slug: assessment.slug,
-          name: assessment.name,
-          description: assessment.description,
-          question_count: assessment.versions[0].question_count,
-        }))}
+        .map((assessment) => {
+          const catalogItem = getAssessmentCatalogItem(assessment.slug);
+
+          return {
+            id: assessment.id,
+            slug: assessment.slug,
+            name: assessment.name,
+            description: assessment.description,
+            question_count:
+              catalogItem?.questionCount ?? assessment.versions[0].question_count,
+          };
+        })}
       role={role}
     />
   );

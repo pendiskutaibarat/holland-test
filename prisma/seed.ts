@@ -66,11 +66,20 @@ async function seedAssessments() {
   const minatHobi = await prisma.assessment.findUniqueOrThrow({
     where: { slug: ASSESSMENT_SLUGS.minatHobi },
   });
+  await prisma.assessmentVersion.updateMany({
+    where: {
+      assessment_id: minatHobi.id,
+      version: "v1",
+    },
+    data: {
+      is_active: false,
+    },
+  });
   const minatHobiVersion = await prisma.assessmentVersion.findUniqueOrThrow({
     where: {
       assessment_id_version: {
         assessment_id: minatHobi.id,
-        version: "v1",
+        version: "v2",
       },
     },
   });

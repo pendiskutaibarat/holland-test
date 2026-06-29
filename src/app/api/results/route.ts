@@ -59,19 +59,41 @@ export async function POST(request: NextRequest) {
       where: { id: session_code },
       include: {
         assessment: true,
-        assessment_version: {
-          include: {
-            questions: true,
-          },
-        },
       },
     });
+
+    const activeMinatHobiVersion =
+      session?.assessment.slug === ASSESSMENT_SLUGS.minatHobi
+        ? await prisma.assessmentVersion.findFirst({
+            where: {
+              assessment_id: session.assessment_id,
+              is_active: true,
+            },
+            include: {
+              questions: true,
+            },
+            orderBy: { created_at: "desc" },
+          })
+        : null;
 
     if (!session) {
       return NextResponse.json(
         { error: "Sesi tidak ditemukan" },
         { status: 404 },
       );
+    }
+
+    if (
+      session.assessment.slug === ASSESSMENT_SLUGS.minatHobi &&
+      activeMinatHobiVersion &&
+      session.assessment_version_id !== activeMinatHobiVersion.id
+    ) {
+      await prisma.session.update({
+        where: { id: session.id },
+        data: {
+          assessment_version_id: activeMinatHobiVersion.id,
+        },
+      });
     }
 
     if (!session.is_active) {
@@ -89,6 +111,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      if (!activeMinatHobiVersion) {
+        return NextResponse.json(
+          { error: "Asesmen tidak tersedia" },
+          { status: 400 },
+        );
+      }
+
       const scoreResult = calculateMinatHobiResult(
         answers.map((answer: MinatHobiAnswer) => ({
           question_number: Number(answer.question_number),
@@ -97,7 +126,7 @@ export async function POST(request: NextRequest) {
       );
 
       const questionIdByNumber = new Map(
-        session.assessment_version.questions.map((question) => [
+        activeMinatHobiVersion.questions.map((question) => [
           question.question_number,
           question.id,
         ]),
@@ -106,7 +135,7 @@ export async function POST(request: NextRequest) {
       const result = await prisma.assessmentResult.create({
         data: {
           session_id: session.id,
-          assessment_version_id: session.assessment_version_id,
+          assessment_version_id: activeMinatHobiVersion.id,
           student_name,
           student_class,
           birth_date: birth_date ? new Date(birth_date) : null,

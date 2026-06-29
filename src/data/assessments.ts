@@ -29,13 +29,13 @@ export const assessmentCatalog: AssessmentCatalogItem[] = [
   },
   {
     slug: ASSESSMENT_SLUGS.minatHobi,
-    name: "Minat Hobi",
+    name: "Minat Hobi (RMIB)",
     description:
-      "Pemetaan 10 area minat dan hobi siswa dari aktivitas sehari-hari.",
+      "Asesmen minat dan hobi berbasis adaptasi RMIB dengan 10 area minat dari aktivitas sehari-hari.",
     engineKey: ASSESSMENT_SLUGS.minatHobi,
-    defaultVersion: "v1",
-    questionCount: 100,
-    estimatedDuration: "12-18 menit",
+    defaultVersion: "v2",
+    questionCount: 60,
+    estimatedDuration: "8-12 menit",
   },
 ];
 

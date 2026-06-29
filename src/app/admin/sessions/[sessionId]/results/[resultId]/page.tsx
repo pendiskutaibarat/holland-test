@@ -35,6 +35,9 @@ export default async function ResultViewPage({
 
   const session = await prisma.session.findFirst({
     where: buildSessionDetailWhere(userId, payload.role, sessionId),
+    include: {
+      assessment_version: true,
+    },
   });
 
   if (!session) {
@@ -61,6 +64,7 @@ export default async function ResultViewPage({
       session_id: sessionId,
     },
     include: {
+      assessment_version: true,
       responses: true,
     },
   });
@@ -88,6 +92,7 @@ export default async function ResultViewPage({
         }>,
       }}
       sessionId={sessionId}
+      assessmentVersion={assessmentResult.assessment_version.version}
     />
   );
 }

@@ -53,20 +53,20 @@ export default function AdminRegisterPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-sm w-full max-w-md text-center">
-          <div className="mb-4 text-green-600">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+        <div className="app-card w-full max-w-md p-8 text-center">
+          <div className="mb-4 text-success-600">
             <svg className="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-gray-800 mb-2">Pendaftaran Berhasil!</h1>
-          <p className="text-gray-600 mb-6">
+          <h1 className="mb-2 text-2xl font-bold text-slate-900">Pendaftaran Berhasil!</h1>
+          <p className="mb-6 text-slate-600">
             Akun Anda menunggu persetujuan admin. Anda akan diberitahu setelah akun disetujui.
           </p>
           <Link
             href="/admin/login"
-            className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="app-button-primary"
           >
             Kembali ke Login
           </Link>
@@ -76,21 +76,17 @@ export default function AdminRegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-sm w-full max-w-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="app-card w-full max-w-md p-8">
+        <h1 className="mb-6 text-center text-2xl font-bold text-slate-900">
           Daftar Akun Guru
         </h1>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
-            {error}
-          </div>
-        )}
+        {error && <div className="app-status-error px-3 py-3">{error}</div>}
 
         <form onSubmit={handleSubmit} className={`space-y-4 ${loading ? "opacity-50 pointer-events-none" : ""}`}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="app-label">
               Nama Lengkap
             </label>
             <input
@@ -98,13 +94,13 @@ export default function AdminRegisterPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="app-input"
               placeholder="Contoh: Budi Santoso"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="app-label">
               Email
             </label>
             <input
@@ -112,13 +108,13 @@ export default function AdminRegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="app-input"
               placeholder="guru@sekolah.id"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="app-label">
               Kata Sandi
             </label>
             <input
@@ -127,13 +123,13 @@ export default function AdminRegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="app-input"
               placeholder="Minimal 6 karakter"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="app-label">
               Konfirmasi Kata Sandi
             </label>
             <input
@@ -142,7 +138,7 @@ export default function AdminRegisterPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="app-input"
               placeholder="Ulangi kata sandi"
             />
           </div>
@@ -151,15 +147,15 @@ export default function AdminRegisterPage() {
             type="submit"
             loading={loading}
             loadingText="Mendaftar..."
-            className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-300"
+            className="app-button-primary w-full"
           >
             Daftar
           </LoadingButton>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-4 text-center text-sm text-slate-600">
           Sudah punya akun?{" "}
-          <Link href="/admin/login" className="text-blue-600 hover:text-blue-800">
+          <Link href="/admin/login" className="app-link font-medium">
             Login
           </Link>
         </p>

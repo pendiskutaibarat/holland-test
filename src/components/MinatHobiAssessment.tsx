@@ -1,14 +1,14 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
+  MINAT_HOBI_ASSESSMENT_NAME,
+  MINAT_HOBI_QUESTIONS_PER_PAGE,
   minatHobiQuestions,
   minatHobiScale,
 } from "@/data/minatHobi";
 import { calculateMinatHobiResult } from "@/utils/minatHobi";
 import MinatHobiResults from "./MinatHobiResults";
-
-const QUESTIONS_PER_PAGE = 10;
 
 interface MinatHobiAssessmentProps {
   sessionId: string;
@@ -29,24 +29,25 @@ export default function MinatHobiAssessment({
   const [error, setError] = useState<string | null>(null);
   const hasSubmitted = useRef(false);
 
-  const totalPages = Math.ceil(minatHobiQuestions.length / QUESTIONS_PER_PAGE);
+  const totalPages = Math.ceil(
+    minatHobiQuestions.length / MINAT_HOBI_QUESTIONS_PER_PAGE,
+  );
   const visibleQuestions = minatHobiQuestions.slice(
-    page * QUESTIONS_PER_PAGE,
-    page * QUESTIONS_PER_PAGE + QUESTIONS_PER_PAGE,
+    page * MINAT_HOBI_QUESTIONS_PER_PAGE,
+    page * MINAT_HOBI_QUESTIONS_PER_PAGE + MINAT_HOBI_QUESTIONS_PER_PAGE,
   );
   const answeredCount = Object.keys(answers).length;
   const canGoNext = visibleQuestions.every((question) => answers[question.number]);
   const isComplete = answeredCount === minatHobiQuestions.length;
 
-  const result = useMemo(() => {
-    if (!isComplete) return null;
-    return calculateMinatHobiResult(
-      minatHobiQuestions.map((question) => ({
-        question_number: question.number,
-        answer_code: answers[question.number],
-      })),
-    );
-  }, [answers, isComplete]);
+  const result = isComplete
+    ? calculateMinatHobiResult(
+        minatHobiQuestions.map((question) => ({
+          question_number: question.number,
+          answer_code: answers[question.number],
+        })),
+      )
+    : null;
 
   async function submit() {
     if (!isComplete || hasSubmitted.current) return;
@@ -91,17 +92,17 @@ export default function MinatHobiAssessment({
     return (
       <div className="mx-auto max-w-[1000px] p-4 md:p-6">
         {status === "success" && (
-          <div className="mb-4 rounded-lg border border-green-200 bg-green-50 p-4 text-center text-sm font-medium text-green-800">
+          <div className="app-status-success text-center font-medium">
             Hasil berhasil disimpan
           </div>
         )}
         {status === "duplicate" && (
-          <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-center text-sm font-medium text-amber-800">
+          <div className="app-status-warning text-center font-medium">
             Anda sudah mengirim hasil asesmen untuk sesi ini
           </div>
         )}
         {status === "error" && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-center text-sm text-red-800">
+          <div className="app-status-error text-center">
             <p>{error}</p>
             <button
               type="button"
@@ -109,7 +110,7 @@ export default function MinatHobiAssessment({
                 hasSubmitted.current = false;
                 setStatus("answering");
               }}
-              className="mt-3 rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              className="app-button-danger mt-3"
             >
               Coba Lagi
             </button>
@@ -128,23 +129,23 @@ export default function MinatHobiAssessment({
 
   return (
     <div className="mx-auto max-w-[900px] p-4 md:p-6">
-      <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
+      <div className="app-card mb-6 p-5">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl font-bold text-gray-800">
-              Asesmen Minat Hobi
+            <h1 className="text-xl font-bold text-slate-900">
+              {MINAT_HOBI_ASSESSMENT_NAME}
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               {answeredCount} dari {minatHobiQuestions.length} jawaban
             </p>
           </div>
-          <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+          <span className="app-badge-brand text-sm">
             Halaman {page + 1}/{totalPages}
           </span>
         </div>
-        <div className="mt-4 h-2 rounded-full bg-gray-100">
+        <div className="mt-4 h-2 rounded-full bg-slate-100">
           <div
-            className="h-2 rounded-full bg-blue-600 transition-all"
+            className="h-2 rounded-full bg-brand-600 transition-all"
             style={{
               width: `${(answeredCount / minatHobiQuestions.length) * 100}%`,
             }}
@@ -157,26 +158,26 @@ export default function MinatHobiAssessment({
           return (
             <div
               key={question.number}
-              className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm"
+              className="app-section-card"
             >
               <div className="mb-3 flex items-start gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-blue-700">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-50 text-sm font-semibold text-brand-700">
                   {question.number}
                 </span>
                 <div>
-                  <p className="font-medium text-gray-800">
+                  <p className="font-medium text-slate-800">
                     {question.statement}
                   </p>
                 </div>
               </div>
-              <div className="grid gap-2 sm:grid-cols-4">
+              <div className="grid gap-2 sm:grid-cols-2">
                 {minatHobiScale.map((scale) => (
                   <label
                     key={scale.code}
-                    className={`flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors ${
+                    className={`flex cursor-pointer items-center justify-center rounded-xl border px-3 py-2 text-sm font-medium transition-colors ${
                       answers[question.number] === scale.code
-                        ? "border-blue-600 bg-blue-50 text-blue-700"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-blue-300"
+                        ? "border-brand-600 bg-brand-50 text-brand-700"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-brand-300"
                     }`}
                   >
                     <input
@@ -209,7 +210,7 @@ export default function MinatHobiAssessment({
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           disabled={page === 0 || status === "submitting"}
-          className="rounded-md border border-gray-300 px-5 py-2 text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="app-button-ghost"
         >
           Kembali
         </button>
@@ -223,7 +224,7 @@ export default function MinatHobiAssessment({
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             disabled={!canGoNext || status === "submitting"}
-            className="rounded-md bg-blue-600 px-5 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="app-button-primary"
           >
             Lanjut
           </button>
@@ -232,7 +233,7 @@ export default function MinatHobiAssessment({
             type="button"
             onClick={submit}
             disabled={!isComplete || status === "submitting"}
-            className="rounded-md bg-green-600 px-5 py-2 font-medium text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="app-button-success"
           >
             {status === "submitting" ? "Mengirim..." : "Lihat Hasil"}
           </button>

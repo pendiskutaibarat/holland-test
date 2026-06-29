@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingButton from "@/components/LoadingButton";
 import { ASSESSMENT_SLUGS } from "@/data/assessments";
@@ -42,7 +41,6 @@ export default function DashboardClient({
     backHref: string;
   };
 }) {
-  const router = useRouter();
   const isAdmin = role === "ADMIN";
   const isAssessmentScoped = !!assessmentContext;
   const [activeTab, setActiveTab] = useState<"sesi" | "guru">("sesi");
@@ -50,7 +48,6 @@ export default function DashboardClient({
   const [sessions, setSessions] = useState<Session[]>(initialSessions);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [logoutLoading, setLogoutLoading] = useState(false);
   const [toggleLoadingId, setToggleLoadingId] = useState<string | null>(null);
   const [deleteLoadingId, setDeleteLoadingId] = useState<string | null>(null);
 
@@ -111,13 +108,6 @@ export default function DashboardClient({
     } finally {
       setRejectLoadingId(null);
     }
-  }
-
-  async function handleLogout() {
-    setLogoutLoading(true);
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/admin/login");
-    router.refresh();
   }
 
   async function handleCreateSession(e: React.FormEvent<HTMLFormElement>) {
@@ -189,19 +179,19 @@ export default function DashboardClient({
     switch (status) {
       case "ACTIVE":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          <span className="app-badge-success">
             Aktif
           </span>
         );
       case "PENDING":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+          <span className="app-badge-warning">
             Menunggu
           </span>
         );
       case "REJECTED":
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+          <span className="app-badge-danger">
             Ditolak
           </span>
         );
@@ -212,8 +202,8 @@ export default function DashboardClient({
 
   return (
     <div className="app-shell">
-      <div className="flex justify-between items-center mb-8">
-        <div>
+      <div className="app-page-header">
+        <div className="app-page-header-copy">
           <h1 className="app-page-title">
             {assessmentContext ? assessmentContext.name : "Dashboard Admin"}
           </h1>
@@ -223,34 +213,19 @@ export default function DashboardClient({
             </p>
           )}
         </div>
-        <LoadingButton
-          onClick={handleLogout}
-          loading={logoutLoading}
-          className="app-button-danger"
-        >
-          Keluar
-        </LoadingButton>
       </div>
 
       {isAdmin && !isAssessmentScoped && (
         <div className="app-tab-list mb-6 w-fit">
           <button
             onClick={() => setActiveTab("sesi")}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeTab === "sesi"
-                ? "app-tab app-tab-active"
-                : "app-tab"
-            }`}
+            className={`app-tab ${activeTab === "sesi" ? "app-tab-active" : ""}`}
           >
             Asesmen
           </button>
           <button
             onClick={() => setActiveTab("guru")}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeTab === "guru"
-                ? "app-tab app-tab-active"
-                : "app-tab"
-            }`}
+            className={`app-tab ${activeTab === "guru" ? "app-tab-active" : ""}`}
           >
             Guru
           </button>
@@ -455,7 +430,7 @@ export default function DashboardClient({
                             href={`/admin/sessions/${session.id}`}
                             title="Lihat Detail"
                             aria-label="Lihat Detail"
-                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                            className="app-icon-button text-brand-700 hover:bg-brand-50"
                           >
                             <svg
                               className="w-4 h-4"
@@ -483,7 +458,7 @@ export default function DashboardClient({
                             loading={deleteLoadingId === session.id}
                             title="Hapus Sesi"
                             aria-label="Hapus Sesi"
-                            className="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                            className="app-icon-button text-danger-600 hover:bg-danger-50"
                           >
                             <svg
                               className="w-4 h-4"
@@ -514,9 +489,9 @@ export default function DashboardClient({
       {activeTab === "guru" && isAdmin && (
         <div>
           {teachersLoading ? (
-            <div className="text-center py-8 text-gray-500">Memuat daftar guru...</div>
+            <div className="app-status-info text-center">Memuat daftar guru...</div>
           ) : teachers.length === 0 ? (
-            <div className="bg-white p-8 rounded-lg shadow-sm text-center text-gray-500">
+            <div className="app-empty-state">
               Belum ada guru yang terdaftar.
             </div>
           ) : (
@@ -526,7 +501,7 @@ export default function DashboardClient({
                 if (filtered.length === 0) return null;
                 return (
                   <div key={status}>
-                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                    <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
                       {status === "PENDING"
                         ? "Menunggu Persetujuan"
                         : status === "ACTIVE"
@@ -537,36 +512,36 @@ export default function DashboardClient({
                       {filtered.map((teacher) => (
                         <div
                           key={teacher.id}
-                          className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center"
+                          className="app-section-card flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
                         >
                           <div>
                             <Link
                               href={`/admin/dashboard/guru/${teacher.id}`}
-                              className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
+                              className="text-base font-medium text-slate-900 transition-colors hover:text-brand-700"
                             >
                               {teacher.name}
                             </Link>
-                            <p className="text-sm text-gray-500">{teacher.email}</p>
-                            <p className="text-xs text-gray-400 mt-1">
+                            <p className="text-sm text-slate-500">{teacher.email}</p>
+                            <p className="mt-1 text-xs text-slate-400">
                               {teacher.session_count} sesi ·{" "}
                               {new Date(teacher.created_at).toLocaleDateString("id-ID")}
                             </p>
                           </div>
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-wrap items-center gap-3">
                             {getStatusBadge(teacher.status)}
                             {teacher.status === "PENDING" && (
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => handleApprove(teacher.id)}
                                   disabled={approveLoadingId === teacher.id}
-                                  className="px-3 py-1.5 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
+                                  className="app-button-success px-3 py-1.5"
                                 >
                                   {approveLoadingId === teacher.id ? "..." : "Setujui"}
                                 </button>
                                 <button
                                   onClick={() => handleReject(teacher.id)}
                                   disabled={rejectLoadingId === teacher.id}
-                                  className="px-3 py-1.5 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+                                  className="app-button-danger px-3 py-1.5"
                                 >
                                   {rejectLoadingId === teacher.id ? "..." : "Tolak"}
                                 </button>
