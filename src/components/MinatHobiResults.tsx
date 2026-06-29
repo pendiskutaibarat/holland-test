@@ -2,6 +2,29 @@
 
 import { minatHobiCategories } from "@/data/minatHobi";
 import type { MinatHobiScoreResult } from "@/utils/minatHobi";
+import outdoorIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/1 - Outdoor.png";
+import mechanicalPracticalIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/2 - Mechanical & Practical.png";
+import computationalClericalIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/3 - Computational & Clerical.png";
+import scientificIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/4 - Scientific.png";
+import persuasiveIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/5 - Persuasive.png";
+import aestheticIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/6 - Aesthetic.png";
+import literaryIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/7 - Literary.png";
+import musicalIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/8 - Musical.png";
+import socialServiceIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/9 - Social Service.png";
+import medicalIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/10 - Medical.png";
+
+const categoryIcons: Record<string, { src: { src: string }; alt: string }> = {
+  outdoor: { src: outdoorIcon, alt: "Icon Outdoor" },
+  mechanical_practical: { src: mechanicalPracticalIcon, alt: "Icon Mechanical & Practical" },
+  computational_clerical: { src: computationalClericalIcon, alt: "Icon Computational & Clerical" },
+  scientific: { src: scientificIcon, alt: "Icon Scientific" },
+  persuasive: { src: persuasiveIcon, alt: "Icon Persuasive" },
+  aesthetic: { src: aestheticIcon, alt: "Icon Aesthetic" },
+  literary: { src: literaryIcon, alt: "Icon Literary" },
+  musical: { src: musicalIcon, alt: "Icon Musical" },
+  social_service: { src: socialServiceIcon, alt: "Icon Social Service" },
+  medical: { src: medicalIcon, alt: "Icon Medical" },
+};
 
 interface MinatHobiResultsProps {
   studentName: string;
@@ -21,6 +44,9 @@ export default function MinatHobiResults({
   const [topCategory, ...secondaryCategories] = result.top_categories;
   const topCategoryDetail = topCategory
     ? minatHobiCategories.find((item) => item.code === topCategory.category_code)
+    : null;
+  const topCategoryIcon = topCategory
+    ? categoryIcons[topCategory.category_code]
     : null;
 
   return (
@@ -45,20 +71,38 @@ export default function MinatHobiResults({
               key={topCategory.category_code}
               className="app-card-muted p-5 md:p-6"
             >
+              {/*{topCategoryIcon && (
+                <img
+                  src={topCategoryIcon.src.src}
+                  alt={topCategoryIcon.alt}
+                  className="mb-4 h-16 w-16 object-contain"
+                />
+              )}*/}
               <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
                 Peringkat {topCategory.rank}
               </p>
-              <h3 className="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">
-                {topCategory.category_name}
-              </h3>
-              <p className="mt-2 text-base font-medium text-slate-700">
-                Skor {topCategory.score}/6
-              </p>
-              {topCategoryDetail && (
-                <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-600">
-                  {topCategoryDetail.description}
-                </p>
-              )}
+              <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="min-w-0">
+                  <h3 className="text-2xl font-bold text-slate-900 md:text-3xl">
+                    {topCategory.category_name}
+                  </h3>
+                  <p className="mt-2 text-base font-medium text-slate-700">
+                    Skor {topCategory.score}/6
+                  </p>
+                  {topCategoryDetail && (
+                    <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-600">
+                      {topCategoryDetail.description}
+                    </p>
+                  )}
+                </div>
+                {topCategoryIcon && (
+                  <img
+                    src={topCategoryIcon.src.src}
+                    alt={topCategoryIcon.alt}
+                    className="h-38 w-38 shrink-0 object-contain md:h-56 md:w-56"
+                  />
+                )}
+              </div>
             </div>
           )}
 
@@ -69,23 +113,31 @@ export default function MinatHobiResults({
                   (item) => item.code === category.category_code,
                 );
                 return (
-                  <div
-                    key={category.category_code}
-                    className="app-card-muted p-4"
-                  >
-                    <p className="text-sm font-medium text-brand-700">
-                      Peringkat {category.rank}
-                    </p>
-                    <h3 className="mt-1 text-lg font-bold text-slate-900">
-                      {category.category_name}
-                    </h3>
-                    <p className="mt-1 text-sm text-slate-600">
-                      Skor {category.score}/6
-                    </p>
-                    {detail && (
-                      <p className="mt-3 text-sm leading-6 text-slate-600">
-                        {detail.description}
+                  <div key={category.category_code} className="app-card-muted p-4 flex">
+                    <div
+                      className=""
+                    >
+                      <p className="text-sm font-medium text-brand-700">
+                        Peringkat {category.rank}
                       </p>
+                      <h3 className="mt-1 text-lg font-bold text-slate-900">
+                        {category.category_name}
+                      </h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        Skor {category.score}/6
+                      </p>
+                      {detail && (
+                        <p className="mt-3 text-sm leading-6 text-slate-600">
+                          {detail.description}
+                        </p>
+                      )}
+                    </div>
+                    {categoryIcons[category.category_code] && (
+                      <img
+                        src={categoryIcons[category.category_code].src.src}
+                        alt={categoryIcons[category.category_code].alt}
+                        className="mb-3 h-24 w-24 object-contain"
+                      />
                     )}
                   </div>
                 );

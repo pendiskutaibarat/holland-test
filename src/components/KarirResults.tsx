@@ -6,8 +6,26 @@ import { TestResult, Mode, PersonalityType } from "@/data/types";
 import { careers } from "@/data/careers";
 import { personalities } from "@/data/personalities";
 import { getBadgeByCode, getTop3Code } from "@/data/badges";
+import realisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/1 - Realistic (Tipe Praktis dan Fisik  The Doers).png";
+import investigativeIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/2 - Investigative (Tipe Analitis dan Sains, The Thinkers).png";
+import artisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/3 - Artistic (Tipe Kreatif dan Ekspresif  The Creators).png";
+import socialIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/4 - Social (Tipe Suportif dan Humanis, The Helpers).png";
+import enterprisingIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/5 - Enterprising (Tipe Pemimpin dan Bisnis, The Persuaders).png";
+import conventionalIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/6 - Conventional (Tipe Terstruktur dan Presisi, The Organizers).png";
 
 import CareerTable from "./CareerTable";
+
+const personalityIcons: Record<
+  PersonalityType,
+  { src: string; alt: string }
+> = {
+  realistic: { src: realisticIcon.src, alt: "Icon Realistic" },
+  investigative: { src: investigativeIcon.src, alt: "Icon Investigative" },
+  artistic: { src: artisticIcon.src, alt: "Icon Artistic" },
+  social: { src: socialIcon.src, alt: "Icon Social" },
+  enterprising: { src: enterprisingIcon.src, alt: "Icon Enterprising" },
+  conventional: { src: conventionalIcon.src, alt: "Icon Conventional" },
+};
 
 const Bar = dynamic(
   () => import("react-chartjs-2").then((mod) => mod.Bar),
@@ -207,43 +225,53 @@ export default function KarirResults({
         ) : (
           top3.map((result, index) => {
             const info = personalities[result.type];
+            const icon = personalityIcons[result.type];
             return (
               <div
                 key={result.type}
                 className="mb-6 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
               >
-                <h4 className="text-blue-700 font-bold text-base mb-1">
-                  {index + 1}. {info.label}
-                </h4>
-                <p className="text-sm text-slate-600">
-                  <span className="font-semibold text-slate-800">
-                    Skor:
-                  </span>{" "}
-                  {result.score}
-                </p>
-                <p className="mt-3 text-slate-600 text-sm leading-relaxed italic">
-                  {info.summary}
-                </p>
-                <ul className="mt-3 space-y-2 text-sm text-slate-600">
-                  <li>
-                    <span className="font-semibold text-slate-800">
-                      Sifat Utama:
-                    </span>{" "}
-                    {info.traits}
-                  </li>
-                  <li>
-                    <span className="font-semibold text-slate-800">
-                      Preferensi (Suka):
-                    </span>{" "}
-                    {info.preferences}
-                  </li>
-                  <li>
-                    <span className="font-semibold text-slate-800">
-                      Hal yang Dihindari:
-                    </span>{" "}
-                    {info.avoidances}
-                  </li>
-                </ul>
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div className="min-w-0">
+                    <h4 className="text-blue-700 font-bold text-base mb-1">
+                      {index + 1}. {info.label}
+                    </h4>
+                    <p className="text-sm text-slate-600">
+                      <span className="font-semibold text-slate-800">
+                        Skor:
+                      </span>{" "}
+                      {result.score}
+                    </p>
+                    <p className="mt-3 text-slate-600 text-sm leading-relaxed italic">
+                      {info.summary}
+                    </p>
+                    <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                      <li>
+                        <span className="font-semibold text-slate-800">
+                          Sifat Utama:
+                        </span>{" "}
+                        {info.traits}
+                      </li>
+                      <li>
+                        <span className="font-semibold text-slate-800">
+                          Preferensi (Suka):
+                        </span>{" "}
+                        {info.preferences}
+                      </li>
+                      <li>
+                        <span className="font-semibold text-slate-800">
+                          Hal yang Dihindari:
+                        </span>{" "}
+                        {info.avoidances}
+                      </li>
+                    </ul>
+                  </div>
+                  <img
+                    src={icon.src}
+                    alt={icon.alt}
+                    className="h-28 w-28 shrink-0 object-contain md:h-36 md:w-36"
+                  />
+                </div>
                 <h4 className="mt-4 font-semibold text-slate-800">
                   Profesi yang Cocok:
                 </h4>
