@@ -61,7 +61,6 @@ function EducationArtwork() {
         src="/3d-education.png"
         alt=""
         fill
-        priority
         sizes="(max-width: 760px) 86vw, 43vw"
         className="education-art-image"
       />
@@ -75,7 +74,16 @@ export default async function Home() {
   return (
     <main className="landing-page">
       <section id="beranda" className="landing-hero">
-        <div className="hero-photo" aria-hidden="true" />
+        <div className="hero-photo" aria-hidden="true">
+          <Image
+            src="/foto-belajar.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="hero-photo-image"
+          />
+        </div>
         <div className="hero-wash" aria-hidden="true" />
         <div className="hero-orb hero-orb-left" aria-hidden="true" />
         <div className="hero-orb hero-orb-right" aria-hidden="true" />

@@ -1,27 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AdminProfileMenu from "@/components/admin/AdminProfileMenu";
-
-interface GlobalNavProps {
-  isActiveUser: boolean;
-  activeUserEmail: string | null;
-}
 
 const navItems = [
   { href: "/", label: "Beranda" },
   { href: "/test/public", label: "Tes Publik" },
 ] as const;
 
-export default function GlobalNav({
-  isActiveUser,
-  activeUserEmail,
-}: GlobalNavProps) {
+export default function GlobalNav() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isActiveUser, setIsActiveUser] = useState(false);
+  const [activeUserEmail, setActiveUserEmail] = useState<string | null>(null);
 
   function isNavActive(href: string) {
     return href === "/"
@@ -32,6 +26,40 @@ export default function GlobalNav({
   function closeMenu() {
     setIsOpen(false);
   }
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadAuthState() {
+      try {
+        const response = await fetch("/api/auth/me", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = (await response.json()) as {
+          isActiveUser?: boolean;
+          activeUserEmail?: string | null;
+        };
+
+        setIsActiveUser(Boolean(data.isActiveUser));
+        setActiveUserEmail(data.activeUserEmail ?? null);
+      } catch {
+        if (!controller.signal.aborted) {
+          setIsActiveUser(false);
+          setActiveUserEmail(null);
+        }
+      }
+    }
+
+    void loadAuthState();
+
+    return () => controller.abort();
+  }, []);
 
   return (
     <header className="app-site-header">
@@ -88,16 +116,18 @@ export default function GlobalNav({
             );
           })}
 
-          <Link
-            href={isActiveUser ? "/admin/dashboard" : "/admin/login"}
-            className="app-button-primary"
-            onClick={closeMenu}
-          >
-            {isActiveUser ? "Dashboard" : "Login"}
-          </Link>
-          {isActiveUser && activeUserEmail ? (
-            <AdminProfileMenu email={activeUserEmail} />
-          ) : null}
+          <div className="flex flex-col gap-3 md:ml-auto md:min-w-[240px] md:flex-row md:items-center md:justify-end">
+            <Link
+              href={isActiveUser ? "/admin/dashboard" : "/admin/login"}
+              className="app-button-primary min-w-[120px] justify-center"
+              onClick={closeMenu}
+            >
+              {isActiveUser ? "Dashboard" : "Login"}
+            </Link>
+            {isActiveUser && activeUserEmail ? (
+              <AdminProfileMenu email={activeUserEmail} />
+            ) : null}
+          </div>
         </nav>
       </div>
     </header>

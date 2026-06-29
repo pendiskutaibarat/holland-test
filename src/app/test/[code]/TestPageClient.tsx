@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import WizardContainer from "@/components/WizardContainer";
@@ -22,12 +23,6 @@ interface TestPageClientProps {
   isActive: boolean;
 }
 
-const TEST_PAGE_BACKGROUND_STYLE = {
-  backgroundImage: "url('/test-background.jpeg'), url('/banner.png')",
-  backgroundPosition: "center",
-  backgroundSize: "cover",
-} as const;
-
 function TestPageBackgroundShell({
   children,
 }: {
@@ -35,11 +30,16 @@ function TestPageBackgroundShell({
 }) {
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 scale-105 blur-sm"
-        style={TEST_PAGE_BACKGROUND_STYLE}
-      />
+      <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+        <Image
+          src="/test-background.jpeg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="scale-105 object-cover object-center blur-sm"
+        />
+      </div>
       <div aria-hidden="true" className="absolute inset-0 bg-slate-950/45" />
       <div className="relative z-10 flex min-h-screen items-center justify-center p-5">
         {children}

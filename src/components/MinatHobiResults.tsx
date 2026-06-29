@@ -2,29 +2,6 @@
 
 import { minatHobiCategories } from "@/data/minatHobi";
 import type { MinatHobiScoreResult } from "@/utils/minatHobi";
-import outdoorIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/1 - Outdoor.png";
-import mechanicalPracticalIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/2 - Mechanical & Practical.png";
-import computationalClericalIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/3 - Computational & Clerical.png";
-import scientificIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/4 - Scientific.png";
-import persuasiveIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/5 - Persuasive.png";
-import aestheticIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/6 - Aesthetic.png";
-import literaryIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/7 - Literary.png";
-import musicalIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/8 - Musical.png";
-import socialServiceIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/9 - Social Service.png";
-import medicalIcon from "../../Icon Minat dan Hobi - RMIB/Icon Minat dan Hobi - RMIB/10 - Medical.png";
-
-const categoryIcons: Record<string, { src: { src: string }; alt: string }> = {
-  outdoor: { src: outdoorIcon, alt: "Icon Outdoor" },
-  mechanical_practical: { src: mechanicalPracticalIcon, alt: "Icon Mechanical & Practical" },
-  computational_clerical: { src: computationalClericalIcon, alt: "Icon Computational & Clerical" },
-  scientific: { src: scientificIcon, alt: "Icon Scientific" },
-  persuasive: { src: persuasiveIcon, alt: "Icon Persuasive" },
-  aesthetic: { src: aestheticIcon, alt: "Icon Aesthetic" },
-  literary: { src: literaryIcon, alt: "Icon Literary" },
-  musical: { src: musicalIcon, alt: "Icon Musical" },
-  social_service: { src: socialServiceIcon, alt: "Icon Social Service" },
-  medical: { src: medicalIcon, alt: "Icon Medical" },
-};
 
 interface MinatHobiResultsProps {
   studentName: string;
@@ -44,9 +21,6 @@ export default function MinatHobiResults({
   const [topCategory, ...secondaryCategories] = result.top_categories;
   const topCategoryDetail = topCategory
     ? minatHobiCategories.find((item) => item.code === topCategory.category_code)
-    : null;
-  const topCategoryIcon = topCategory
-    ? categoryIcons[topCategory.category_code]
     : null;
 
   return (
@@ -95,13 +69,6 @@ export default function MinatHobiResults({
                     </p>
                   )}
                 </div>
-                {topCategoryIcon && (
-                  <img
-                    src={topCategoryIcon.src.src}
-                    alt={topCategoryIcon.alt}
-                    className="h-38 w-38 shrink-0 object-contain md:h-56 md:w-56"
-                  />
-                )}
               </div>
             </div>
           )}
@@ -113,10 +80,8 @@ export default function MinatHobiResults({
                   (item) => item.code === category.category_code,
                 );
                 return (
-                  <div key={category.category_code} className="app-card-muted p-4 flex">
-                    <div
-                      className=""
-                    >
+                  <div key={category.category_code} className="app-card-muted flex p-4">
+                    <div>
                       <p className="text-sm font-medium text-brand-700">
                         Peringkat {category.rank}
                       </p>
@@ -132,13 +97,6 @@ export default function MinatHobiResults({
                         </p>
                       )}
                     </div>
-                    {categoryIcons[category.category_code] && (
-                      <img
-                        src={categoryIcons[category.category_code].src.src}
-                        alt={categoryIcons[category.category_code].alt}
-                        className="mb-3 h-24 w-24 object-contain"
-                      />
-                    )}
                   </div>
                 );
               })}

@@ -412,7 +412,12 @@ body {
 
 .hero-photo {
   z-index: -4;
-  background: url("/foto-belajar.png") center 43% / cover no-repeat;
+  overflow: hidden;
+}
+
+.hero-photo-image {
+  object-fit: cover;
+  object-position: center 43%;
   filter: saturate(0.88) contrast(1.02);
 }
 
@@ -999,7 +1004,11 @@ body {
   }
 
   .hero-photo {
-    background-position: 60% center;
+    overflow: hidden;
+  }
+
+  .hero-photo-image {
+    object-position: 60% center;
   }
 
   .hero-wash {

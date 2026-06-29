@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 interface UserInfoStepProps {
   name: string;
   birthDate: string;
@@ -19,10 +21,14 @@ export default function UserInfoStep({
     <div className="space-y-6">
       {/* Banner */}
       <div className="text-center">
-        <img
+        <Image
           src="/banner.png"
           alt="Holland RIASEC"
-          className="mx-auto rounded-lg"
+          width={4950}
+          height={1238}
+          priority
+          sizes="(max-width: 768px) 92vw, 720px"
+          className="mx-auto h-auto w-full max-w-[720px] rounded-lg"
         />
       </div>
 
