@@ -5,9 +5,11 @@ import {
   calculatePeminatanPercentages,
   getTopPeminatan,
 } from "@/utils/peminatan";
+import { downloadPdf } from "@/utils/pdfExport";
 
 
 interface PeminatanResultsProps {
+  sessionId: string;
   name: string;
   birthDate: string;
   results: TestResult[];
@@ -16,6 +18,7 @@ interface PeminatanResultsProps {
 }
 
 export default function PeminatanResults({
+  sessionId,
   name,
   birthDate,
   results,
@@ -63,17 +66,123 @@ export default function PeminatanResults({
     },
   };
 
+  const pdfFileName = `hasil-peminatan-${name.trim().replace(/\s+/g, "-").toLowerCase() || "siswa"}.pdf`;
+
   return (
     <div
       id="results"
       className="bg-white p-5 md:p-8 rounded-xl shadow-sm border border-slate-200"
     >
-      <div id="print-banner" className="print:block hidden">
+      <div
+        id="peminatan-result-pdf"
+        className="absolute -left-[10000px] top-0 w-[794px] bg-white p-8 text-slate-800"
+        aria-hidden="true"
+      >
         <img
           src="/banner.png"
           alt="Holland RIASEC"
-          className="mx-auto mb-4"
+          className="mx-auto mb-6 w-full max-w-[260px]"
         />
+
+        <h2 className="text-2xl font-bold text-slate-900">
+          Hasil Pemetaan Peminatan SMA/MA
+        </h2>
+
+        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <p>
+            <span className="font-semibold text-slate-900">Nama:</span> {name}
+          </p>
+          <p className="mt-1">
+            <span className="font-semibold text-slate-900">Tanggal Lahir:</span>{" "}
+            {formattedBirthDate}
+          </p>
+          <p className="mt-1">
+            <span className="font-semibold text-slate-900">Tanggal Tes:</span>{" "}
+            {testDate}
+          </p>
+        </div>
+
+        <div className="mt-6 grid gap-4">
+          {topPeminatan.map((ptype) => {
+            const pct = percentages[ptype];
+            const info = PEMINATAN_INFO[ptype];
+            const config = barConfig[ptype];
+            return (
+              <div
+                key={ptype}
+                className="rounded-xl border border-slate-200 bg-white p-4"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-semibold text-slate-900">
+                    {info.label}
+                  </h3>
+                  <span className={`text-sm font-semibold ${config.textColor}`}>
+                    {pct}%
+                  </span>
+                </div>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {info.description}
+                </p>
+                <p className="mt-2 text-sm text-slate-600">
+                  <span className="font-semibold text-slate-900">
+                    Mata Pelajaran relevan:
+                  </span>{" "}
+                  {info.subjects.join(", ")}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {top2.length > 0 && (
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold text-slate-900">
+              Kepribadian RIASEC Dominan
+            </h3>
+            <div className="mt-3 grid gap-4">
+              {top2.map((result, index) => {
+                const info = personalities[result.type];
+                return (
+                  <div
+                    key={result.type}
+                    className="rounded-xl border border-slate-200 bg-white p-4"
+                  >
+                    <p className="font-semibold text-blue-700">
+                      {index + 1}. {info.label}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      Skor: {result.score}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {info.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-slate-900">
+            Detail Semua Hasil RIASEC
+          </h3>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {sorted.map((result) => (
+              <div
+                key={result.type}
+                className="rounded-lg border border-slate-200 bg-slate-50 p-3"
+              >
+                <span className="block text-sm text-slate-600">
+                  {personalities[result.type].label}
+                </span>
+                <span className="block text-lg font-bold text-blue-700">
+                  {result.score} poin
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div id="results-content">
@@ -81,7 +190,7 @@ export default function PeminatanResults({
         Hasil Pemetaan Peminatan SMA/MA
       </h2>
 
-      <div className="bg-slate-50 rounded-lg p-4 mb-8 space-y-1">
+      <div className="print-card bg-slate-50 rounded-lg p-4 mb-8 space-y-1">
         <p className="text-slate-600">
           <span className="font-semibold text-slate-800">Nama:</span> {name}
         </p>
@@ -154,7 +263,7 @@ export default function PeminatanResults({
             return (
               <div
                 key={ptype}
-                className="p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
+                className="print-card p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
               >
                 <h4 className="font-bold text-slate-800 flex items-center gap-2">
                   <span
@@ -178,7 +287,7 @@ export default function PeminatanResults({
           return (
             <div
               key={ptype}
-              className="p-4 rounded-xl border border-slate-200 bg-slate-50"
+              className="print-card p-4 rounded-xl border border-slate-200 bg-slate-50"
             >
               <h4 className="font-semibold text-slate-500 text-sm">
                 {info.label}
@@ -204,7 +313,7 @@ export default function PeminatanResults({
             return (
               <div
                 key={result.type}
-                className="mb-5 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
+                className="print-card mb-5 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
               >
                 <h4 className="text-blue-700 font-bold text-base mb-1">
                   {index + 1}. {info.label}
@@ -233,9 +342,9 @@ export default function PeminatanResults({
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {sorted.map((result) => (
-            <div
+          <div
               key={result.type}
-              className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200"
+              className="print-card px-3 py-2 rounded-lg bg-slate-50 border border-slate-200"
             >
               <span className="text-sm text-slate-600">
                 {personalities[result.type].label}
@@ -250,10 +359,16 @@ export default function PeminatanResults({
 
       <div className="mt-8 flex flex-wrap justify-center gap-3 print:hidden">
         <button
-          onClick={() => window.print()}
-          className="px-6 py-2.5 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+          type="button"
+          onClick={() =>
+            void downloadPdf(
+              `/api/results/pdf?kind=peminatan&sessionId=${encodeURIComponent(sessionId)}&studentName=${encodeURIComponent(name)}&studentClass=${encodeURIComponent(birthDate)}`,
+              pdfFileName,
+            )
+          }
+          className="app-button-ghost"
         >
-          Cetak Hasil
+          Unduh PDF
         </button>
       </div>
       </div>

@@ -14,7 +14,7 @@ const navItems = [
 export default function GlobalNav() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [isActiveUser, setIsActiveUser] = useState(false);
+  const [isAdminOrGuruLoggedIn, setIsAdminOrGuruLoggedIn] = useState(false);
   const [activeUserEmail, setActiveUserEmail] = useState<string | null>(null);
 
   function isNavActive(href: string) {
@@ -42,15 +42,15 @@ export default function GlobalNav() {
         }
 
         const data = (await response.json()) as {
-          isActiveUser?: boolean;
+          isAdminOrGuruLoggedIn?: boolean;
           activeUserEmail?: string | null;
         };
 
-        setIsActiveUser(Boolean(data.isActiveUser));
+        setIsAdminOrGuruLoggedIn(Boolean(data.isAdminOrGuruLoggedIn));
         setActiveUserEmail(data.activeUserEmail ?? null);
       } catch {
         if (!controller.signal.aborted) {
-          setIsActiveUser(false);
+          setIsAdminOrGuruLoggedIn(false);
           setActiveUserEmail(null);
         }
       }
@@ -116,15 +116,15 @@ export default function GlobalNav() {
             );
           })}
 
-          <div className="flex flex-col gap-3 md:ml-auto md:min-w-[240px] md:flex-row md:items-center md:justify-end">
+          <div className="flex flex-col gap-3 md:ml-auto md:flex-row md:items-center md:justify-end">
             <Link
-              href={isActiveUser ? "/admin/dashboard" : "/admin/login"}
+              href={isAdminOrGuruLoggedIn ? "/admin/dashboard" : "/admin/login"}
               className="app-button-primary min-w-[120px] justify-center"
               onClick={closeMenu}
             >
-              {isActiveUser ? "Dashboard" : "Login"}
+              {isAdminOrGuruLoggedIn ? "Dashboard" : "Login"}
             </Link>
-            {isActiveUser && activeUserEmail ? (
+            {isAdminOrGuruLoggedIn && activeUserEmail ? (
               <AdminProfileMenu email={activeUserEmail} />
             ) : null}
           </div>

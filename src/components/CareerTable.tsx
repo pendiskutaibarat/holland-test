@@ -6,7 +6,7 @@ interface CareerTableProps {
 
 export default function CareerTable({ careers }: CareerTableProps) {
   return (
-    <div className="overflow-x-auto mt-3 rounded-lg border border-slate-200">
+    <div className="print-card overflow-x-auto mt-3 rounded-lg border border-slate-200">
       <table className="w-full border-collapse text-sm">
         <caption className="sr-only">Daftar karir yang cocok</caption>
         <thead>

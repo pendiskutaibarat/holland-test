@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   MINAT_HOBI_ASSESSMENT_NAME,
   MINAT_HOBI_QUESTIONS_PER_PAGE,
@@ -8,6 +8,7 @@ import {
   minatHobiScale,
 } from "@/data/minatHobi";
 import { calculateMinatHobiResult } from "@/utils/minatHobi";
+import AssessmentBanner from "./AssessmentBanner";
 import MinatHobiResults from "./MinatHobiResults";
 
 interface MinatHobiAssessmentProps {
@@ -28,6 +29,7 @@ export default function MinatHobiAssessment({
   >("answering");
   const [error, setError] = useState<string | null>(null);
   const hasSubmitted = useRef(false);
+  const didMount = useRef(false);
 
   const totalPages = Math.ceil(
     minatHobiQuestions.length / MINAT_HOBI_QUESTIONS_PER_PAGE,
@@ -39,6 +41,15 @@ export default function MinatHobiAssessment({
   const answeredCount = Object.keys(answers).length;
   const canGoNext = visibleQuestions.every((question) => answers[question.number]);
   const isComplete = answeredCount === minatHobiQuestions.length;
+
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true;
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
 
   const result = isComplete
     ? calculateMinatHobiResult(
@@ -118,6 +129,7 @@ export default function MinatHobiAssessment({
         )}
         {result && (
           <MinatHobiResults
+            sessionId={sessionId}
             studentName={studentName}
             birthDate={birthDate}
             result={result}
@@ -129,6 +141,11 @@ export default function MinatHobiAssessment({
 
   return (
     <div className="mx-auto max-w-[900px] p-4 md:p-6">
+      <AssessmentBanner
+        src="/test-banners/minat-hobi-banner.png"
+        alt="Banner asesmen Minat Hobi"
+      />
+
       <div className="app-card mb-6 p-5">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -207,7 +224,6 @@ export default function MinatHobiAssessment({
           type="button"
           onClick={() => {
             setPage((current) => Math.max(0, current - 1));
-            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           disabled={page === 0 || status === "submitting"}
           className="app-button-ghost"
@@ -221,7 +237,6 @@ export default function MinatHobiAssessment({
             onClick={() => {
               if (!canGoNext) return;
               setPage((current) => current + 1);
-              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             disabled={!canGoNext || status === "submitting"}
             className="app-button-primary"

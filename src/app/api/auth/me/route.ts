@@ -7,24 +7,29 @@ export async function GET() {
 
     if (!token) {
       return NextResponse.json(
-        { isActiveUser: false, activeUserEmail: null },
+        {
+          isAdminOrGuruLoggedIn: false,
+          activeUserEmail: null,
+        },
         { headers: { "Cache-Control": "no-store" } },
       );
     }
 
     const payload = verifyToken(token);
-    const isActiveUser = payload.status === "ACTIVE";
+    const isAdminOrGuruLoggedIn =
+      payload.status === "ACTIVE" &&
+      (payload.role === "ADMIN" || payload.role === "TEACHER");
 
     return NextResponse.json(
       {
-        isActiveUser,
-        activeUserEmail: isActiveUser ? payload.email : null,
+        isAdminOrGuruLoggedIn,
+        activeUserEmail: isAdminOrGuruLoggedIn ? payload.email : null,
       },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch {
     return NextResponse.json(
-      { isActiveUser: false, activeUserEmail: null },
+      { isAdminOrGuruLoggedIn: false, activeUserEmail: null },
       { headers: { "Cache-Control": "no-store" } },
     );
   }

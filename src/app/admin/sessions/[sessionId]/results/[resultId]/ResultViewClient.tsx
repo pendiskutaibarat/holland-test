@@ -82,6 +82,7 @@ export default function ResultViewClient({
     return (
       <ResultShell sessionId={sessionId}>
         <MinatHobiResults
+          sessionId={sessionId}
           studentName={result.student_name}
           birthDate={result.student_class}
           assessmentVersion={assessmentVersion}
@@ -119,6 +120,7 @@ export default function ResultViewClient({
     >
       {mode === "peminatan" ? (
         <PeminatanResults
+          sessionId={sessionId}
           name={result.student_name}
           birthDate={birthDateStr}
           results={results}
@@ -127,6 +129,7 @@ export default function ResultViewClient({
         />
       ) : (
         <KarirResults
+          sessionId={sessionId}
           name={result.student_name}
           birthDate={birthDateStr}
           results={results}

@@ -291,6 +291,8 @@ export default function TestPageClient({
       }
       studentName={studentName}
       studentClass={birthDate}
+      questionBannerSrc="/test-banners/riasec-banner.png"
+      questionBannerAlt="Banner asesmen RIASEC"
     />
   );
 }

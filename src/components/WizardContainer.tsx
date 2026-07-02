@@ -2,7 +2,8 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { questions } from "@/data/questions";
-import { PersonalityType, TestResult, Mode } from "@/data/types";
+import { PersonalityType, Mode } from "@/data/types";
+import AssessmentBanner from "./AssessmentBanner";
 import ProgressBar from "./ProgressBar";
 import StepNavigation from "./StepNavigation";
 import ModeSelectorStep from "./ModeSelectorStep";
@@ -25,6 +26,8 @@ interface WizardContainerProps {
   forcedMode: "peminatan" | "karir" | null;
   studentName: string;
   studentClass: string;
+  questionBannerSrc?: string;
+  questionBannerAlt?: string;
 }
 
 export default function WizardContainer({
@@ -32,6 +35,8 @@ export default function WizardContainer({
   forcedMode,
   studentName,
   studentClass,
+  questionBannerSrc,
+  questionBannerAlt,
 }: WizardContainerProps) {
   const [currentStep, setCurrentStep] = useState(forcedMode ? 0 : 0);
   const [mode, setMode] = useState<Mode | null>(forcedMode);
@@ -273,6 +278,7 @@ export default function WizardContainer({
 
         {mode === "peminatan" ? (
           <PeminatanResults
+            sessionId={sessionId}
             name={name}
             birthDate={birthDate}
             results={results}
@@ -281,6 +287,7 @@ export default function WizardContainer({
           />
         ) : (
           <KarirResults
+            sessionId={sessionId}
             name={name}
             birthDate={birthDate}
             results={results}
@@ -380,6 +387,14 @@ export default function WizardContainer({
 
   return (
     <div className="max-w-[1000px] mx-auto p-4 md:p-6 print:hidden">
+      {questionBannerSrc && (
+        <div className="mb-6">
+          <AssessmentBanner
+            src={questionBannerSrc}
+            alt={questionBannerAlt ?? "Banner asesmen"}
+          />
+        </div>
+      )}
       <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
       <TestSectionStep
         section={section}

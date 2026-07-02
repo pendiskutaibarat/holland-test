@@ -26,9 +26,6 @@ export default function StepNavigation({
       <div>
         {!isFirstStep && (
           <button onClick={onBack} className="app-button-ghost px-6">
-            <span aria-hidden="true" className="mr-1">
-              Back
-            </span>
             Kembali
           </button>
         )}

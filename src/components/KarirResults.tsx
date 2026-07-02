@@ -6,6 +6,7 @@ import { TestResult, Mode, PersonalityType } from "@/data/types";
 import { careers } from "@/data/careers";
 import { personalities } from "@/data/personalities";
 import { getBadgeByCode, getTop3Code } from "@/data/badges";
+import { downloadPdf } from "@/utils/pdfExport";
 import realisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/1 - Realistic (Tipe Praktis dan Fisik  The Doers).png";
 import investigativeIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/2 - Investigative (Tipe Analitis dan Sains, The Thinkers).png";
 import artisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/3 - Artistic (Tipe Kreatif dan Ekspresif  The Creators).png";
@@ -33,6 +34,7 @@ const Bar = dynamic(
 );
 
 interface KarirResultsProps {
+  sessionId: string;
   name: string;
   birthDate: string;
   results: TestResult[];
@@ -41,6 +43,7 @@ interface KarirResultsProps {
 }
 
 export default function KarirResults({
+  sessionId,
   name,
   birthDate,
   results,
@@ -78,6 +81,7 @@ export default function KarirResults({
   ];
 
   const top3Types = new Set(top3.map((r) => r.type));
+  const pdfFileName = `hasil-karir-${name.trim().replace(/\s+/g, "-").toLowerCase() || "siswa"}.pdf`;
 
   const barData = {
     labels: [
@@ -137,12 +141,127 @@ export default function KarirResults({
       id="results"
       className="bg-white p-5 md:p-8 rounded-xl shadow-sm border border-slate-200"
     >
-      <div id="print-banner" className="print:block hidden">
+      <div
+        id="karir-result-pdf"
+        className="absolute -left-[10000px] top-0 w-[794px] bg-white p-8 text-slate-800"
+        aria-hidden="true"
+      >
         <img
           src="/banner.png"
           alt="Holland RIASEC"
-          className="mx-auto mb-4"
+          className="mx-auto mb-6 w-full max-w-[260px]"
         />
+
+        <h2 className="text-2xl font-bold text-slate-900">
+          Hasil Tes Holland RIASEC
+        </h2>
+
+        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <p>
+            <span className="font-semibold text-slate-900">Nama:</span> {name}
+          </p>
+          <p className="mt-1">
+            <span className="font-semibold text-slate-900">Tanggal Lahir:</span>{" "}
+            {formattedBirthDate}
+          </p>
+          <p className="mt-1">
+            <span className="font-semibold text-slate-900">Tanggal Tes:</span>{" "}
+            {testDate}
+          </p>
+          <p className="mt-1">
+            <span className="font-semibold text-slate-900">Kode Holland:</span>{" "}
+            {hollandCode}
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-slate-900">
+            Profil RIASEC
+          </h3>
+          <div className="mt-3">
+            <Bar data={barData} options={barOptions} />
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4">
+          {top3.map((result, index) => {
+            const info = personalities[result.type];
+            return (
+              <div
+                key={result.type}
+                className="rounded-xl border border-slate-200 bg-white p-4"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="font-semibold text-blue-700">
+                      {index + 1}. {info.label}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      Skor: {result.score}
+                    </p>
+                  </div>
+                  <img
+                    src={personalityIcons[result.type].src}
+                    alt={personalityIcons[result.type].alt}
+                    className="h-20 w-20 shrink-0 object-contain"
+                  />
+                </div>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  {info.summary}
+                </p>
+                <ul className="mt-3 space-y-1.5 text-sm text-slate-600">
+                  <li>
+                    <span className="font-semibold text-slate-900">
+                      Sifat Utama:
+                    </span>{" "}
+                    {info.traits}
+                  </li>
+                  <li>
+                    <span className="font-semibold text-slate-900">
+                      Preferensi (Suka):
+                    </span>{" "}
+                    {info.preferences}
+                  </li>
+                  <li>
+                    <span className="font-semibold text-slate-900">
+                      Hal yang Dihindari:
+                    </span>{" "}
+                    {info.avoidances}
+                  </li>
+                </ul>
+                <div className="mt-3">
+                  <h4 className="font-semibold text-slate-900">
+                    Profesi yang Cocok:
+                  </h4>
+                  <div className="mt-2">
+                    <CareerTable careers={careers[result.type]} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-slate-900">
+            Detail Semua Hasil
+          </h3>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {sorted.map((result) => (
+              <div
+                key={result.type}
+                className="rounded-lg border border-slate-200 bg-slate-50 p-3"
+              >
+                <span className="block text-sm text-slate-600">
+                  {personalities[result.type].label}
+                </span>
+                <span className="block text-lg font-bold text-blue-700">
+                  {result.score} poin
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div id="results-content">
@@ -150,7 +269,7 @@ export default function KarirResults({
         Hasil Tes Holland RIASEC
       </h2>
 
-      <div className="bg-slate-50 rounded-lg p-4 mb-8 space-y-1">
+      <div className="print-card bg-slate-50 rounded-lg p-4 mb-8 space-y-1">
         <p className="text-slate-600">
           <span className="font-semibold text-slate-800">Nama:</span> {name}
         </p>
@@ -229,7 +348,7 @@ export default function KarirResults({
             return (
               <div
                 key={result.type}
-                className="mb-6 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
+                className="print-card mb-6 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div className="min-w-0">
@@ -291,9 +410,9 @@ export default function KarirResults({
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {sorted.map((result) => (
-            <div
+          <div
               key={result.type}
-              className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200"
+              className="print-card px-3 py-2 rounded-lg bg-slate-50 border border-slate-200"
             >
               <span className="text-sm text-slate-600">
                 {personalities[result.type].label}
@@ -308,10 +427,16 @@ export default function KarirResults({
 
       <div className="mt-8 flex flex-wrap justify-center gap-3 print:hidden">
         <button
-          onClick={() => window.print()}
-          className="px-6 py-2.5 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+          type="button"
+          onClick={() =>
+            void downloadPdf(
+              `/api/results/pdf?kind=karir&sessionId=${encodeURIComponent(sessionId)}&studentName=${encodeURIComponent(name)}&studentClass=${encodeURIComponent(birthDate)}`,
+              pdfFileName,
+            )
+          }
+          className="app-button-ghost"
         >
-          Cetak Hasil
+          Unduh PDF
         </button>
       </div>
       </div>

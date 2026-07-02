@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import AboutPdfModal from "@/components/AboutPdfModal";
 
 const featureCards = [
   {
@@ -186,6 +187,7 @@ export default async function Home() {
               <span>Akses digital yang mudah</span>
               <span>Mitra strategis madrasah dan orang tua</span>
             </div>
+            <AboutPdfModal />
           </div>
         </div>
       </section>

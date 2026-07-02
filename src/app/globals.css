@@ -1186,9 +1186,15 @@ body {
 }
 
 @media print {
+  @page {
+    size: auto;
+    margin: 28mm 12mm 16mm;
+  }
+
   body {
-    width: 8.5in;
+    width: auto;
     background: white;
+    color: #172c2a;
   }
 
   body * {
@@ -1204,18 +1210,28 @@ body {
     position: relative;
     width: 100%;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     background: white;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 
   #print-banner {
     z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    padding: 8mm 12mm 4mm;
     background: white;
     text-align: center;
-    padding: 12px 20px;
+    border-bottom: 1px solid #d7e1e0;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 
   #print-banner img {
@@ -1223,10 +1239,47 @@ body {
     margin: 0 auto;
     width: auto;
     max-width: 100%;
+    max-height: 14mm;
     object-fit: contain;
   }
 
   #results-content {
-    padding-top: 16px;
+    padding-top: 0;
+  }
+
+  .print-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #results-content section {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  #results .overflow-x-auto {
+    overflow: visible !important;
+  }
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  th,
+  td {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
