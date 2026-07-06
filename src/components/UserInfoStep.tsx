@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import AssessmentBanner from "./AssessmentBanner";
 
 interface UserInfoStepProps {
   name: string;
@@ -21,15 +21,7 @@ export default function UserInfoStep({
     <div className="space-y-6">
       {/* Banner */}
       <div className="text-center">
-        <Image
-          src="/banner.png"
-          alt="Holland RIASEC"
-          width={4950}
-          height={1238}
-          priority
-          sizes="(max-width: 768px) 92vw, 720px"
-          className="mx-auto h-auto w-full max-w-[720px] rounded-lg"
-        />
+        <AssessmentBanner src="/test-banners/riasec-banner.png" alt="Banner asesmen Holland RIASEC" />
       </div>
 
       <h1 className="text-2xl font-bold text-center text-blue-500">

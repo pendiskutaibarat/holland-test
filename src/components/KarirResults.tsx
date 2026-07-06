@@ -28,6 +28,8 @@ const personalityIcons: Record<
   conventional: { src: conventionalIcon.src, alt: "Icon Conventional" },
 };
 
+const bannerSrc = "/test-banners/riasec-banner.png";
+
 const Bar = dynamic(
   () => import("react-chartjs-2").then((mod) => mod.Bar),
   { ssr: false },
@@ -147,8 +149,8 @@ export default function KarirResults({
         aria-hidden="true"
       >
         <img
-          src="/banner.png"
-          alt="Holland RIASEC"
+          src={bannerSrc}
+          alt="Banner asesmen Holland RIASEC"
           className="mx-auto mb-6 w-full max-w-[260px]"
         />
 

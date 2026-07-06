@@ -27,6 +27,8 @@ const categoryIcons: Record<string, { src: string; alt: string }> = {
   medical: { src: medicalIcon.src, alt: "Icon Medical" },
 };
 
+const bannerSrc = "/test-banners/minat-hobi-banner.png";
+
 interface MinatHobiResultsProps {
   sessionId: string;
   studentName: string;
@@ -59,8 +61,8 @@ export default function MinatHobiResults({
         aria-hidden="true"
       >
         <img
-          src="/banner.png"
-          alt="Holland RIASEC"
+          src={bannerSrc}
+          alt="Banner asesmen Minat Hobi"
           className="mx-auto mb-6 w-full max-w-[260px]"
         />
 

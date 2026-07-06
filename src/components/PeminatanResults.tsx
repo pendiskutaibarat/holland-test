@@ -7,6 +7,7 @@ import {
 } from "@/utils/peminatan";
 import { downloadPdf } from "@/utils/pdfExport";
 
+const bannerSrc = "/test-banners/riasec-banner.png";
 
 interface PeminatanResultsProps {
   sessionId: string;
@@ -79,8 +80,8 @@ export default function PeminatanResults({
         aria-hidden="true"
       >
         <img
-          src="/banner.png"
-          alt="Holland RIASEC"
+          src={bannerSrc}
+          alt="Banner asesmen Holland RIASEC"
           className="mx-auto mb-6 w-full max-w-[260px]"
         />
 

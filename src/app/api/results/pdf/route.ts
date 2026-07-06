@@ -239,6 +239,7 @@ export async function GET(request: NextRequest) {
     dominant: top3.map((row) => {
       const info = personalities[row.key as keyof typeof personalities];
       return {
+        type: row.key as keyof typeof personalities,
         label: info.label,
         score: row.score,
         summary: info.summary,

@@ -306,10 +306,9 @@ export default function WizardContainer({
         {forcedMode ? (
           <div className="space-y-8">
             <div className="text-center">
-              <img
-                src="/banner.png"
-                alt="Tes Bakat Holland RIASEC"
-                className="mx-auto rounded-lg"
+              <AssessmentBanner
+                src="/test-banners/riasec-banner.png"
+                alt="Banner asesmen Holland RIASEC"
               />
             </div>
             <div className="text-center">

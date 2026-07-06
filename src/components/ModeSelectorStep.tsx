@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { Mode } from "@/data/types";
+import AssessmentBanner from "./AssessmentBanner";
 
 interface ModeSelectorStepProps {
   selectedMode: Mode | null;
@@ -41,15 +41,7 @@ export default function ModeSelectorStep({
   return (
     <div className="mx-auto max-w-[800px] space-y-8">
       <div className="text-center">
-        <Image
-          src="/banner.png"
-          alt="Tes Bakat Holland RIASEC"
-          width={4950}
-          height={1238}
-          priority
-          sizes="(max-width: 768px) 92vw, 720px"
-          className="mx-auto h-auto w-full max-w-[720px] rounded-lg"
-        />
+        <AssessmentBanner src="/test-banners/riasec-banner.png" alt="Banner asesmen Holland RIASEC" />
       </div>
 
       <div className="text-center">
