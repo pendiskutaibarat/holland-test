@@ -205,6 +205,7 @@ export async function GET(request: NextRequest) {
       topPeminatan,
       peminatanInfo: PEMINATAN_INFO,
       topRiasec: top3.map((row) => ({
+        type: row.key as keyof typeof personalities,
         label: personalities[row.key as keyof typeof personalities].label,
         score: row.score,
         description: personalities[row.key as keyof typeof personalities].summary,

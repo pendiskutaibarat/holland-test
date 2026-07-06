@@ -739,10 +739,11 @@ export async function renderPeminatanPdf(params: {
   percentages: Record<string, number>;
   topPeminatan: string[];
   peminatanInfo: Record<string, { label: string; description: string; subjects: string[] }>;
-  topRiasec: Array<{ label: string; score: number; description: string }>;
+  topRiasec: Array<{ type: PersonalityType; label: string; score: number; description: string }>;
   scores: Array<{ label: string; score: number }>;
 }) {
   const banner = await loadBannerDataUrl("test-banners/riasec-banner.png");
+  const personalityIcons = await loadPersonalityIcons();
   const doc = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
   const layout = new PdfLayout(doc, banner);
 
@@ -777,7 +778,13 @@ export async function renderPeminatanPdf(params: {
   layout.addSpacer(2);
   layout.addSection("Kepribadian RIASEC Dominan");
   params.topRiasec.forEach((row, index) => {
-    layout.addCard(`${index + 1}. ${row.label}`, [`Skor: ${row.score}`, row.description]);
+    layout.addIconCard({
+      title: `${index + 1}. ${row.label}`,
+      score: row.score,
+      summary: row.description,
+      bullets: [],
+      imageDataUrl: personalityIcons[row.type],
+    });
   });
 
   layout.addSpacer(2);

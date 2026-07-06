@@ -1,4 +1,5 @@
-import { TestResult, Mode } from "@/data/types";
+import Image from "next/image";
+import { TestResult, Mode, PersonalityType } from "@/data/types";
 import { personalities } from "@/data/personalities";
 import { PEMINATAN_INFO } from "@/data/peminatan";
 import {
@@ -6,8 +7,40 @@ import {
   getTopPeminatan,
 } from "@/utils/peminatan";
 import { downloadPdf } from "@/utils/pdfExport";
+import realisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/1 - Realistic (Tipe Praktis dan Fisik  The Doers).png";
+import investigativeIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/2 - Investigative (Tipe Analitis dan Sains, The Thinkers).png";
+import artisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/3 - Artistic (Tipe Kreatif dan Ekspresif  The Creators).png";
+import socialIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/4 - Social (Tipe Suportif dan Humanis, The Helpers).png";
+import enterprisingIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/5 - Enterprising (Tipe Pemimpin dan Bisnis, The Persuaders).png";
+import conventionalIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/6 - Conventional (Tipe Terstruktur dan Presisi, The Organizers).png";
 
 const bannerSrc = "/test-banners/riasec-banner.png";
+const personalityIcons: Record<
+  PersonalityType,
+  { src: string; alt: string }
+> = {
+  realistic: { src: realisticIcon.src, alt: "Icon Realistic" },
+  investigative: { src: investigativeIcon.src, alt: "Icon Investigative" },
+  artistic: { src: artisticIcon.src, alt: "Icon Artistic" },
+  social: { src: socialIcon.src, alt: "Icon Social" },
+  enterprising: { src: enterprisingIcon.src, alt: "Icon Enterprising" },
+  conventional: { src: conventionalIcon.src, alt: "Icon Conventional" },
+};
+
+const peminatanIcons: Record<string, { src: string; alt: string }> = {
+  ipa: {
+    src: "/test-banners/riasec-minat-ipa.png",
+    alt: "Ilustrasi minat IPA",
+  },
+  ips: {
+    src: "/test-banners/riasec-minat-ips.png",
+    alt: "Ilustrasi minat IPS",
+  },
+  bahasa: {
+    src: "/test-banners/riasec-minat-bahasa.png",
+    alt: "Ilustrasi minat Bahasa dan Budaya",
+  },
+};
 
 interface PeminatanResultsProps {
   sessionId: string;
@@ -143,19 +176,29 @@ export default function PeminatanResults({
             <div className="mt-3 grid gap-4">
               {top2.map((result, index) => {
                 const info = personalities[result.type];
+                const icon = personalityIcons[result.type];
                 return (
                   <div
                     key={result.type}
                     className="rounded-xl border border-slate-200 bg-white p-4"
                   >
-                    <p className="font-semibold text-blue-700">
-                      {index + 1}. {info.label}
-                    </p>
-                    <p className="mt-1 text-sm text-slate-600">
-                      Skor: {result.score}
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
-                      {info.description}
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-semibold text-blue-700">
+                          {index + 1}. {info.label}
+                        </p>
+                        <p className="mt-1 text-sm text-slate-600">
+                          Skor: {result.score}
+                        </p>
+                      </div>
+                      <img
+                        src={icon.src}
+                        alt={icon.alt}
+                        className="h-20 w-20 shrink-0 object-contain"
+                      />
+                    </div>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">
+                      {info.summary}
                     </p>
                   </div>
                 );
@@ -260,28 +303,42 @@ export default function PeminatanResults({
           const pct = percentages[ptype];
           const info = PEMINATAN_INFO[ptype];
           const config = barConfig[ptype];
+          const icon = peminatanIcons[ptype];
           if (pct >= 10) {
             return (
               <div
                 key={ptype}
                 className="print-card p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
               >
-                <h4 className="font-bold text-slate-800 flex items-center gap-2">
-                  <span
-                    className={`inline-block w-3 h-3 rounded-full ${config.bgColor}`}
-                    aria-hidden="true"
-                  />
-                  {info.label}
-                </h4>
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                  {info.description}
-                </p>
-                <p className="mt-2 text-sm text-slate-600">
-                  <span className="font-semibold text-slate-800">
-                    Mata Pelajaran relevan:
-                  </span>{" "}
-                  {info.subjects.join(", ")}
-                </p>
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-slate-800 flex items-center gap-2">
+                      <span
+                        className={`inline-block w-3 h-3 rounded-full ${config.bgColor}`}
+                        aria-hidden="true"
+                      />
+                      {info.label}
+                    </h4>
+                    <p className="mt-2 text-slate-600 text-sm leading-relaxed">
+                      {info.description}
+                    </p>
+                    <p className="mt-2 text-sm text-slate-600">
+                      <span className="font-semibold text-slate-800">
+                        Mata Pelajaran relevan:
+                      </span>{" "}
+                      {info.subjects.join(", ")}
+                    </p>
+                  </div>
+                  {icon && (
+                    <Image
+                      src={icon.src}
+                      alt={icon.alt}
+                      width={220}
+                      height={220}
+                      className="mx-auto h-40 w-auto shrink-0 object-contain md:mx-0 md:h-48"
+                    />
+                  )}
+                </div>
               </div>
             );
           }
@@ -311,23 +368,33 @@ export default function PeminatanResults({
           </h3>
           {top2.map((result, index) => {
             const info = personalities[result.type];
+            const icon = personalityIcons[result.type];
             return (
               <div
                 key={result.type}
                 className="print-card mb-5 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
               >
-                <h4 className="text-blue-700 font-bold text-base mb-1">
-                  {index + 1}. {info.label}
-                </h4>
-                <p className="text-sm text-slate-600">
-                  <span className="font-semibold text-slate-800">
-                    Skor:
-                  </span>{" "}
-                  {result.score}
-                </p>
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                  {info.description}
-                </p>
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div className="min-w-0">
+                    <h4 className="text-blue-700 font-bold text-base mb-1">
+                      {index + 1}. {info.label}
+                    </h4>
+                    <p className="text-sm text-slate-600">
+                      <span className="font-semibold text-slate-800">
+                        Skor:
+                      </span>{" "}
+                      {result.score}
+                    </p>
+                    <p className="mt-3 text-slate-600 text-sm leading-relaxed italic">
+                      {info.summary}
+                    </p>
+                  </div>
+                  <img
+                    src={icon.src}
+                    alt={icon.alt}
+                    className="h-28 w-28 shrink-0 object-contain md:h-36 md:w-36"
+                  />
+                </div>
               </div>
             );
           })}
