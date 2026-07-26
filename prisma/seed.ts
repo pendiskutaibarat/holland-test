@@ -8,6 +8,7 @@ import {
   minatHobiQuestions,
   minatHobiScale,
 } from "../src/data/minatHobi";
+import { questions as riasecSections } from "../src/data/questions";
 
 const connectionString = process.env.DATABASE_URL!;
 
@@ -22,9 +23,14 @@ const PUBLIC_USER_EMAIL = "public-assessment@pendis.local";
 const PUBLIC_USER_NAME = "Public Assessment";
 const PUBLIC_SCHOOL_NAME = "Asesmen Pendis Kutai Barat";
 const PUBLIC_PASSWORD = "public-assessment-disabled";
+const RIASEC_ONLY = process.argv.includes("--riasec-only");
 
 async function seedAssessments() {
-  for (const item of assessmentCatalog) {
+  const items = RIASEC_ONLY
+    ? assessmentCatalog.filter((item) => item.slug === ASSESSMENT_SLUGS.holland)
+    : assessmentCatalog;
+
+  for (const item of items) {
     const assessment = await prisma.assessment.upsert({
       where: { slug: item.slug },
       update: {
@@ -67,6 +73,102 @@ async function seedAssessments() {
       },
     });
   }
+
+  const holland = await prisma.assessment.findUniqueOrThrow({
+    where: { slug: ASSESSMENT_SLUGS.holland },
+  });
+  await prisma.assessmentVersion.updateMany({
+    where: {
+      assessment_id: holland.id,
+      version: { not: "v2" },
+    },
+    data: { is_active: false },
+  });
+  const hollandVersion = await prisma.assessmentVersion.findUniqueOrThrow({
+    where: {
+      assessment_id_version: {
+        assessment_id: holland.id,
+        version: "v2",
+      },
+    },
+  });
+  const hollandCategoryIds = new Map<string, string>();
+
+  for (const [index, section] of riasecSections.entries()) {
+    const category = await prisma.assessmentCategory.upsert({
+      where: {
+        assessment_id_code: {
+          assessment_id: holland.id,
+          code: section.type,
+        },
+      },
+      update: {
+        name: section.label,
+        display_order: index + 1,
+      },
+      create: {
+        assessment_id: holland.id,
+        code: section.type,
+        name: section.label,
+        display_order: index + 1,
+      },
+    });
+    hollandCategoryIds.set(section.type, category.id);
+  }
+
+  await prisma.assessmentScaleOption.upsert({
+    where: {
+      assessment_version_id_code: {
+        assessment_version_id: hollandVersion.id,
+        code: "SELECTED",
+      },
+    },
+    update: { label: "Sesuai", score: 1, display_order: 1 },
+    create: {
+      assessment_version_id: hollandVersion.id,
+      code: "SELECTED",
+      label: "Sesuai",
+      score: 1,
+      display_order: 1,
+    },
+  });
+
+  for (const section of riasecSections) {
+    for (const question of section.questions) {
+      await prisma.assessmentQuestion.upsert({
+        where: {
+          assessment_version_id_question_number: {
+            assessment_version_id: hollandVersion.id,
+            question_number: question.number,
+          },
+        },
+        update: {
+          category_id: hollandCategoryIds.get(section.type) ?? null,
+          statement: question.text,
+          display_order: question.number,
+          is_active: true,
+        },
+        create: {
+          assessment_version_id: hollandVersion.id,
+          category_id: hollandCategoryIds.get(section.type) ?? null,
+          question_number: question.number,
+          statement: question.text,
+          display_order: question.number,
+          is_active: true,
+        },
+      });
+    }
+  }
+
+  await prisma.session.updateMany({
+    where: {
+      assessment_id: holland.id,
+      is_active: true,
+    },
+    data: { assessment_version_id: hollandVersion.id },
+  });
+
+  if (RIASEC_ONLY) return;
 
   const minatHobi = await prisma.assessment.findUniqueOrThrow({
     where: { slug: ASSESSMENT_SLUGS.minatHobi },
@@ -230,6 +332,10 @@ async function seedPublicSessions() {
 
 async function main() {
   await seedAssessments();
+  if (RIASEC_ONLY) {
+    console.log("RIASEC v2 seed completed.");
+    return;
+  }
   await seedPublicSessions();
 
   const email = process.env.ADMIN_EMAIL || "admin@example.com";

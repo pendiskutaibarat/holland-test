@@ -62,7 +62,7 @@ export default function GlobalNav() {
   }, []);
 
   return (
-    <header className="app-site-header">
+    <header className="app-site-header" style={{ viewTransitionName: "persistent-nav" }}>
       <div className="app-site-header-inner">
         <div className="app-site-header-top">
           <Link

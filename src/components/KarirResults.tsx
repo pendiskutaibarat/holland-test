@@ -2,10 +2,11 @@
 
 import "@/lib/chartjs";
 import dynamic from "next/dynamic";
-import { TestResult, Mode, PersonalityType } from "@/data/types";
+import { TestResult, PersonalityType } from "@/data/types";
 import { careers } from "@/data/careers";
 import { personalities } from "@/data/personalities";
-import { getBadgeByCode, getTop3Code } from "@/data/badges";
+import { getBadgeByCode } from "@/data/badges";
+import { rankRiasecResults } from "@/utils/riasec";
 import { downloadPdf } from "@/utils/pdfExport";
 import realisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/1 - Realistic (Tipe Praktis dan Fisik  The Doers).png";
 import investigativeIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/2 - Investigative (Tipe Analitis dan Sains, The Thinkers).png";
@@ -40,8 +41,6 @@ interface KarirResultsProps {
   name: string;
   birthDate: string;
   results: TestResult[];
-  selectedAnswers: { section: string; question: string; answer: string }[];
-  mode: Mode;
 }
 
 export default function KarirResults({
@@ -50,9 +49,9 @@ export default function KarirResults({
   birthDate,
   results,
 }: KarirResultsProps) {
-  const sorted = [...results].sort((a, b) => b.score - a.score);
-  const topResults = sorted.filter((r) => r.score > 0);
-  const top3 = topResults.slice(0, 3);
+  const ranking = rankRiasecResults(results);
+  const sorted = ranking.ranked;
+  const top3 = ranking.top3;
 
   const testDate = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
@@ -70,7 +69,7 @@ export default function KarirResults({
       })
     : "-";
 
-  const hollandCode = getTop3Code(results);
+  const hollandCode = ranking.hollandCode;
   const badge = getBadgeByCode(hollandCode);
 
   const typeOrder: PersonalityType[] = [
@@ -121,7 +120,7 @@ export default function KarirResults({
     scales: {
       x: {
         beginAtZero: true,
-        suggestedMax: 5,
+        suggestedMax: 15,
         ticks: { stepSize: 1 },
         grid: { color: "rgba(0,0,0,0.06)" },
       },
@@ -288,6 +287,13 @@ export default function KarirResults({
           {testDate}
         </p>
       </div>
+
+      {ranking.hasTies ? (
+        <div className="app-status-info mb-6" role="status">
+          Ada skor RIASEC yang sama. Urutan seri ditetapkan secara konsisten
+          menggunakan urutan R-I-A-S-E-C.
+        </div>
+      ) : null}
 
       <section className="mt-6 text-center" aria-labelledby="holland-code-heading">
         <h2 id="holland-code-heading" className="sr-only">

@@ -1,244 +1,120 @@
-import { PersonalityQuestions } from "./types";
+import type { PersonalityQuestions, PersonalityType } from "./types";
+
+const block = (
+  type: PersonalityType,
+  label: string,
+  start: number,
+  statements: string[],
+): PersonalityQuestions => ({
+  type,
+  label,
+  questions: statements.map((text, index) => ({
+    number: start + index,
+    text,
+  })),
+});
 
 export const questions: PersonalityQuestions[] = [
-  {
-    type: "realistic",
-    label: "Kepribadian 1",
-    categories: [
-      {
-        title: "Saya adalah orang yang:",
-        questions: [
-          { text: "Berpikir secara realistis" },
-          { text: "Mandiri" },
-          { text: "Jujur" },
-          { text: "Suka olahraga" },
-          { text: "Cinta alam, hewan, dan tumbuhan" },
-        ],
-      },
-      {
-        title: "Saya bisa:",
-        questions: [
-          { text: "Memperbaiki peralatan dan mesin listrik" },
-          { text: "Membaca gambar dan desain" },
-          { text: "Melakukan 1 jenis olahraga" },
-          { text: "Mengoperasikan mesin dan peralatan" },
-          { text: "Melakukan pekerjaan manual" },
-        ],
-      },
-      {
-        title: "Saya suka:",
-        questions: [
-          { text: "Bekerja di luar ruangan" },
-          { text: "Perakitan furniture" },
-          { text: "Menanam pohon, berkebun" },
-          { text: "Menggunakan tangan dan kaki untuk bekerja" },
-          { text: "Membuat kerajinan tangan" },
-        ],
-      },
-    ],
-  },
-  {
-    type: "investigative",
-    label: "Kepribadian 2",
-    categories: [
-      {
-        title: "Saya adalah orang yang:",
-        questions: [
-          { text: "Punya kemampuan analisis yang tinggi" },
-          { text: "Punya pengamatan yang baik" },
-          { text: "Punya pemikiran logis" },
-          { text: "Berhati-hati dalam segala hal, tepat waktu" },
-          { text: "Punya wawasan yang luas" },
-        ],
-      },
-      {
-        title: "Saya bisa:",
-        questions: [
-          { text: "Melakukan eksperimen dan penelitian" },
-          { text: "Memikirkan dan memahami masalah yang kompleks dan abstrak" },
-          {
-            text: "Analisis data dan menyelesaikan masalah matematika dengan baik",
-          },
-          { text: "Berpikir secara koheren" },
-          {
-            text: "Cepat memahami ilmu pengetahuan, fisika, matematika, dan lain-lain",
-          },
-        ],
-      },
-      {
-        title: "Saya suka:",
-        questions: [
-          { text: "Bekerja sendiri" },
-          { text: "Kegiatan investigasi, inspeksi, evaluasi, dan sejenisnya" },
-          { text: "Bertanya" },
-          {
-            text: "Mengunjungi laboratorium, museum sains, atau fasilitas ilmiah lainnya",
-          },
-          {
-            text: "Membaca buku, surat kabar, dan dokumen ilmiah atau teknis khusus",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    type: "artistic",
-    label: "Kepribadian 3",
-    categories: [
-      {
-        title: "Saya adalah orang yang:",
-        questions: [
-          { text: "Sangat kreatif" },
-          { text: "Memiliki Imajinasi yang tinggi" },
-          { text: "Sensitif, emosional" },
-          { text: "Tidak ragu mengungkapkan pendapat" },
-          { text: "Individualis" },
-        ],
-      },
-      {
-        title: "Saya bisa:",
-        questions: [
-          { text: "Bernyanyi/berdansa/berakting dengan baik" },
-          { text: "Menggambar atau mengambil foto dengan baik" },
-          { text: "Memainkan instrumen musik" },
-          {
-            text: "Berbicara di depan orang atau presentasi dengan percaya diri",
-          },
-          {
-            text: "Desain dan penataan (fashion/pakaian, desain interior, dst)",
-          },
-        ],
-      },
-      {
-        title: "Saya suka:",
-        questions: [
-          { text: "Kebebasan, tidak suka dibatasi" },
-          { text: "Membaca cerita dan puisi" },
-          { text: "Menggambar, mengambil foto, merekam" },
-          { text: "Menonton drama, pameran seni, mendengarkan musik" },
-          { text: "Pekerjaan yang membutuhkan kreativitas" },
-        ],
-      },
-    ],
-  },
-  {
-    type: "social",
-    label: "Kepribadian 4",
-    categories: [
-      {
-        title: "Saya adalah orang yang:",
-        questions: [
-          { text: "Ramah, mudah didekati, senang membantu" },
-          { text: "Sopan" },
-          { text: "Mau mendengar orang lain" },
-          { text: "Simpatik" },
-          { text: "Ingin berguna bagi masyarakat dan komunitas" },
-        ],
-      },
-      {
-        title: "Saya bisa:",
-        questions: [
-          { text: "Membimbing dan mengajar orang lain" },
-          { text: "Menengahi dan menyelesaikan konflik" },
-          { text: "Bekerja sama dalam tim dengan baik" },
-          { text: "Mengekspresikan emosi dengan jelas dan wajar" },
-          { text: "Memantau sebuah project atau kegiatan" },
-        ],
-      },
-      {
-        title: "Saya suka:",
-        questions: [
-          { text: "Membantu orang lain memecahkan masalah" },
-          { text: "Bertemu dan bekerja dengan orang banyak" },
-          { text: "Berkontribusi dalam sebuah diskusi (ikut beropini)" },
-          { text: "Melakukan pekerjaan sukarela" },
-          {
-            text: "Mendengarkan, membimbing, menasihati, dan menjelaskan sesuatu pada orang lain",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    type: "enterprising",
-    label: "Kepribadian 5",
-    categories: [
-      {
-        title: "Saya adalah orang yang:",
-        questions: [
-          { text: "Yakin dengan keputusan sendiri" },
-          { text: "Dinamis, antusias" },
-          { text: "Ambisius" },
-          { text: "Populer di sekolah/Kampus" },
-          { text: "Suka berteman dengan orang baru" },
-        ],
-      },
-      {
-        title: "Saya bisa:",
-        questions: [
-          { text: "Meyakinkan orang lain dengan mudah" },
-          { text: "Berekspresi dan berargumentasi dengan baik" },
-          { text: "Memimpin sebuah kelompok" },
-          {
-            text: "Menentukan ide baru dan memulai sebuah project atau kegiatan",
-          },
-          { text: "Menyusun strategi untuk mencapai sebuah tujuan" },
-        ],
-      },
-      {
-        title: "Saya suka:",
-        questions: [
-          {
-            text: "Memiliki hak atau kewenangan atas kekuasaan, manajemen, atau evaluasi",
-          },
-          { text: "Mempengaruhi orang lain dalam mengambil keputusan" },
-          { text: "Ketika orang lain menghormati dan mengagumi saya" },
-          { text: "Menghadapi risiko dan tantangan" },
-          { text: "Berkompetisi dan menjadi lebih baik dari orang lain" },
-        ],
-      },
-    ],
-  },
-  {
-    type: "conventional",
-    label: "Kepribadian 6",
-    categories: [
-      {
-        title: "Saya adalah orang yang:",
-        questions: [
-          { text: "Akurat, dapat diandalkan" },
-          { text: "Rapi" },
-          { text: "Teliti" },
-          { text: "Bekerja sesuai prinsip dan prosedur" },
-          { text: "Berpikir secara terorganisasi (runtut)" },
-        ],
-      },
-      {
-        title: "Saya bisa:",
-        questions: [
-          { text: "Memperkirakan pendapatan dan pengeluaran secara akurat" },
-          { text: "Menulis laporan dan melakukan perhitungan dengan baik" },
-          { text: "Mengurus dokumen dengan cepat" },
-          {
-            text: "Bekerja di perusahaan atau lembaga yang punya sistem teratur/baku",
-          },
-          {
-            text: "Menyelesaikan dengan baik tugas-tugas yang memerlukan ketelitian tinggi",
-          },
-        ],
-      },
-      {
-        title: "Saya suka:",
-        questions: [
-          { text: "Merapikan atau mengatur tempat kerja dan tempat tinggal" },
-          { text: "Menetapkan rencana atau tujuan hidup" },
-          { text: "Menyusun jadwal dan mengikutinya" },
-          { text: "Bekerja dengan angka dan data" },
-          {
-            text: "Pekerjaan yang berkaitan dengan menyimpan, mengklasifikasikan, atau memperbarui informasi",
-          },
-        ],
-      },
-    ],
-  },
+  block("realistic", "Kepribadian 1", 1, [
+    "Saya lebih suka melihat bukti nyata dan hasil kerja yang langsung terlihat daripada sekadar mendengarkan teori.",
+    "Saya lebih betah beraktivitas di luar ruangan (lapangan/alam) daripada duduk seharian di dalam kelas.",
+    "Saya lebih suka langsung mengerjakan tugas dengan tangan sendiri daripada menghabiskan waktu berjam-jam untuk rapat atau berdiskusi.",
+    "Jika berbicara, saya cenderung menyukai gaya yang langsung ke intinya (to the point) tanpa banyak basa-basi.",
+    "Saya menyukai aktivitas fisik atau berolahraga sampai berkeringat.",
+    "Saya senang berinteraksi dengan alam, merawat hewan peliharaan, atau berkebun.",
+    "Saya hobi membongkar, mengutak-atik, atau mencoba memperbaiki sendiri barang elektronik/mesin yang rusak di rumah.",
+    "Saya bisa merakit barang sendiri (misalnya merakit meja lipat, mainan Lego rakitan, atau rak sepatu).",
+    "Saya sangat mudah memahami gambar petunjuk manual (manual book) langkah demi langkah saat merakit sesuatu.",
+    "Saya menguasai setidaknya satu jenis cabang olahraga fisik dengan cukup baik.",
+    "Saya tahu cara dasar menanam, menyiram, atau memindahkan tanaman ke dalam pot.",
+    "Saya bisa menggunakan perkakas pertukangan dasar seperti obeng, palu, tang, atau kunci pas.",
+    "Saya jauh lebih cepat paham pelajaran jika mempraktikkannya langsung ketimbang hanya membaca buku teks.",
+    "Saya menikmati pelajaran prakarya/kriya yang menghasilkan produk fungsional (bisa dipakai).",
+    "Saya bisa melakukan perbaikan darurat pada barang pribadi (seperti membetulkan rantai sepeda yang lepas atau menjahit kancing baju yang copot).",
+  ]),
+  block("investigative", "Kepribadian 2", 16, [
+    "Saya memiliki rasa penasaran yang tinggi dan selalu ingin mencari tahu alasan mendalam di balik suatu kejadian.",
+    "Saya sangat jeli melihat detail, pola, atau kejanggalan kecil yang sering dilewatkan oleh teman-teman lain.",
+    "Saya selalu mengutamakan logika, data, dan akal sehat saat menilai kebenaran sebuah informasi.",
+    "Saya terbiasa berpikir secara runtut dan tidak mudah percaya pada gosip atau berita hoaks yang belum ada buktinya.",
+    "Saya suka membaca artikel ilmiah, menonton video dokumenter sains, atau menelusuri penemuan teknologi terbaru.",
+    "Saya senang melakukan eksperimen atau percobaan ilmiah sederhana untuk membuktikan rasa penasaran saya.",
+    "Saya merasa lebih fokus dan produktif saat memecahkan masalah sendirian di tempat yang tenang.",
+    "Saya justru merasa tertantang saat dihadapkan pada soal pelajaran atau teka-teki logika yang sangat rumit.",
+    "Saya sering melontarkan pertanyaan kritis yang mendalam di dalam hati atau kepada guru saat jam pelajaran.",
+    "Saya selalu mengecek ulang kebenaran fakta dan sumber data sebelum mengambil kesimpulan akhir.",
+    "Saya relatif lebih mudah menangkap logika mata pelajaran eksakta seperti Matematika, Fisika, Kimia, atau Biologi.",
+    "Saya menyukai aktivitas menelusuri data, melakukan survei kecil, atau menganalisis suatu kasus.",
+    "Saya sanggup mengurai masalah yang rumit menjadi beberapa bagian kecil agar lebih mudah dipahami.",
+    "Saya lebih memilih membaca buku ensiklopedia atau biografi tokoh ilmuwan ketimbang membaca novel percintaan.",
+    "Berkunjung ke pameran teknologi, museum sains, atau observatorium astronomi jauh lebih menarik bagi saya ketimbang pergi ke pusat perbelanjaan.",
+  ]),
+  block("artistic", "Kepribadian 3", 31, [
+    "Saya memiliki banyak ide imajinatif atau sudut pandang yang sering kali berbeda dari kebanyakan teman saya.",
+    "Saya sering melamunkan konsep-konsep visual, melodi musik, atau alur cerita di dalam kepala saya.",
+    "Saya sangat tidak nyaman dengan aturan yang kaku, tugas yang terlalu seragam, atau rutinitas yang mengekang kebebasan.",
+    "Saya adalah orang yang peka secara emosional; perasaan saya mudah tersentuh oleh keindahan, puisi, atau lagu.",
+    "Saya mengekspresikan jati diri saya secara jujur melalui gaya berpakaian, tulisan, atau selera musik yang khas.",
+    "Saya lebih suka bekerja dengan ritme, inspirasi, dan suasana hati (mood) saya sendiri.",
+    "Saya memiliki ketertarikan atau bakat pada seni pertunjukan (bernyanyi, menari/dance, atau bermain teater/drama).",
+    "Saya bisa menggambar, membuat sketsa, melukis, atau memotret dengan sudut pandang (angle) yang estetis.",
+    "Saya bisa memainkan alat musik (gitar, piano, keyboard, drum, dll) atau sangat gemar mengulik nada lagu.",
+    "Saya sanggup merangkai kata-kata yang puitis, kiasan yang indah, atau menulis cerita fiksi yang menyentuh hati.",
+    "Saya punya selera yang bagus dalam memadupadankan warna pakaian (mix and match) atau menata dekorasi kamar.",
+    "Saya sangat menikmati membaca novel fiksi, webtoon, buku sastra, atau menonton film dengan sinematografi yang indah.",
+    "Saya hobi mengedit foto atau video menggunakan aplikasi di HP/laptop menjadi konten visual yang artistik.",
+    "Saya mengisi waktu luang dengan mendengarkan musik, datang ke pameran seni, atau menonton pementasan drama.",
+    "Jika diberi tugas sekolah, saya lebih bersemangat membuat produk kreatif (poster, video, infografis) daripada mengerjakan soal uraian biasa.",
+  ]),
+  block("social", "Kepribadian 4", 46, [
+    "Saya dikenal sebagai pribadi yang hangat, ramah, dan mudah didekati oleh teman-teman baru.",
+    "Saya sangat menjaga sopan santun dan selalu berhati-hati dalam berbicara agar tidak menyinggung perasaan orang lain.",
+    'Teman-teman sering menjadikan saya sebagai "tempat curhat" karena saya mau mendengarkan keluh kesah mereka secara sabar.',
+    "Saya memiliki rasa empati yang tinggi; saya mudah merasa iba dan langsung terdorong untuk menolong teman yang kesusahan.",
+    "Saya sangat menikmati bekerja sama di dalam tim dan lebih menyukai keberhasilan kelompok daripada menonjol sendirian.",
+    "Saya bisa menunjukkan rasa simpati, memberikan apresiasi, atau menenangkan teman yang sedang menangis/bersedih.",
+    "Saya senang dan bersabar saat menjelaskan ulang pelajaran kepada teman kelas yang belum paham (menjadi tutor sebaya).",
+    "Saya merasa sangat lega dan bahagia ketika nasihat atau bantuan saya berhasil memecahkan masalah pribadi orang lain.",
+    "Saya sanggup menengahi dan mendamaikan dua teman kelas yang sedang berselisih paham atau bertengkar.",
+    "Saya mendapatkan energi positif jika berada di tengah lingkungan pertemanan yang rukun, kompak, dan saling peduli.",
+    "Saya bersedia mendampingi teman yang lambat dalam belajar atau membantu siswa baru beradaptasi di madrasah.",
+    "Saya bercita-cita memiliki pekerjaan yang memberikan manfaat, kesembuhan, atau edukasi langsung kepada masyarakat luas.",
+    "Di dalam diskusi kelompok, saya sering mendorong teman-teman yang pemalu agar berani menyuarakan pendapatnya.",
+    "Saya tertarik dan suka ikut serta dalam kegiatan bakti sosial, penggalangan dana bencana, atau menjadi relawan.",
+    'Bagi masa depan saya, lingkungan kerja dengan rasa kekeluargaan yang hangat jauh lebih penting daripada gaji besar di tempat yang penuh persaingan kejam.',
+  ]),
+  block("enterprising", "Kepribadian 5", 61, [
+    "Saya punya rasa percaya diri yang tinggi dan berani mengambil keputusan secara cepat saat teman-teman lain ragu.",
+    "Saya adalah orang yang dinamis, punya energi fisik yang melimpah, dan benci berdiam diri tanpa melakukan apa pun.",
+    "Saya memiliki ambisi yang kuat; saya menetapkan target masa depan yang besar dan terpacu untuk mencapainya.",
+    "Saya pandai membawa diri, mudah bergaul, dan memiliki banyak relasi pertemanan di luar madrasah.",
+    "Saya menyukai tantangan, persaingan yang sehat, dan merasa bersemangat jika diikutsertakan dalam perlombaan.",
+    "Saya secara alami sering mengambil peran sebagai ketua kelas, kapten tim, atau ketua panitia sebuah kegiatan.",
+    "Saya pandai berbicara di depan umum (public speaking), sanggup berdebat, dan jago meyakinkan audiens.",
+    "Saya mampu memimpin, membagi tugas, dan memotivasi anggota kelompok agar bekerja sesuai rencana.",
+    'Saya sering menjadi "pencetus ide pertama" (inisiator) saat kelas merencanakan membuat jaket angkatan atau mengadakan acara.',
+    "Saya menikmati momen saat berdiri di atas panggung, memegang kendali acara, dan didengarkan oleh banyak orang.",
+    "Saya memiliki kemampuan melobi atau bernegosiasi guna mencapai kesepakatan yang menguntungkan kelompok saya.",
+    "Saya sangat mudah membujuk atau memengaruhi cara berpikir teman-teman agar setuju dengan pendapat saya.",
+    "Saya menyukai dunia pemasaran; saya berani mempromosikan atau menawarkan barang jualan kepada orang lain.",
+    "Saya cepat menyusun taktik atau strategi praktis agar tim kelompok saya bisa mengalahkan kelompok lain.",
+    "Saya tidak suka diberi tanggung jawab yang pasif; saya menginginkan posisi yang memiliki wewenang untuk mengambil kebijakan.",
+  ]),
+  block("conventional", "Kepribadian 6", 76, [
+    "Saya adalah orang yang sangat teratur, menyukai kepastian, dan selalu bekerja berdasarkan jadwal yang sudah disepakati.",
+    "Saya selalu menjaga buku pelajaran, alat tulis, dan kamar tidur saya tetap rapi serta dikembalikan pada tempat aslinya.",
+    "Saya sangat teliti; saya mudah merasa gemas jika melihat ada kesalahan ketik kecil (typo), salah hitung, atau data yang tidak sinkron.",
+    "Saya jauh lebih tenang mengerjakan tugas jika ada Standar Operasional Prosedur (SOP) atau contoh panduan yang baku.",
+    "Saya terbiasa berpikir secara sistematis (tahap demi tahap) dan tidak suka melompati prosedur yang sudah ditetapkan.",
+    "Saya bisa dipercaya mengelola uang kas kelas atau kepanitiaan karena pembukuan keluar-masuk uang saya sangat akurat.",
+    "Saya mendapatkan kepuasan batin setelah berhasil mengurutkan dokumen, merapikan rak buku, atau menyusun folder laptop secara alfabetis.",
+    "Saya menyukai tugas-tugas merapikan tabel Excel, menginput data nilai, atau merekap daftar presensi kehadiran.",
+    "Saya selalu membuat daftar tugas harian (to-do list) dan mencatat tenggat waktu (deadline) agar tidak ada tugas yang terlupa.",
+    "Saya sanggup mengurus, mengklasifikasikan, dan menyimpan dokumen persuratan (administratif) secara rapi agar mudah dicari saat dibutuhkan.",
+    "Saya sangat menghargai ketepatan waktu; saya tidak menyukai rencana mendadak yang merusak susunan jadwal saya.",
+    "Saya lebih menyukai lingkungan belajar atau tempat kerja yang tenang, tertib, dan memiliki aturan hierarki yang jelas.",
+    "Mengetik ulang dokumen, memverifikasi kecocokan angka, atau menyalin catatan dengan tulisan rapi adalah aktivitas yang membuat saya nyaman.",
+    "Saya sanggup mengerjakan tugas-tugas administratif yang polanya berulang (repetitif) asalkan instruksi kerjanya jelas.",
+    "Sebelum bertindak, saya selalu memikirkan konsekuensinya secara matang; saya sangat tidak suka mengambil keputusan secara terburu-buru.",
+  ]),
 ];

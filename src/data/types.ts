@@ -7,18 +7,14 @@ export type PersonalityType =
   | "conventional";
 
 export interface Question {
+  number: number;
   text: string;
-}
-
-export interface QuestionCategory {
-  title: string; // e.g. "Saya adalah orang yang:"
-  questions: Question[];
 }
 
 export interface PersonalityQuestions {
   type: PersonalityType;
-  label: string; // e.g. "Kepribadian 1"
-  categories: QuestionCategory[];
+  label: string;
+  questions: Question[];
 }
 
 export interface Career {
@@ -49,6 +45,27 @@ export interface UserSelections {
 export type Mode = "peminatan" | "karir";
 
 export type PeminatanType = "ipa" | "ips" | "bahasa";
+
+export type PeminatanCompatibility =
+  | "sangat_cocok"
+  | "cukup_cocok"
+  | "kurang_cocok";
+
+export interface PeminatanScore {
+  type: PeminatanType;
+  score: number;
+  compatibility: PeminatanCompatibility;
+}
+
+export type PeminatanOutcome =
+  | {
+      version: "v1";
+      percentages: Record<PeminatanType, number>;
+    }
+  | {
+      version: "v2";
+      scores: PeminatanScore[];
+    };
 
 export interface PeminatanWeights {
   ipa: number;

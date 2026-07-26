@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import AboutPdfModal from "@/components/AboutPdfModal";
+import LandingScrollReveal from "@/components/LandingScrollReveal";
 
 const featureCards = [
   {
@@ -74,6 +75,7 @@ export default async function Home() {
 
   return (
     <main className="landing-page">
+      <LandingScrollReveal />
       <section id="beranda" className="landing-hero">
         <div className="hero-photo" aria-hidden="true">
           <Image
@@ -122,15 +124,17 @@ export default async function Home() {
       </section>
 
       <section id="pilihan-tes" className="landing-section landing-section-surface">
-        <p className="section-kicker">Pilihan Tes</p>
-        <h2>Temukan potensi terbaikmu</h2>
-        <p className="landing-section-intro">
+        <p className="section-kicker" data-reveal>
+          Pilihan Tes
+        </p>
+        <h2 data-reveal>Temukan potensi terbaikmu</h2>
+        <p className="landing-section-intro" data-reveal>
           Tiga instrumen asesmen terintegrasi yang dirancang khusus untuk
           memetakan kecenderungan akademis dan profesional secara akurat.
         </p>
         <div className="test-grid">
           {featureCards.map((card) => (
-            <article key={card.title} className="landing-feature-card">
+            <article key={card.title} className="landing-feature-card" data-reveal>
               <div className="landing-feature-header">
                 <span className="landing-feature-badge">{card.badge}</span>
                 <span className="landing-feature-icon" aria-hidden="true">
@@ -147,11 +151,13 @@ export default async function Home() {
       </section>
 
       <section id="panduan" className="landing-section landing-section-muted">
-        <p className="section-kicker">Panduan Pengisian</p>
-        <h2>Langkah Mudah Menuju Masa Depan Cerah</h2>
+        <p className="section-kicker" data-reveal>
+          Panduan Pengisian
+        </p>
+        <h2 data-reveal>Langkah Mudah Menuju Masa Depan Cerah</h2>
         <div className="landing-steps-grid">
           {guidanceSteps.map((step, index) => (
-            <article key={step.title} className="landing-step-card">
+            <article key={step.title} className="landing-step-card" data-reveal>
               <div className="landing-step-number">0{index + 1}</div>
               <h3>{step.title}</h3>
               <p>{step.description}</p>
@@ -161,9 +167,11 @@ export default async function Home() {
       </section>
 
       <section id="tentang-kami" className="landing-section">
-        <p className="section-kicker">Tentang Kami</p>
-        <div className="landing-about-panel">
-          <div className="landing-about-lead">
+        <p className="section-kicker" data-reveal>
+          Tentang Kami
+        </p>
+        <div className="landing-about-panel" data-reveal>
+          <div className="landing-about-lead" data-reveal>
             <h2>Sinergi Teknologi dan Pedagogi untuk Madrasah Hebat Bermartabat</h2>
             <p>
               Asesmen Pendis Kutai Barat adalah layanan inovasi teknologi
@@ -173,7 +181,7 @@ export default async function Home() {
               teknologi digital.
             </p>
           </div>
-          <div className="landing-about-body">
+          <div className="landing-about-body" data-reveal>
             <p>
               Hadir sebagai mitra strategis bagi Guru Bimbingan dan Konseling
               (BK), madrasah, serta orang tua, platform ini bertujuan

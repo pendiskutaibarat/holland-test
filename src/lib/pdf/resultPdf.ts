@@ -167,9 +167,8 @@ class PdfLayout {
   private readonly pageWidth = 210;
   private readonly pageHeight = 297;
   private readonly marginX = 14;
-  private readonly marginTop = 38;
   private readonly marginBottom = 18;
-  private y = this.marginTop;
+  private y = 0;
 
   constructor(doc: jsPDF, banner: string | null) {
     this.doc = doc;
@@ -178,28 +177,27 @@ class PdfLayout {
   }
 
   private drawHeader() {
+    const bannerHeight = this.banner ? (this.pageWidth * 1500) / 6600 : 30;
     this.doc.setFillColor(247, 250, 249);
-    this.doc.rect(0, 0, this.pageWidth, 30, "F");
+    this.doc.rect(0, 0, this.pageWidth, bannerHeight, "F");
     if (this.banner) {
-      const bannerWidth = 118;
-      const bannerHeight = (bannerWidth * 1238) / 4950;
       this.doc.addImage(
         this.banner,
-        "PNG",
-        (this.pageWidth - bannerWidth) / 2,
-        (30 - bannerHeight) / 2,
-        bannerWidth,
+        "JPEG",
+        0,
+        0,
+        this.pageWidth,
         bannerHeight,
       );
     } else {
       this.doc.setTextColor(15, 118, 110);
       this.doc.setFont("helvetica", "bold");
       this.doc.setFontSize(16);
-      this.doc.text("Holland RIASEC", this.marginX, 17);
+      this.doc.text("Holland RIASEC", this.marginX, bannerHeight / 2 + 2);
     }
     this.doc.setDrawColor(215, 225, 224);
-    this.doc.line(this.marginX, 30, this.pageWidth - this.marginX, 30);
-    this.y = this.marginTop;
+    this.doc.line(this.marginX, bannerHeight, this.pageWidth - this.marginX, bannerHeight);
+    this.y = bannerHeight + 8;
   }
 
   private newPage() {
@@ -736,9 +734,16 @@ export async function renderPeminatanPdf(params: {
   name: string;
   birthDate?: string | null;
   testDate: string;
-  percentages: Record<string, number>;
-  topPeminatan: string[];
-  peminatanInfo: Record<string, { label: string; description: string; subjects: string[] }>;
+  version: "v1" | "v2";
+  peminatanRows: Array<{
+    key: string;
+    label: string;
+    score: number;
+    max: number;
+    valueLabel: string;
+    description: string;
+    subjects: string[];
+  }>;
   topRiasec: Array<{ type: PersonalityType; label: string; score: number; description: string }>;
   scores: Array<{ label: string; score: number }>;
 }) {
@@ -752,26 +757,29 @@ export async function renderPeminatanPdf(params: {
   layout.addKeyValue("Tanggal Lahir", formatDate(params.birthDate));
   layout.addKeyValue("Tanggal Tes", params.testDate);
   layout.addSpacer(3);
-  layout.addSection("Kecenderungan Peminatan");
+  layout.addSection(
+    params.version === "v2"
+      ? "Skor Kecocokan Peminatan"
+      : "Kecenderungan Peminatan (RIASEC v1)",
+  );
   layout.addBars(
-    params.topPeminatan.map((key) => ({
-      label: params.peminatanInfo[key].label,
-      score: params.percentages[key],
-      max: Math.max(...params.topPeminatan.map((candidate) => params.percentages[candidate])),
+    params.peminatanRows.map((row) => ({
+      label: row.label,
+      score: row.score,
+      max: row.max,
       color:
-        key === "ipa"
+        row.key === "ipa"
           ? [29, 78, 216]
-          : key === "ips"
+          : row.key === "ips"
             ? [5, 150, 105]
             : [180, 83, 9],
     })),
   );
 
-  params.topPeminatan.forEach((key) => {
-    layout.addCard(params.peminatanInfo[key].label, [
-      params.peminatanInfo[key].description,
-      `Mata pelajaran relevan: ${params.peminatanInfo[key].subjects.join(", ")}`,
-      `Porsi hasil: ${params.percentages[key]}%`,
+  params.peminatanRows.forEach((row) => {
+    layout.addCard(`${row.label} - ${row.valueLabel}`, [
+      row.description,
+      `Mata pelajaran relevan: ${row.subjects.join(", ")}`,
     ]);
   });
 

@@ -68,10 +68,17 @@ export function getBadgeByCode(code: string): Badge | undefined {
 }
 
 export function getTop3Code(results: { type: string; score: number }[]): string {
+  const order = [
+    "realistic",
+    "investigative",
+    "artistic",
+    "social",
+    "enterprising",
+    "conventional",
+  ];
   const sorted = [...results].sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
-    // tie-breaker: alphabetical by type
-    return a.type.localeCompare(b.type);
+    return order.indexOf(a.type) - order.indexOf(b.type);
   });
   const top3 = sorted.slice(0, 3);
   const typeToLetter: Record<string, string> = {

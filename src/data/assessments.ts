@@ -23,9 +23,9 @@ export const assessmentCatalog: AssessmentCatalogItem[] = [
     description:
       "Eksplorasi minat, bakat, peminatan SMA/MA, serta rekomendasi karir dan program studi.",
     engineKey: ASSESSMENT_SLUGS.holland,
-    defaultVersion: "v1",
+    defaultVersion: "v2",
     questionCount: 90,
-    estimatedDuration: "7-12 menit",
+    estimatedDuration: "5-10 menit",
   },
   {
     slug: ASSESSMENT_SLUGS.minatHobi,

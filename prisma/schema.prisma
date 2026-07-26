@@ -8,34 +8,34 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email         String    @unique
-  password_hash String
-  name          String
-  role          String    @default("TEACHER")
-  status        String    @default("PENDING")
-  created_at    DateTime  @default(now())
-  sessions      Session[]
+  id             String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email          String                @unique
+  password_hash  String
+  name           String
+  role           String                @default("TEACHER")
+  status         String                @default("PENDING")
+  created_at     DateTime              @default(now())
+  sessions       Session[]
   session_shares SessionCollaborator[]
 
   @@map("users")
 }
 
 model Session {
-  id                    String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id               String             @db.Uuid
-  user                  User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  assessment_id         String             @db.Uuid
-  assessment            Assessment         @relation(fields: [assessment_id], references: [id], onDelete: Restrict)
-  assessment_version_id String             @db.Uuid
-  assessment_version    AssessmentVersion  @relation(fields: [assessment_version_id], references: [id], onDelete: Restrict)
-  code                  String             @unique @db.VarChar(100)
+  id                    String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id               String                @db.Uuid
+  user                  User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  assessment_id         String                @db.Uuid
+  assessment            Assessment            @relation(fields: [assessment_id], references: [id], onDelete: Restrict)
+  assessment_version_id String                @db.Uuid
+  assessment_version    AssessmentVersion     @relation(fields: [assessment_version_id], references: [id], onDelete: Restrict)
+  code                  String                @unique @db.VarChar(100)
   name                  String
   school_name           String
   description           String?
-  mode                  String             @default("bebas")
-  is_active             Boolean            @default(true)
-  created_at            DateTime           @default(now())
+  mode                  String                @default("bebas")
+  is_active             Boolean               @default(true)
+  created_at            DateTime              @default(now())
   expires_at            DateTime?
   results               TestResult[]
   assessment_results    AssessmentResult[]
@@ -45,13 +45,13 @@ model Session {
 }
 
 model Assessment {
-  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  slug        String              @unique
+  id          String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug        String               @unique
   name        String
   description String?
   engine_key  String
-  is_active   Boolean             @default(true)
-  created_at  DateTime            @default(now())
+  is_active   Boolean              @default(true)
+  created_at  DateTime             @default(now())
   versions    AssessmentVersion[]
   categories  AssessmentCategory[]
   sessions    Session[]
@@ -95,15 +95,15 @@ model AssessmentCategory {
 }
 
 model AssessmentQuestion {
-  id                    String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  assessment_version_id String             @db.Uuid
-  assessment_version    AssessmentVersion  @relation(fields: [assessment_version_id], references: [id], onDelete: Cascade)
-  category_id           String?            @db.Uuid
+  id                    String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assessment_version_id String              @db.Uuid
+  assessment_version    AssessmentVersion   @relation(fields: [assessment_version_id], references: [id], onDelete: Cascade)
+  category_id           String?             @db.Uuid
   category              AssessmentCategory? @relation(fields: [category_id], references: [id], onDelete: SetNull)
   question_number       Int
   statement             String
   display_order         Int
-  is_active             Boolean            @default(true)
+  is_active             Boolean             @default(true)
 
   @@unique([assessment_version_id, question_number])
   @@map("assessment_questions")
@@ -123,37 +123,41 @@ model AssessmentScaleOption {
 }
 
 model TestResult {
-  id             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  session_id     String          @db.Uuid
-  session        Session         @relation(fields: [session_id], references: [id], onDelete: Cascade)
-  student_name   String
-  student_class  String
-  mode           String
-  birth_date     DateTime?       @db.Date
-  r_score        Int             @default(0)
-  i_score        Int             @default(0)
-  a_score        Int             @default(0)
-  s_score        Int             @default(0)
-  e_score        Int             @default(0)
-  c_score        Int             @default(0)
-  holland_code   String?
-  ipa_pct        Float?
-  ips_pct        Float?
-  bahasa_pct     Float?
-  created_at     DateTime        @default(now())
-  answers        ResultAnswer[]
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id      String         @db.Uuid
+  session         Session        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  student_name    String
+  student_class   String
+  mode            String
+  birth_date      DateTime?      @db.Date
+  r_score         Int            @default(0)
+  i_score         Int            @default(0)
+  a_score         Int            @default(0)
+  s_score         Int            @default(0)
+  e_score         Int            @default(0)
+  c_score         Int            @default(0)
+  holland_code    String?
+  ipa_pct         Float?
+  ips_pct         Float?
+  bahasa_pct      Float?
+  scoring_version String         @default("v1")
+  ipa_score       Int?
+  ips_score       Int?
+  bahasa_score    Int?
+  created_at      DateTime       @default(now())
+  answers         ResultAnswer[]
 
   @@unique([session_id, student_name, student_class])
   @@map("test_results")
 }
 
 model ResultAnswer {
-  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  result_id  String     @db.Uuid
-  result     TestResult @relation(fields: [result_id], references: [id], onDelete: Cascade)
-  section    String
-  question   String
-  answer     String     @default("Selected")
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  result_id String     @db.Uuid
+  result    TestResult @relation(fields: [result_id], references: [id], onDelete: Cascade)
+  section   String
+  question  String
+  answer    String     @default("Selected")
 
   @@map("result_answers")
 }
@@ -180,15 +184,15 @@ model AssessmentResult {
 }
 
 model AssessmentResponse {
-  id                 String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  assessment_result_id String         @db.Uuid
-  assessment_result AssessmentResult  @relation(fields: [assessment_result_id], references: [id], onDelete: Cascade)
-  question_id        String?          @db.Uuid
-  question_number    Int
-  question           String
-  answer_code        String
-  score              Int
-  category_code      String?
+  id                   String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assessment_result_id String           @db.Uuid
+  assessment_result    AssessmentResult @relation(fields: [assessment_result_id], references: [id], onDelete: Cascade)
+  question_id          String?          @db.Uuid
+  question_number      Int
+  question             String
+  answer_code          String
+  score                Int
+  category_code        String?
 
   @@map("assessment_responses")
 }
@@ -197,7 +201,7 @@ model SessionCollaborator {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   session_id String   @db.Uuid
   user_id    String   @db.Uuid
-  created_at  DateTime @default(now())
+  created_at DateTime @default(now())
 
   session Session @relation(fields: [session_id], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)

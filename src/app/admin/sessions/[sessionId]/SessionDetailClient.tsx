@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import LoadingButton from "@/components/LoadingButton";
 import { calculatePeminatanPercentages } from "@/utils/peminatan";
+import { PEMINATAN_COMPATIBILITY } from "@/data/peminatan";
+import { getPeminatanCompatibility } from "@/utils/riasec";
 import { getAssessmentTestHref } from "@/lib/test-route";
 import type { PeminatanType, TestResult } from "@/data/types";
 
@@ -25,6 +27,10 @@ interface Result {
   ipa_pct: number | null;
   ips_pct: number | null;
   bahasa_pct: number | null;
+  scoring_version: string;
+  ipa_score: number | null;
+  ips_score: number | null;
+  bahasa_score: number | null;
   created_at: Date;
 }
 
@@ -98,7 +104,7 @@ function resultToTestResults(result: Result): TestResult[] {
 function getPeminatanPercentages(
   result: Result,
 ): PeminatanPercentages | null {
-  if (result.mode !== "peminatan") return null;
+  if (result.mode !== "peminatan" || result.scoring_version === "v2") return null;
 
   if (
     result.ipa_pct !== null &&
@@ -115,19 +121,37 @@ function getPeminatanPercentages(
   return calculatePeminatanPercentages(resultToTestResults(result));
 }
 
-function averagePeminatan(
+function getPeminatanScores(result: Result): PeminatanPercentages | null {
+  if (
+    result.mode !== "peminatan" ||
+    result.scoring_version !== "v2" ||
+    result.ipa_score === null ||
+    result.ips_score === null ||
+    result.bahasa_score === null
+  ) {
+    return null;
+  }
+
+  return {
+    ipa: result.ipa_score,
+    ips: result.ips_score,
+    bahasa: result.bahasa_score,
+  };
+}
+
+function averagePeminatanValues(
   results: Result[],
   key: PeminatanType,
+  getter: (result: Result) => PeminatanPercentages | null,
 ): number {
-  const percentages = results
-    .map((result) => getPeminatanPercentages(result))
+  const values = results
+    .map(getter)
     .filter((value): value is PeminatanPercentages => value !== null);
 
-  if (!percentages.length) return 0;
+  if (!values.length) return 0;
 
   return (
-    percentages.reduce((sum, percentage) => sum + percentage[key], 0) /
-    percentages.length
+    values.reduce((sum, value) => sum + value[key], 0) / values.length
   );
 }
 
@@ -415,9 +439,42 @@ export default function SessionDetailClient({
   const peminatanCount = results.filter((r) => r.mode === "peminatan").length;
   const karirCount = results.filter((r) => r.mode === "karir").length;
 
-  const avgIpa = averagePeminatan(peminatanResults, "ipa");
-  const avgIps = averagePeminatan(peminatanResults, "ips");
-  const avgBahasa = averagePeminatan(peminatanResults, "bahasa");
+  const legacyPeminatanCount = peminatanResults.filter(
+    (result) => result.scoring_version !== "v2",
+  ).length;
+  const v2PeminatanCount = peminatanResults.filter(
+    (result) => result.scoring_version === "v2",
+  ).length;
+  const avgIpaV1 = averagePeminatanValues(
+    peminatanResults,
+    "ipa",
+    getPeminatanPercentages,
+  );
+  const avgIpsV1 = averagePeminatanValues(
+    peminatanResults,
+    "ips",
+    getPeminatanPercentages,
+  );
+  const avgBahasaV1 = averagePeminatanValues(
+    peminatanResults,
+    "bahasa",
+    getPeminatanPercentages,
+  );
+  const avgIpaV2 = averagePeminatanValues(
+    peminatanResults,
+    "ipa",
+    getPeminatanScores,
+  );
+  const avgIpsV2 = averagePeminatanValues(
+    peminatanResults,
+    "ips",
+    getPeminatanScores,
+  );
+  const avgBahasaV2 = averagePeminatanValues(
+    peminatanResults,
+    "bahasa",
+    getPeminatanScores,
+  );
 
   const [copied, setCopied] = useState(false);
   const [exporting, setExporting] = useState(false);
@@ -583,14 +640,26 @@ export default function SessionDetailClient({
       "Enterprising",
       "Conventional",
       "Holland Code",
-      "IPA %",
-      "IPS %",
-      "Bahasa %",
+      "Versi Skoring",
+      "IPA % (v1)",
+      "IPS % (v1)",
+      "Bahasa % (v1)",
+      "IPA /14 (v2)",
+      "Kategori IPA (v2)",
+      "IPS /14 (v2)",
+      "Kategori IPS (v2)",
+      "Bahasa /14 (v2)",
+      "Kategori Bahasa (v2)",
       "Timestamp",
     ];
 
     const detailRows = results.map((result) => {
       const percentages = getPeminatanPercentages(result);
+      const scores = getPeminatanScores(result);
+      const compatibility = (score: number | undefined) =>
+        score === undefined
+          ? ""
+          : PEMINATAN_COMPATIBILITY[getPeminatanCompatibility(score)].label;
 
       return [
         result.student_name,
@@ -603,9 +672,16 @@ export default function SessionDetailClient({
         result.e_score,
         result.c_score,
         result.holland_code || "",
+        result.scoring_version,
         percentages?.ipa ?? "",
         percentages?.ips ?? "",
         percentages?.bahasa ?? "",
+        scores?.ipa ?? "",
+        compatibility(scores?.ipa),
+        scores?.ips ?? "",
+        compatibility(scores?.ips),
+        scores?.bahasa ?? "",
+        compatibility(scores?.bahasa),
         new Date(result.created_at).toLocaleString("id-ID"),
       ];
     });
@@ -853,24 +929,54 @@ export default function SessionDetailClient({
           </div>
           {session.mode === "peminatan" && (
             <>
-              <div className="app-stat-card">
-                <p className="text-sm text-gray-500">Rata-rata IPA</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {avgIpa.toFixed(1)}%
-                </p>
-              </div>
-              <div className="app-stat-card">
-                <p className="text-sm text-gray-500">Rata-rata IPS</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {avgIps.toFixed(1)}%
-                </p>
-              </div>
-              <div className="app-stat-card">
-                <p className="text-sm text-gray-500">Rata-rata Bahasa</p>
-                <p className="text-2xl font-bold text-amber-600">
-                  {avgBahasa.toFixed(1)}%
-                </p>
-              </div>
+              {v2PeminatanCount > 0 ? (
+                <>
+                  <div className="app-stat-card">
+                    <p className="text-sm text-gray-500">Rata-rata IPA v2</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {avgIpaV2.toFixed(1)}/14
+                    </p>
+                  </div>
+                  <div className="app-stat-card">
+                    <p className="text-sm text-gray-500">Rata-rata IPS v2</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {avgIpsV2.toFixed(1)}/14
+                    </p>
+                  </div>
+                  <div className="app-stat-card">
+                    <p className="text-sm text-gray-500">
+                      Rata-rata Bahasa v2
+                    </p>
+                    <p className="text-2xl font-bold text-amber-600">
+                      {avgBahasaV2.toFixed(1)}/14
+                    </p>
+                  </div>
+                </>
+              ) : null}
+              {legacyPeminatanCount > 0 ? (
+                <>
+                  <div className="app-stat-card">
+                    <p className="text-sm text-gray-500">Rata-rata IPA v1</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {avgIpaV1.toFixed(1)}%
+                    </p>
+                  </div>
+                  <div className="app-stat-card">
+                    <p className="text-sm text-gray-500">Rata-rata IPS v1</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {avgIpsV1.toFixed(1)}%
+                    </p>
+                  </div>
+                  <div className="app-stat-card">
+                    <p className="text-sm text-gray-500">
+                      Rata-rata Bahasa v1
+                    </p>
+                    <p className="text-2xl font-bold text-amber-600">
+                      {avgBahasaV1.toFixed(1)}%
+                    </p>
+                  </div>
+                </>
+              ) : null}
             </>
           )}
         </div>

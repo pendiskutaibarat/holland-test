@@ -3,8 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { personalities } from "@/data/personalities";
 import { careers } from "@/data/careers";
 import { getBadgeByCode, getTop3Code } from "@/data/badges";
-import { PEMINATAN_INFO } from "@/data/peminatan";
+import {
+  PEMINATAN_COMPATIBILITY,
+  PEMINATAN_INFO,
+} from "@/data/peminatan";
 import { calculatePeminatanPercentages } from "@/utils/peminatan";
+import {
+  calculatePeminatanScores,
+  getPeminatanCompatibility,
+  rankRiasecResults,
+} from "@/utils/riasec";
 import { minatHobiCategories } from "@/data/minatHobi";
 import {
   renderKarirPdf,
@@ -170,48 +178,96 @@ export async function GET(request: NextRequest) {
     { key: "conventional", label: "Konvensional", score: result.c_score },
   ];
 
-  const sorted = [...scores].sort((a, b) => b.score - a.score);
-  const top3 = sorted.filter((row) => row.score > 0).slice(0, 3);
-  const hollandCode = result.holland_code || getTop3Code([
+  const testResults = [
     { type: "realistic", score: result.r_score },
     { type: "investigative", score: result.i_score },
     { type: "artistic", score: result.a_score },
     { type: "social", score: result.s_score },
     { type: "enterprising", score: result.e_score },
     { type: "conventional", score: result.c_score },
-  ]);
+  ] as const;
+  const ranking = rankRiasecResults([...testResults]);
+  const sorted = ranking.ranked.map((ranked) => ({
+    key: ranked.type,
+    label: personalities[ranked.type].label,
+    score: ranked.score,
+  }));
+  const top3 = ranking.top3;
+  const hollandCode = result.holland_code || getTop3Code([...testResults]);
   const badge = getBadgeByCode(hollandCode);
 
   if (kind === "peminatan") {
-    const percentages = calculatePeminatanPercentages([
-      { type: "realistic", score: result.r_score },
-      { type: "investigative", score: result.i_score },
-      { type: "artistic", score: result.a_score },
-      { type: "social", score: result.s_score },
-      { type: "enterprising", score: result.e_score },
-      { type: "conventional", score: result.c_score },
-    ]);
-
-    const topPeminatan = Object.entries(percentages)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([key]) => key);
+    const isV2 = result.scoring_version === "v2";
+    const storedV2Scores =
+      result.ipa_score !== null &&
+      result.ips_score !== null &&
+      result.bahasa_score !== null
+        ? [
+            { type: "ipa" as const, score: result.ipa_score },
+            { type: "ips" as const, score: result.ips_score },
+            { type: "bahasa" as const, score: result.bahasa_score },
+          ]
+        : null;
+    const v2Scores = (
+      storedV2Scores ?? calculatePeminatanScores([...testResults]) ?? []
+    )
+      .map((item) => ({
+        ...item,
+        compatibility: getPeminatanCompatibility(item.score),
+      }))
+      .sort((a, b) => b.score - a.score);
+    const legacyPercentages =
+      result.ipa_pct !== null &&
+      result.ips_pct !== null &&
+      result.bahasa_pct !== null
+        ? {
+            ipa: result.ipa_pct,
+            ips: result.ips_pct,
+            bahasa: result.bahasa_pct,
+          }
+        : calculatePeminatanPercentages([...testResults]);
+    const peminatanRows = isV2
+      ? v2Scores.map((item) => {
+          const compatibility = PEMINATAN_COMPATIBILITY[item.compatibility];
+          return {
+            key: item.type,
+            label: PEMINATAN_INFO[item.type].label,
+            score: item.score,
+            max: 14,
+            valueLabel: `${item.score}/14`,
+            description: `${compatibility.label} - ${compatibility.priority}. ${compatibility.description}`,
+            subjects: PEMINATAN_INFO[item.type].subjects,
+          };
+        })
+      : (Object.entries(legacyPercentages) as [
+          keyof typeof PEMINATAN_INFO,
+          number,
+        ][])
+          .sort((a, b) => b[1] - a[1])
+          .map(([key, value]) => ({
+            key,
+            label: PEMINATAN_INFO[key].label,
+            score: value,
+            max: 100,
+            valueLabel: `${value}%`,
+            description: PEMINATAN_INFO[key].description,
+            subjects: PEMINATAN_INFO[key].subjects,
+          }));
 
     const pdf = await renderPeminatanPdf({
       name: result.student_name,
       birthDate: result.birth_date?.toISOString() ?? null,
       testDate: result.created_at.toISOString(),
-      percentages,
-      topPeminatan,
-      peminatanInfo: PEMINATAN_INFO,
+      version: isV2 ? "v2" : "v1",
+      peminatanRows,
       topRiasec: top3.map((row) => ({
-        type: row.key as keyof typeof personalities,
-        label: personalities[row.key as keyof typeof personalities].label,
+        type: row.type,
+        label: personalities[row.type].label,
         score: row.score,
-        description: personalities[row.key as keyof typeof personalities].summary,
+        description: personalities[row.type].summary,
       })),
       scores: sorted.map((row) => ({
-        label: personalities[row.key as keyof typeof personalities].label,
+        label: row.label,
         score: row.score,
       })),
     });
@@ -235,23 +291,23 @@ export async function GET(request: NextRequest) {
     barRows: scores.map((row) => ({
       label: row.label,
       score: row.score,
-      max: 5,
+      max: 15,
     })),
     dominant: top3.map((row) => {
-      const info = personalities[row.key as keyof typeof personalities];
+      const info = personalities[row.type];
       return {
-        type: row.key as keyof typeof personalities,
+        type: row.type,
         label: info.label,
         score: row.score,
         summary: info.summary,
         traits: info.traits,
         preferences: info.preferences,
         avoidances: info.avoidances,
-        careers: careers[row.key as keyof typeof careers],
+        careers: careers[row.type],
       };
     }),
     scores: sorted.map((row) => ({
-      label: personalities[row.key as keyof typeof personalities].label,
+      label: row.label,
       score: row.score,
     })),
   });

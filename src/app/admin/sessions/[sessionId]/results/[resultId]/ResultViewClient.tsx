@@ -1,11 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { TestResult, Mode, PersonalityType } from "@/data/types";
+import type {
+  Mode,
+  PeminatanOutcome,
+  PersonalityType,
+  TestResult,
+} from "@/data/types";
 import KarirResults from "@/components/KarirResults";
 import PeminatanResults from "@/components/PeminatanResults";
 import MinatHobiResults from "@/components/MinatHobiResults";
 import type { RankedMinatHobiCategory } from "@/utils/minatHobi";
+import { calculatePeminatanPercentages } from "@/utils/peminatan";
+import {
+  calculatePeminatanScores,
+  getPeminatanCompatibility,
+} from "@/utils/riasec";
 
 interface DbAnswer {
   section: string;
@@ -28,6 +38,10 @@ interface DbResult {
   ipa_pct: number | null;
   ips_pct: number | null;
   bahasa_pct: number | null;
+  scoring_version: string;
+  ipa_score: number | null;
+  ips_score: number | null;
+  bahasa_score: number | null;
   answers: DbAnswer[];
 }
 
@@ -101,17 +115,45 @@ export default function ResultViewClient({
     { type: "conventional" as PersonalityType, score: result.c_score },
   ];
 
-  const selectedAnswers = result.answers.map((a) => ({
-    section: a.section,
-    question: a.question,
-    answer: a.answer,
-  }));
-
   const birthDateStr = result.birth_date
     ? result.birth_date.toISOString().split("T")[0]
     : "";
 
   const mode = result.mode as Mode;
+  const storedV2Scores =
+    result.ipa_score !== null &&
+    result.ips_score !== null &&
+    result.bahasa_score !== null
+      ? [
+          { type: "ipa" as const, score: result.ipa_score },
+          { type: "ips" as const, score: result.ips_score },
+          { type: "bahasa" as const, score: result.bahasa_score },
+        ]
+      : null;
+  const outcome: PeminatanOutcome =
+    result.scoring_version === "v2"
+      ? {
+          version: "v2",
+          scores: (storedV2Scores ?? calculatePeminatanScores(results) ?? [])
+            .map((item) => ({
+              ...item,
+              compatibility: getPeminatanCompatibility(item.score),
+            }))
+            .sort((a, b) => b.score - a.score),
+        }
+      : {
+          version: "v1",
+          percentages:
+            result.ipa_pct !== null &&
+            result.ips_pct !== null &&
+            result.bahasa_pct !== null
+              ? {
+                  ipa: result.ipa_pct,
+                  ips: result.ips_pct,
+                  bahasa: result.bahasa_pct,
+                }
+              : calculatePeminatanPercentages(results),
+        };
 
   return (
     <ResultShell
@@ -124,8 +166,7 @@ export default function ResultViewClient({
           name={result.student_name}
           birthDate={birthDateStr}
           results={results}
-          selectedAnswers={selectedAnswers}
-          mode={mode}
+          outcome={outcome}
         />
       ) : (
         <KarirResults
@@ -133,8 +174,6 @@ export default function ResultViewClient({
           name={result.student_name}
           birthDate={birthDateStr}
           results={results}
-          selectedAnswers={selectedAnswers}
-          mode={mode}
         />
       )}
     </ResultShell>

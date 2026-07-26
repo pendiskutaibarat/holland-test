@@ -138,14 +138,14 @@ export default function TestPageClient({
               {[
                 assessmentSlug === ASSESSMENT_SLUGS.minatHobi
                   ? MINAT_HOBI_SUMMARY_TEXT
-                  : "Asesmen ini menggunakan model Holland Occupational Themes (RIASEC).",
+                  : "Tes terdiri atas 6 kelompok kepribadian dengan 15 pernyataan pada setiap kelompok.",
                 "Semua jawaban valid - pilih sesuai minatmu, tanpa jawaban benar atau salah.",
                 assessmentSlug === ASSESSMENT_SLUGS.minatHobi
                   ? MINAT_HOBI_ANSWER_INSTRUCTION
-                  : "Pilihan jawaban bisa dipilih lebih dari satu.",
+                  : "Centang semua pernyataan yang sesuai dengan dirimu; tidak ada batas minimal atau maksimal.",
                 assessmentSlug === ASSESSMENT_SLUGS.minatHobi
                   ? `Waktu pengerjaan kira-kira ${MINAT_HOBI_ESTIMATED_DURATION}.`
-                  : "Waktu pengerjaan kira-kira 7-12 menit.",
+                  : "Waktu pengerjaan santai, sekitar 5-10 menit.",
                 "Hasil tes bersifat eksploratif - disarankan untuk dibahas bersama guru BK atau konselor.",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">

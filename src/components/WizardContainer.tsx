@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import { questions } from "@/data/questions";
 import { PersonalityType, Mode } from "@/data/types";
+import { calculateRiasecResult } from "@/utils/riasec";
 import AssessmentBanner from "./AssessmentBanner";
 import ProgressBar from "./ProgressBar";
 import StepNavigation from "./StepNavigation";
@@ -80,6 +81,41 @@ export default function WizardContainer({
     return true;
   };
 
+  const selectedQuestionNumbers = PERSONALITY_TYPES.flatMap((type) => [
+    ...(selections[type] ?? []),
+  ]).sort((a, b) => a - b);
+  const riasecResult = calculateRiasecResult(selectedQuestionNumbers);
+
+  async function submitResult() {
+    if (!mode || selectedQuestionNumbers.length === 0) return;
+
+    setSubmissionStatus("submitting");
+    try {
+      const res = await fetch("/api/results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_code: sessionId,
+          student_name: studentName,
+          student_class: studentClass,
+          mode,
+          birth_date: birthDate || null,
+          selected_question_numbers: selectedQuestionNumbers,
+        }),
+      });
+
+      if (res.status === 409) {
+        setSubmissionStatus("duplicate");
+      } else if (res.ok) {
+        setSubmissionStatus("success");
+      } else {
+        setSubmissionStatus("error");
+      }
+    } catch {
+      setSubmissionStatus("error");
+    }
+  }
+
   const handleNext = () => {
     if (currentStep === 0) {
       if (!mode) return;
@@ -87,6 +123,9 @@ export default function WizardContainer({
     if (currentStep < TOTAL_STEPS - 1) {
       setCurrentStep((s) => s + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
+      if (currentStep === TOTAL_STEPS - 2) {
+        void submitResult();
+      }
     }
   };
 
@@ -108,97 +147,28 @@ export default function WizardContainer({
     setSelections(init);
   };
 
-  const getSelectedAnswers = () => {
-    const answers: { section: string; question: string; answer: string }[] = [];
-    PERSONALITY_TYPES.forEach((type) => {
-      const sectionData = questions.find((q) => q.type === type);
-      if (!sectionData) return;
-      const indices = selections[type] ?? new Set();
-      indices.forEach((idx) => {
-        let flatIdx = 0;
-        for (const cat of sectionData.categories) {
-          for (const q of cat.questions) {
-            if (flatIdx === idx) {
-              answers.push({
-                section: sectionData.label,
-                question: q.text,
-                answer: "Selected",
-              });
-            }
-            flatIdx++;
-          }
-        }
-      });
-    });
-    return answers;
-  };
-
-  const hasSubmitted = useRef(false);
-
-  useEffect(() => {
-    if (currentStep !== TOTAL_STEPS - 1) return;
-    if (hasSubmitted.current) return;
-
-    async function submit() {
-      hasSubmitted.current = true;
-      setSubmissionStatus("submitting");
-      const results = PERSONALITY_TYPES.map((type) => ({
-        type,
-        score: selections[type]?.size ?? 0,
-      }));
-
-      const answers = getSelectedAnswers();
-
-      try {
-        const res = await fetch("/api/results", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            session_code: sessionId,
-            student_name: studentName,
-            student_class: studentClass,
-            mode,
-            birth_date: birthDate || null,
-            r_score: results.find((r) => r.type === "realistic")?.score ?? 0,
-            i_score:
-              results.find((r) => r.type === "investigative")?.score ?? 0,
-            a_score: results.find((r) => r.type === "artistic")?.score ?? 0,
-            s_score: results.find((r) => r.type === "social")?.score ?? 0,
-            e_score:
-              results.find((r) => r.type === "enterprising")?.score ?? 0,
-            c_score:
-              results.find((r) => r.type === "conventional")?.score ?? 0,
-            holland_code: null,
-            ipa_pct: null,
-            ips_pct: null,
-            bahasa_pct: null,
-            answers,
-          }),
-        });
-
-        if (res.status === 409) {
-          setSubmissionStatus("duplicate");
-        } else if (res.ok) {
-          setSubmissionStatus("success");
-        } else {
-          setSubmissionStatus("error");
-        }
-      } catch {
-        setSubmissionStatus("error");
-      }
-    }
-
-    submit();
-  }, [currentStep]);
-
   if (currentStep === TOTAL_STEPS - 1) {
-    const results = PERSONALITY_TYPES.map((type) => ({
-      type,
-      score: selections[type]?.size ?? 0,
-    }));
-
     return (
       <div className="max-w-[1000px] mx-auto p-4 md:p-6 print:max-w-none print:p-4">
+        {selectedQuestionNumbers.length === 0 ? (
+          <div className="app-card mx-auto max-w-xl p-8 text-center">
+            <h2 className="text-xl font-bold text-slate-800">
+              Data belum cukup untuk menghitung hasil
+            </h2>
+            <p className="mt-3 text-slate-600">
+              Kamu belum mencentang satu pun pernyataan. Kembali ke tes dan
+              pilih pernyataan yang paling menggambarkan dirimu.
+            </p>
+            <button
+              type="button"
+              onClick={() => setCurrentStep(1)}
+              className="app-button-primary mt-6 px-6"
+            >
+              Kembali Mengisi Tes
+            </button>
+          </div>
+        ) : (
+          <>
         {submissionStatus === "success" && (
           <div
             className="app-status-success text-center font-medium"
@@ -252,10 +222,7 @@ export default function WizardContainer({
           >
             <span>Gagal menyimpan hasil.</span>
             <button
-              onClick={() => {
-                hasSubmitted.current = false;
-                setSubmissionStatus("idle");
-              }}
+              onClick={() => void submitResult()}
               className="app-button-danger"
             >
               Coba Lagi
@@ -281,19 +248,18 @@ export default function WizardContainer({
             sessionId={sessionId}
             name={name}
             birthDate={birthDate}
-            results={results}
-            selectedAnswers={getSelectedAnswers()}
-            mode={mode}
+            results={riasecResult.scores}
+            hasTies={riasecResult.hasTies}
           />
         ) : (
           <KarirResults
             sessionId={sessionId}
             name={name}
             birthDate={birthDate}
-            results={results}
-            selectedAnswers={getSelectedAnswers()}
-            mode={mode!}
+            results={riasecResult.scores}
           />
+        )}
+          </>
         )}
       </div>
     );

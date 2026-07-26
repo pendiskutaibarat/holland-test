@@ -1,12 +1,22 @@
+"use client";
+
 import Image from "next/image";
-import { TestResult, Mode, PersonalityType } from "@/data/types";
+import type {
+  PeminatanOutcome,
+  PeminatanType,
+  PersonalityType,
+  TestResult,
+} from "@/data/types";
 import { personalities } from "@/data/personalities";
-import { PEMINATAN_INFO } from "@/data/peminatan";
 import {
-  calculatePeminatanPercentages,
-  getTopPeminatan,
-} from "@/utils/peminatan";
-import { downloadPdf } from "@/utils/pdfExport";
+  PEMINATAN_COMPATIBILITY,
+  PEMINATAN_INFO,
+} from "@/data/peminatan";
+import {
+  calculatePeminatanScores,
+  rankRiasecResults,
+} from "@/utils/riasec";
+
 import realisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/1 - Realistic (Tipe Praktis dan Fisik  The Doers).png";
 import investigativeIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/2 - Investigative (Tipe Analitis dan Sains, The Thinkers).png";
 import artisticIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/3 - Artistic (Tipe Kreatif dan Ekspresif  The Creators).png";
@@ -14,31 +24,36 @@ import socialIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Kari
 import enterprisingIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/5 - Enterprising (Tipe Pemimpin dan Bisnis, The Persuaders).png";
 import conventionalIcon from "../../Icon Minat dan Karier - RIASEC/Icon Minat dan Karier - RIASEC/6 - Conventional (Tipe Terstruktur dan Presisi, The Organizers).png";
 
-const bannerSrc = "/test-banners/riasec-banner.png";
-const personalityIcons: Record<
-  PersonalityType,
-  { src: string; alt: string }
-> = {
-  realistic: { src: realisticIcon.src, alt: "Icon Realistic" },
-  investigative: { src: investigativeIcon.src, alt: "Icon Investigative" },
-  artistic: { src: artisticIcon.src, alt: "Icon Artistic" },
-  social: { src: socialIcon.src, alt: "Icon Social" },
-  enterprising: { src: enterprisingIcon.src, alt: "Icon Enterprising" },
-  conventional: { src: conventionalIcon.src, alt: "Icon Conventional" },
+const personalityIcons: Record<PersonalityType, { src: string; alt: string }> = {
+  realistic: { src: realisticIcon.src, alt: "Ilustrasi tipe Realistic" },
+  investigative: {
+    src: investigativeIcon.src,
+    alt: "Ilustrasi tipe Investigative",
+  },
+  artistic: { src: artisticIcon.src, alt: "Ilustrasi tipe Artistic" },
+  social: { src: socialIcon.src, alt: "Ilustrasi tipe Social" },
+  enterprising: {
+    src: enterprisingIcon.src,
+    alt: "Ilustrasi tipe Enterprising",
+  },
+  conventional: {
+    src: conventionalIcon.src,
+    alt: "Ilustrasi tipe Conventional",
+  },
 };
 
-const peminatanIcons: Record<string, { src: string; alt: string }> = {
+const peminatanIcons: Record<PeminatanType, { src: string; alt: string }> = {
   ipa: {
     src: "/test-banners/riasec-minat-ipa.png",
-    alt: "Ilustrasi minat IPA",
+    alt: "Ilustrasi peminatan IPA",
   },
   ips: {
     src: "/test-banners/riasec-minat-ips.png",
-    alt: "Ilustrasi minat IPS",
+    alt: "Ilustrasi peminatan IPS",
   },
   bahasa: {
     src: "/test-banners/riasec-minat-bahasa.png",
-    alt: "Ilustrasi minat Bahasa dan Budaya",
+    alt: "Ilustrasi peminatan Bahasa dan Budaya",
   },
 };
 
@@ -47,8 +62,8 @@ interface PeminatanResultsProps {
   name: string;
   birthDate: string;
   results: TestResult[];
-  selectedAnswers: { section: string; question: string; answer: string }[];
-  mode: Mode;
+  outcome?: PeminatanOutcome;
+  hasTies?: boolean;
 }
 
 export default function PeminatanResults({
@@ -56,389 +71,196 @@ export default function PeminatanResults({
   name,
   birthDate,
   results,
+  outcome,
+  hasTies,
 }: PeminatanResultsProps) {
-  const sorted = [...results].sort((a, b) => b.score - a.score);
-  const top2 = sorted.filter((r) => r.score > 0).slice(0, 2);
-
-  const percentages = calculatePeminatanPercentages(results);
-  const topPeminatan = getTopPeminatan(percentages);
-
-  const testDate = new Date().toLocaleDateString("id-ID", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
+  const ranking = rankRiasecResults(results);
+  const resolvedOutcome: PeminatanOutcome =
+    outcome ??
+    ({
+      version: "v2",
+      scores: calculatePeminatanScores(results) ?? [],
+    } satisfies PeminatanOutcome);
+  const displayItems =
+    resolvedOutcome.version === "v2"
+      ? resolvedOutcome.scores.map((item) => ({
+          type: item.type,
+          value: item.score,
+          valueLabel: `${item.score}/14`,
+          compatibility: PEMINATAN_COMPATIBILITY[item.compatibility],
+        }))
+      : (Object.entries(resolvedOutcome.percentages) as [
+          PeminatanType,
+          number,
+        ][])
+          .sort((a, b) => b[1] - a[1])
+          .map(([type, value]) => ({
+            type,
+            value,
+            valueLabel: `${value}%`,
+            compatibility: null,
+          }));
   const formattedBirthDate = birthDate
     ? new Date(birthDate).toLocaleDateString("id-ID", {
-        weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
       })
     : "-";
-
-  const barConfig: Record<
-    string,
-    { bgColor: string; textColor: string; label: string }
-  > = {
-    ipa: {
-      bgColor: "bg-blue-600",
-      textColor: "text-blue-800",
-      label: "IPA",
-    },
-    ips: {
-      bgColor: "bg-emerald-600",
-      textColor: "text-emerald-800",
-      label: "IPS",
-    },
-    bahasa: {
-      bgColor: "bg-amber-600",
-      textColor: "text-amber-800",
-      label: "Bahasa & Budaya",
-    },
-  };
-
-  const pdfFileName = `hasil-peminatan-${name.trim().replace(/\s+/g, "-").toLowerCase() || "siswa"}.pdf`;
+  const pdfFileName = `hasil-peminatan-${
+    name.trim().replace(/\s+/g, "-").toLowerCase() || "siswa"
+  }.pdf`;
 
   return (
-    <div
-      id="results"
-      className="bg-white p-5 md:p-8 rounded-xl shadow-sm border border-slate-200"
-    >
-      <div
-        id="peminatan-result-pdf"
-        className="absolute -left-[10000px] top-0 w-[794px] bg-white p-8 text-slate-800"
-        aria-hidden="true"
-      >
-        <img
-          src={bannerSrc}
+    <div id="results" className="mx-auto max-w-4xl space-y-6">
+      <header className="app-card overflow-hidden">
+        <Image
+          src="/test-banners/riasec-banner.png"
           alt="Banner asesmen Holland RIASEC"
-          className="mx-auto mb-6 w-full max-w-[260px]"
+          width={1200}
+          height={360}
+          priority
+          className="h-auto w-full"
         />
-
-        <h2 className="text-2xl font-bold text-slate-900">
-          Hasil Pemetaan Peminatan SMA/MA
-        </h2>
-
-        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <p>
-            <span className="font-semibold text-slate-900">Nama:</span> {name}
+        <div className="p-5 md:p-6">
+          <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
+            Hasil Tes Holland RIASEC
           </p>
-          <p className="mt-1">
-            <span className="font-semibold text-slate-900">Tanggal Lahir:</span>{" "}
-            {formattedBirthDate}
-          </p>
-          <p className="mt-1">
-            <span className="font-semibold text-slate-900">Tanggal Tes:</span>{" "}
-            {testDate}
-          </p>
-        </div>
-
-        <div className="mt-6 grid gap-4">
-          {topPeminatan.map((ptype) => {
-            const pct = percentages[ptype];
-            const info = PEMINATAN_INFO[ptype];
-            const config = barConfig[ptype];
-            return (
-              <div
-                key={ptype}
-                className="rounded-xl border border-slate-200 bg-white p-4"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-semibold text-slate-900">
-                    {info.label}
-                  </h3>
-                  <span className={`text-sm font-semibold ${config.textColor}`}>
-                    {pct}%
-                  </span>
-                </div>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {info.description}
-                </p>
-                <p className="mt-2 text-sm text-slate-600">
-                  <span className="font-semibold text-slate-900">
-                    Mata Pelajaran relevan:
-                  </span>{" "}
-                  {info.subjects.join(", ")}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-
-        {top2.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold text-slate-900">
-              Kepribadian RIASEC Dominan
-            </h3>
-            <div className="mt-3 grid gap-4">
-              {top2.map((result, index) => {
-                const info = personalities[result.type];
-                const icon = personalityIcons[result.type];
-                return (
-                  <div
-                    key={result.type}
-                    className="rounded-xl border border-slate-200 bg-white p-4"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="font-semibold text-blue-700">
-                          {index + 1}. {info.label}
-                        </p>
-                        <p className="mt-1 text-sm text-slate-600">
-                          Skor: {result.score}
-                        </p>
-                      </div>
-                      <img
-                        src={icon.src}
-                        alt={icon.alt}
-                        className="h-20 w-20 shrink-0 object-contain"
-                      />
-                    </div>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">
-                      {info.summary}
-                    </p>
-                  </div>
-                );
-              })}
+          <h1 className="mt-1 text-2xl font-bold text-slate-900">
+            Peminatan SMA/MA
+          </h1>
+          <dl className="mt-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+            <div>
+              <dt className="font-semibold text-slate-900">Nama</dt>
+              <dd>{name}</dd>
             </div>
-          </div>
-        )}
-
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold text-slate-900">
-            Detail Semua Hasil RIASEC
-          </h3>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {sorted.map((result) => (
-              <div
-                key={result.type}
-                className="rounded-lg border border-slate-200 bg-slate-50 p-3"
-              >
-                <span className="block text-sm text-slate-600">
-                  {personalities[result.type].label}
-                </span>
-                <span className="block text-lg font-bold text-blue-700">
-                  {result.score} poin
-                </span>
-              </div>
-            ))}
-          </div>
+            <div>
+              <dt className="font-semibold text-slate-900">Tanggal lahir</dt>
+              <dd>{formattedBirthDate}</dd>
+            </div>
+          </dl>
         </div>
-      </div>
+      </header>
 
-      <div id="results-content">
-      <h2 className="text-2xl font-bold text-slate-800 mb-4">
-        Hasil Pemetaan Peminatan SMA/MA
-      </h2>
-
-      <div className="print-card bg-slate-50 rounded-lg p-4 mb-8 space-y-1">
-        <p className="text-slate-600">
-          <span className="font-semibold text-slate-800">Nama:</span> {name}
-        </p>
-        <p className="text-slate-600">
-          <span className="font-semibold text-slate-800">
-            Tanggal Lahir:
-          </span>{" "}
-          {formattedBirthDate}
-        </p>
-        <p className="text-slate-600">
-          <span className="font-semibold text-slate-800">
-            Tanggal Tes:
-          </span>{" "}
-          {testDate}
-        </p>
-      </div>
-
-      <section aria-labelledby="peminatan-heading">
-        <h3
-          id="peminatan-heading"
-          className="text-lg font-bold text-slate-800 mb-4"
-        >
-          Kecenderungan Peminatan
-        </h3>
-        <div className="space-y-5">
-          {topPeminatan.map((ptype) => {
-            const pct = percentages[ptype];
-            const config = barConfig[ptype];
-            const maxPct = Math.max(...topPeminatan.map((p) => percentages[p]));
-            const width = maxPct > 0 ? Math.max((pct / maxPct) * 100, 5) : 5;
-            return (
-              <div key={ptype}>
-                <div className="flex justify-between text-sm font-semibold mb-1.5">
-                  <span className="text-slate-800">
-                    {config.label}
-                  </span>
-                  <span className={config.textColor}>{pct}%</span>
-                </div>
-                <div
-                  className="w-full bg-slate-200 rounded-full h-4 overflow-hidden"
-                  role="progressbar"
-                  aria-valuenow={pct}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-label={`${config.label}: ${pct}%`}
-                >
-                  <div
-                    className={`${config.bgColor} h-4 rounded-full transition-all duration-500`}
-                    style={{ width: `${width}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
+      {(hasTies ?? ranking.hasTies) ? (
+        <div className="app-status-info" role="status">
+          Ada skor RIASEC yang sama. Urutan seri ditetapkan secara konsisten
+          menggunakan urutan R-I-A-S-E-C.
         </div>
-      </section>
+      ) : null}
 
-      <section className="mt-8 space-y-4" aria-labelledby="explanation-heading">
-        <h3
-          id="explanation-heading"
-          className="text-lg font-bold text-slate-800"
-        >
-          Penjelasan Hasil
-        </h3>
-        {topPeminatan.map((ptype) => {
-          const pct = percentages[ptype];
-          const info = PEMINATAN_INFO[ptype];
-          const config = barConfig[ptype];
-          const icon = peminatanIcons[ptype];
-          if (pct >= 10) {
+      <section className="app-card p-5 md:p-6" aria-labelledby="peminatan-title">
+        <div className="mb-5">
+          <h2 id="peminatan-title" className="text-xl font-bold text-slate-900">
+            Rekomendasi Peminatan
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            {resolvedOutcome.version === "v2"
+              ? "Skor dihitung dari tiga tipe RIASEC dominan dengan rentang 0–14."
+              : "Hasil historis ini menggunakan algoritma persentase RIASEC v1."}
+          </p>
+        </div>
+        <div className="space-y-4">
+          {displayItems.map((item, index) => {
+            const info = PEMINATAN_INFO[item.type];
+            const icon = peminatanIcons[item.type];
+
             return (
-              <div
-                key={ptype}
-                className="print-card p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
+              <article
+                key={item.type}
+                className="rounded-2xl border border-slate-200 bg-white p-5"
               >
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div className="min-w-0">
-                    <h4 className="font-bold text-slate-800 flex items-center gap-2">
-                      <span
-                        className={`inline-block w-3 h-3 rounded-full ${config.bgColor}`}
-                        aria-hidden="true"
-                      />
-                      {info.label}
-                    </h4>
-                    <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                      {info.description}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
+                        Peringkat {index + 1}
+                      </span>
+                      {item.compatibility ? (
+                        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                          {item.compatibility.label} ·{" "}
+                          {item.compatibility.priority}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="mt-3 flex items-baseline justify-between gap-3">
+                      <h3 className="font-bold text-slate-900">{info.label}</h3>
+                      <span className="text-lg font-bold text-brand-700">
+                        {item.valueLabel}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {item.compatibility?.description ?? info.description}
                     </p>
                     <p className="mt-2 text-sm text-slate-600">
-                      <span className="font-semibold text-slate-800">
-                        Mata Pelajaran relevan:
+                      <span className="font-semibold text-slate-900">
+                        Mata pelajaran relevan:
                       </span>{" "}
                       {info.subjects.join(", ")}
                     </p>
                   </div>
-                  {icon && (
-                    <Image
-                      src={icon.src}
-                      alt={icon.alt}
-                      width={220}
-                      height={220}
-                      className="mx-auto h-40 w-auto shrink-0 object-contain md:mx-0 md:h-48"
-                    />
-                  )}
-                </div>
-              </div>
-            );
-          }
-          return (
-            <div
-              key={ptype}
-              className="print-card p-4 rounded-xl border border-slate-200 bg-slate-50"
-            >
-              <h4 className="font-semibold text-slate-500 text-sm">
-                {info.label}
-              </h4>
-              <p className="mt-1 text-slate-500 text-sm">
-                Kecenderungan {info.label} tergolong rendah ({pct}%).
-              </p>
-            </div>
-          );
-        })}
-      </section>
-
-      {top2.length > 0 && (
-        <section className="mt-8" aria-labelledby="dominant-heading">
-          <h3
-            id="dominant-heading"
-            className="text-lg font-bold text-slate-800 mb-4"
-          >
-            Kepribadian RIASEC Dominan
-          </h3>
-          {top2.map((result, index) => {
-            const info = personalities[result.type];
-            const icon = personalityIcons[result.type];
-            return (
-              <div
-                key={result.type}
-                className="print-card mb-5 p-5 rounded-xl border border-slate-200 bg-white shadow-sm"
-              >
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div className="min-w-0">
-                    <h4 className="text-blue-700 font-bold text-base mb-1">
-                      {index + 1}. {info.label}
-                    </h4>
-                    <p className="text-sm text-slate-600">
-                      <span className="font-semibold text-slate-800">
-                        Skor:
-                      </span>{" "}
-                      {result.score}
-                    </p>
-                    <p className="mt-3 text-slate-600 text-sm leading-relaxed italic">
-                      {info.summary}
-                    </p>
-                  </div>
-                  <img
+                  <Image
                     src={icon.src}
                     alt={icon.alt}
-                    className="h-28 w-28 shrink-0 object-contain md:h-36 md:w-36"
+                    width={180}
+                    height={180}
+                    className="mx-auto h-32 w-auto shrink-0 object-contain sm:mx-0"
                   />
                 </div>
-              </div>
+              </article>
             );
           })}
-        </section>
-      )}
-
-      <section className="mt-6" aria-labelledby="all-scores-heading">
-        <h3
-          id="all-scores-heading"
-          className="font-bold text-slate-800 mb-3"
-        >
-          Detail Semua Hasil RIASEC
-        </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {sorted.map((result) => (
-          <div
-              key={result.type}
-              className="print-card px-3 py-2 rounded-lg bg-slate-50 border border-slate-200"
-            >
-              <span className="text-sm text-slate-600">
-                {personalities[result.type].label}
-              </span>
-              <span className="block text-lg font-bold text-blue-700">
-                {result.score} poin
-              </span>
-            </div>
-          ))}
         </div>
       </section>
 
-      <div className="mt-8 flex flex-wrap justify-center gap-3 print:hidden">
+      <section className="app-card p-5 md:p-6" aria-labelledby="riasec-title">
+        <h2 id="riasec-title" className="text-xl font-bold text-slate-900">
+          Tiga Tipe RIASEC Dominan
+        </h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Kode Holland:{" "}
+          <strong className="text-slate-900">{ranking.hollandCode}</strong>
+        </p>
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          {ranking.top3.map((result) => {
+            const info = personalities[result.type];
+            const icon = personalityIcons[result.type];
+            return (
+              <article
+                key={result.type}
+                className="rounded-2xl border border-slate-200 p-4 text-center"
+              >
+                <Image
+                  src={icon.src}
+                  alt={icon.alt}
+                  width={160}
+                  height={160}
+                  className="mx-auto h-28 w-auto object-contain"
+                />
+                <h3 className="mt-3 font-bold text-slate-900">{info.label}</h3>
+                <p className="mt-1 text-sm font-semibold text-brand-700">
+                  {result.score}/15 poin
+                </p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <div className="flex justify-center print:hidden">
         <button
           type="button"
-          onClick={() =>
-            void downloadPdf(
-              `/api/results/pdf?kind=peminatan&sessionId=${encodeURIComponent(sessionId)}&studentName=${encodeURIComponent(name)}&studentClass=${encodeURIComponent(birthDate)}`,
-              pdfFileName,
-            )
-          }
-          className="app-button-ghost"
+          className="app-button-primary px-6"
+          onClick={() => {
+            window.location.href = `/api/results/pdf?kind=peminatan&sessionId=${encodeURIComponent(
+              sessionId,
+            )}&studentName=${encodeURIComponent(name)}&studentClass=${encodeURIComponent(
+              birthDate,
+            )}&filename=${encodeURIComponent(pdfFileName)}`;
+          }}
         >
           Unduh PDF
         </button>
-      </div>
       </div>
     </div>
   );
