@@ -639,15 +639,6 @@ body {
   animation: landing-fade-scale 620ms ease-out 80ms backwards;
 }
 
-.hero-chip::before {
-  content: "";
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--color-accent-500), var(--color-brand-400));
-  box-shadow: 0 0 0 6px rgba(173, 46, 243, 0.08);
-}
-
 .hero-eyebrow {
   margin: 20px 0 0;
   color: var(--color-brand-700);
@@ -756,14 +747,6 @@ body {
   font-size: 0.92rem;
   font-weight: 600;
   backdrop-filter: blur(12px);
-}
-
-.hero-trust-list span::before {
-  content: "";
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 999px;
-  background: var(--color-brand-500);
 }
 
 .education-art {
@@ -1099,14 +1082,6 @@ body {
   color: var(--color-brand-800);
   font-size: 0.95rem;
   font-weight: 700;
-}
-
-.landing-about-points span::before {
-  content: "";
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 999px;
-  background: var(--color-accent-500);
 }
 
 @media (max-width: 1440px) {
