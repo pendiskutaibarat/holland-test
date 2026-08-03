@@ -406,8 +406,8 @@ body {
   }
 
   .app-site-brand-logo {
-    width: clamp(108px, 8vw, 156px);
-    height: auto;
+    width: clamp(44px, 3.5vw, 54px);
+    height: clamp(44px, 3.5vw, 54px);
     object-fit: contain;
   }
 

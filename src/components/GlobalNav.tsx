@@ -72,14 +72,14 @@ export default function GlobalNav() {
             onClick={closeMenu}
           >
             <Image
-              src="/pendis_logo.png"
-              alt="Pendis"
-              width={1772}
-              height={597}
+              src="/madani_logo.png"
+              alt="MADANI"
+              width={6250}
+              height={6250}
               priority
               className="app-site-brand-logo"
             />
-            <span className="app-site-brand-title">Asesmen Pendis Kutai Barat</span>
+            {/*<span className="app-site-brand-title">Asesmen Pendis Kutai Barat</span>*/}
           </Link>
 
           <button
