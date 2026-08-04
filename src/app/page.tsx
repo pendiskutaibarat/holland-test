@@ -92,7 +92,7 @@ export default async function Home() {
         <div className="hero-orb hero-orb-right" aria-hidden="true" />
 
         <div className="hero-content">
-          <span className="hero-chip">Platform Asesmen Digital untuk Madrasah</span>
+          <span className="hero-chip">Manajemen Asesmen Digital Anak Indonesia</span>
           <p className="hero-eyebrow">Minat Terarah,</p>
           <h1>
             Masa Depan
