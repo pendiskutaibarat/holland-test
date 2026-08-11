@@ -118,8 +118,14 @@ export default function GlobalNav() {
 
           <div className="flex flex-col gap-3 md:ml-auto md:flex-row md:items-center md:justify-end">
             <Link
+              href="/admin/register"
+              className="app-button-primary min-w-[80px] justify-center"
+            >
+              Daftar
+            </Link>
+            <Link
               href={isAdminOrGuruLoggedIn ? "/admin/dashboard" : "/admin/login"}
-              className="app-button-primary min-w-[120px] justify-center"
+              className="app-button-primary min-w-[80px] justify-center"
               onClick={closeMenu}
             >
               {isAdminOrGuruLoggedIn ? "Dashboard" : "Login"}
