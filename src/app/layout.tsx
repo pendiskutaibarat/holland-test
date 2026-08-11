@@ -22,9 +22,9 @@ const newsreader = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Platform Asesmen Siswa",
+  title: "MADANI",
   description:
-    "Platform asesmen siswa untuk Holland RIASEC, Minat Hobi, dan asesmen lain.",
+    "Platform asesmen siswa untuk RIASEC, Minat Hobi, dan asesmen lain.",
   icons: {
     icon: "favicon.ico",
   },

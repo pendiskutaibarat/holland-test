@@ -79,7 +79,7 @@ export default function GlobalNav() {
               priority
               className="app-site-brand-logo"
             />
-            <span className="app-site-brand-title">Manajemen Asesmen Digital Anak Indonesia</span>
+            {/*<span className="app-site-brand-title">Manajemen Asesmen Digital Anak Indonesia</span>*/}
           </Link>
 
           <button

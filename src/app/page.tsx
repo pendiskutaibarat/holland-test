@@ -7,7 +7,7 @@ const featureCards = [
   {
     badge: "RIASEC",
     icon: "\u{1F9ED}",
-    title: "Holland RIASEC",
+    title: "RIASEC",
     subtitle: "Kenali Kepribadian & Lingkungan Kerja",
     description:
       "Temukan di mana tipe kepribadianmu di antara 6 dimensi (Realistic, Investigative, Artistic, Social, Enterprising, Conventional) untuk mencocokkan gaya belajarmu dengan bidang karir yang paling harmonis.",
@@ -92,7 +92,6 @@ export default async function Home() {
         <div className="hero-orb hero-orb-right" aria-hidden="true" />
 
         <div className="hero-content">
-          <span className="hero-chip">Manajemen Asesmen Digital Anak Indonesia</span>
           <p className="hero-eyebrow">Minat Terarah,</p>
           <h1>
             Masa Depan
@@ -112,18 +111,18 @@ export default async function Home() {
               Pelajari Jenis Tes
             </Link>
           </div>
-          <div className="hero-trust-list" aria-label="Keunggulan utama platform">
+          {/*<div className="hero-trust-list" aria-label="Keunggulan utama platform">
             <span>Instrumen terintegrasi</span>
             <span>Laporan instan</span>
             <span>Siap didiskusikan dengan BK</span>
-          </div>
+          </div>*/}
         </div>
 
         <EducationArtwork />
         <div className="hero-curve" aria-hidden="true" />
       </section>
 
-      <section id="pilihan-tes" className="landing-section landing-section-surface">
+      <section id="pilihan-tes" className="landing-section">
         <p className="section-kicker" data-reveal>
           Pilihan Tes
         </p>
