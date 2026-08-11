@@ -173,7 +173,7 @@ export default async function Home() {
           <div className="landing-about-lead" data-reveal>
             <h2>Sinergi Teknologi dan Pedagogi untuk Madrasah Hebat Bermartabat</h2>
             <p>
-              Asesmen Pendis Kutai Barat adalah layanan inovasi teknologi
+              MADANI (Manajemen Asesmen Digital Anak Indonesia) adalah layanan inovasi teknologi
               pembelajaran yang dikembangkan oleh Seksi Pendidikan Islam Kantor
               Kementerian Agama Kabupaten Kutai Barat. Platform ini memadukan
               teori psikologi pendidikan yang teruji dengan kemudahan akses
