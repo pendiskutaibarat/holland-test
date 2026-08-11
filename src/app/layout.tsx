@@ -22,7 +22,7 @@ const newsreader = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "MADANI",
+  title: "MADANI - Manajemen Asesmen Digital Anak Indonesia",
   description:
     "Platform asesmen siswa untuk RIASEC, Minat Hobi, dan asesmen lain.",
   icons: {
