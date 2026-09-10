@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { getAssessmentDisplayName } from "@/data/assessments";
 import { getAssessmentSlugFromRouteSegment } from "@/lib/test-route";
 import TestPageClient from "../../[code]/TestPageClient";
 
@@ -36,7 +37,10 @@ export default async function PublicAssessmentPage({
       schoolName={session.school_name}
       sessionMode={session.mode}
       assessmentSlug={session.assessment.slug}
-      assessmentName={session.assessment.name}
+      assessmentName={getAssessmentDisplayName(
+        session.assessment.slug,
+        session.assessment.name,
+      )}
       assessmentVersion={session.assessment_version.version}
       isActive={session.is_active}
     />

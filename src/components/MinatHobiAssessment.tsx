@@ -10,23 +10,28 @@ import {
 import { calculateMinatHobiResult } from "@/utils/minatHobi";
 import AssessmentBanner from "./AssessmentBanner";
 import MinatHobiResults from "./MinatHobiResults";
+import { saveCompletedTest } from "@/lib/student-test-history";
 
 interface MinatHobiAssessmentProps {
   sessionId: string;
   studentName: string;
   birthDate: string;
+  initialAnswers?: Record<number, string>;
+  initiallyCompleted?: boolean;
 }
 
 export default function MinatHobiAssessment({
   sessionId,
   studentName,
   birthDate,
+  initialAnswers,
+  initiallyCompleted = false,
 }: MinatHobiAssessmentProps) {
   const [page, setPage] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [answers, setAnswers] = useState<Record<number, string>>(initialAnswers ?? {});
   const [status, setStatus] = useState<
     "answering" | "submitting" | "success" | "error" | "duplicate"
-  >("answering");
+  >(initiallyCompleted ? "success" : "answering");
   const [error, setError] = useState<string | null>(null);
   const hasSubmitted = useRef(false);
   const didMount = useRef(false);
@@ -59,6 +64,19 @@ export default function MinatHobiAssessment({
         })),
       )
     : null;
+
+  useEffect(() => {
+    if (status !== "success" || !result) return;
+
+    saveCompletedTest({
+      sessionId,
+      assessmentName: MINAT_HOBI_ASSESSMENT_NAME,
+      assessmentSlug: "minat_hobi",
+      testHref: window.location.pathname,
+      studentName,
+      snapshot: { kind: "minat_hobi", birthDate, answers },
+    });
+  }, [answers, birthDate, result, sessionId, status, studentName]);
 
   async function submit() {
     if (!isComplete || hasSubmitted.current) return;

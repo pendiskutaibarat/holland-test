@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { getAssessmentDisplayName } from "@/data/assessments";
 import { getAssessmentTestHref } from "@/lib/test-route";
 
 export type SessionCardAccessType = "OWNED" | "SHARED";
@@ -38,7 +39,10 @@ export default function SessionCard({
   actions,
 }: SessionCardProps) {
   const [copied, setCopied] = useState(false);
-  const assessmentName = session.assessment?.name ?? "Holland RIASEC";
+  const assessmentName = getAssessmentDisplayName(
+    session.assessment?.slug ?? "holland_riasec",
+    session.assessment?.name,
+  );
   const showMode = session.assessment?.slug !== "minat_hobi";
   const testHref = getAssessmentTestHref(
     session.assessment?.slug ?? "holland_riasec",

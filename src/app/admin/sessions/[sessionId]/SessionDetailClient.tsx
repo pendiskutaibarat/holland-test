@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import LoadingButton from "@/components/LoadingButton";
+import { getAssessmentDisplayName } from "@/data/assessments";
 import { calculatePeminatanPercentages } from "@/utils/peminatan";
 import { PEMINATAN_COMPATIBILITY } from "@/data/peminatan";
 import { getPeminatanCompatibility } from "@/utils/riasec";
@@ -88,6 +89,10 @@ interface Session {
   collaborators: Collaborator[];
   results: Result[];
   assessment_results: AssessmentResult[];
+}
+
+function getSessionAssessmentName(session: Session) {
+  return getAssessmentDisplayName(session.assessment.slug, session.assessment.name);
 }
 
 function resultToTestResults(result: Result): TestResult[] {
@@ -586,7 +591,7 @@ export default function SessionDetailClient({
         ),
       );
       const rows: ExcelCell[][] = [
-        [`Hasil ${session.assessment.name}`],
+        [`Hasil ${getSessionAssessmentName(session)}`],
         ["Sesi", session.name],
         ["Sekolah / Madrasah", session.school_name],
         ["Kode", session.code],
@@ -687,7 +692,7 @@ export default function SessionDetailClient({
     });
 
     const rows: ExcelCell[][] = [
-      ["Hasil Tes Holland RIASEC"],
+      ["Hasil Tes RIASEC"],
       ["Sesi", session.name],
       ["Sekolah / Madrasah", session.school_name],
       ["Kode", session.code],
@@ -718,7 +723,7 @@ export default function SessionDetailClient({
           <p className="app-page-subtitle">{session.school_name}</p>
           <p className="text-gray-500 mt-1">
             Kode: <code className="bg-gray-100 px-1 rounded">{session.code}</code> ·{" "}
-            {displayedResultCount} hasil · Asesmen: {session.assessment.name}
+            {displayedResultCount} hasil · Asesmen: {getSessionAssessmentName(session)}
             {!isMinatHobi && <> · Mode: {session.mode}</>}
           </p>
           <p className="mt-1 text-sm text-slate-500">

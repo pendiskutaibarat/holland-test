@@ -301,7 +301,7 @@ def build_pdf() -> None:
         leftMargin=22 * mm,
         topMargin=20 * mm,
         bottomMargin=22 * mm,
-        title="Dokumentasi Produk Holland Test",
+        title="Dokumentasi Produk Tes RIASEC",
         author="Kami",
     )
 

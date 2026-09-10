@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import localFont from "next/font/local";
 import { Suspense } from "react";
+import ChangelogModal from "@/components/ChangelogModal";
 import GlobalNav from "@/components/GlobalNav";
 import TopLoadingBar from "@/components/TopLoadingBar";
 import "./globals.css";
@@ -46,6 +47,7 @@ export default function RootLayout({
           <TopLoadingBar />
         </Suspense>
         <GlobalNav />
+        <ChangelogModal />
         {children}
         <Analytics />
         <SpeedInsights />

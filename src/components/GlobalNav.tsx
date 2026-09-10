@@ -9,6 +9,7 @@ import AdminProfileMenu from "@/components/admin/AdminProfileMenu";
 const navItems = [
   { href: "/", label: "Beranda" },
   { href: "/test/public", label: "Tes Publik" },
+  { href: "/riwayat-tes", label: "Riwayat Tes" },
 ] as const;
 
 export default function GlobalNav() {
@@ -117,12 +118,6 @@ export default function GlobalNav() {
           })}
 
           <div className="flex flex-col gap-3 md:ml-auto md:flex-row md:items-center md:justify-end">
-            <Link
-              href="/admin/register"
-              className="app-button-primary min-w-[80px] justify-center"
-            >
-              Daftar
-            </Link>
             <Link
               href={isAdminOrGuruLoggedIn ? "/admin/dashboard" : "/admin/login"}
               className="app-button-primary min-w-[80px] justify-center"

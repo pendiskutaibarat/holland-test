@@ -1,4 +1,4 @@
-# Holland Test - Tes Bakat Holland RIASEC
+# Tes RIASEC
 
 Platform tes kepribadian dan pemetaan peminatan/karir berdasarkan teori Holland RIASEC (Realistic, Investigative, Artistic, Social, Enterprising, Conventional).
 

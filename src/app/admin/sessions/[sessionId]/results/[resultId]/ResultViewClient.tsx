@@ -165,6 +165,7 @@ export default function ResultViewClient({
           sessionId={sessionId}
           name={result.student_name}
           birthDate={birthDateStr}
+          studentClass={result.student_class}
           results={results}
           outcome={outcome}
         />
@@ -173,6 +174,7 @@ export default function ResultViewClient({
           sessionId={sessionId}
           name={result.student_name}
           birthDate={birthDateStr}
+          studentClass={result.student_class}
           results={results}
         />
       )}

@@ -40,6 +40,7 @@ interface KarirResultsProps {
   sessionId: string;
   name: string;
   birthDate: string;
+  studentClass: string;
   results: TestResult[];
 }
 
@@ -47,6 +48,7 @@ export default function KarirResults({
   sessionId,
   name,
   birthDate,
+  studentClass,
   results,
 }: KarirResultsProps) {
   const ranking = rankRiasecResults(results);
@@ -149,12 +151,12 @@ export default function KarirResults({
       >
         <img
           src={bannerSrc}
-          alt="Banner asesmen Holland RIASEC"
+          alt="Banner Tes RIASEC"
           className="mx-auto mb-6 w-full max-w-[260px]"
         />
 
         <h2 className="text-2xl font-bold text-slate-900">
-          Hasil Tes Holland RIASEC
+          Hasil Tes RIASEC
         </h2>
 
         <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -267,7 +269,7 @@ export default function KarirResults({
 
       <div id="results-content">
       <h2 className="text-2xl font-bold text-slate-800 mb-4">
-        Hasil Tes Holland RIASEC
+        Hasil Tes RIASEC
       </h2>
 
       <div className="print-card bg-slate-50 rounded-lg p-4 mb-8 space-y-1">
@@ -438,7 +440,7 @@ export default function KarirResults({
           type="button"
           onClick={() =>
             void downloadPdf(
-              `/api/results/pdf?kind=karir&sessionId=${encodeURIComponent(sessionId)}&studentName=${encodeURIComponent(name)}&studentClass=${encodeURIComponent(birthDate)}`,
+              `/api/results/pdf?kind=karir&sessionId=${encodeURIComponent(sessionId)}&studentName=${encodeURIComponent(name)}&studentClass=${encodeURIComponent(studentClass)}`,
               pdfFileName,
             )
           }

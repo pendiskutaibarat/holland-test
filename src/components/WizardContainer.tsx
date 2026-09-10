@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { questions } from "@/data/questions";
 import { PersonalityType, Mode } from "@/data/types";
 import { calculateRiasecResult } from "@/utils/riasec";
@@ -11,6 +11,7 @@ import ModeSelectorStep from "./ModeSelectorStep";
 import TestSectionStep from "./TestSectionStep";
 import PeminatanResults from "./PeminatanResults";
 import KarirResults from "./KarirResults";
+import { saveCompletedTest } from "@/lib/student-test-history";
 
 const TOTAL_STEPS = 8;
 const PERSONALITY_TYPES: PersonalityType[] = [
@@ -29,6 +30,8 @@ interface WizardContainerProps {
   studentClass: string;
   questionBannerSrc?: string;
   questionBannerAlt?: string;
+  initialSelections?: Record<string, number[]>;
+  initiallyCompleted?: boolean;
 }
 
 export default function WizardContainer({
@@ -38,20 +41,22 @@ export default function WizardContainer({
   studentClass,
   questionBannerSrc,
   questionBannerAlt,
+  initialSelections,
+  initiallyCompleted = false,
 }: WizardContainerProps) {
-  const [currentStep, setCurrentStep] = useState(forcedMode ? 0 : 0);
+  const [currentStep, setCurrentStep] = useState(initiallyCompleted ? TOTAL_STEPS - 1 : 0);
   const [mode, setMode] = useState<Mode | null>(forcedMode);
   const [name] = useState(studentName);
   const [birthDate] = useState(studentClass);
   const [submissionStatus, setSubmissionStatus] = useState<
     "idle" | "submitting" | "success" | "error" | "duplicate"
-  >("idle");
+  >(initiallyCompleted ? "success" : "idle");
 
   const [selections, setSelections] = useState<Record<string, Set<number>>>(
     () => {
       const init: Record<string, Set<number>> = {};
       PERSONALITY_TYPES.forEach((type) => {
-        init[type] = new Set();
+        init[type] = new Set(initialSelections?.[type] ?? []);
       });
       return init;
     },
@@ -85,6 +90,26 @@ export default function WizardContainer({
     ...(selections[type] ?? []),
   ]).sort((a, b) => a - b);
   const riasecResult = calculateRiasecResult(selectedQuestionNumbers);
+
+  useEffect(() => {
+    if (submissionStatus !== "success" || !mode) return;
+
+    saveCompletedTest({
+      sessionId,
+      assessmentName: "Tes RIASEC",
+      assessmentSlug: "holland_riasec",
+      testHref: window.location.pathname,
+      studentName,
+      snapshot: {
+        kind: "riasec",
+        mode,
+        birthDate,
+        selections: Object.fromEntries(
+          PERSONALITY_TYPES.map((type) => [type, [...(selections[type] ?? [])]]),
+        ),
+      },
+    });
+  }, [birthDate, mode, selections, sessionId, studentName, submissionStatus]);
 
   async function submitResult() {
     if (!mode || selectedQuestionNumbers.length === 0) return;
@@ -248,6 +273,7 @@ export default function WizardContainer({
             sessionId={sessionId}
             name={name}
             birthDate={birthDate}
+            studentClass={studentClass}
             results={riasecResult.scores}
             hasTies={riasecResult.hasTies}
           />
@@ -256,6 +282,7 @@ export default function WizardContainer({
             sessionId={sessionId}
             name={name}
             birthDate={birthDate}
+            studentClass={studentClass}
             results={riasecResult.scores}
           />
         )}
@@ -274,12 +301,12 @@ export default function WizardContainer({
             <div className="text-center">
               <AssessmentBanner
                 src="/test-banners/riasec-banner.png"
-                alt="Banner asesmen Holland RIASEC"
+                alt="Banner Tes RIASEC"
               />
             </div>
             <div className="text-center">
               <h1 className="mb-2 text-2xl font-bold text-brand-700">
-                TES BAKAT HOLLAND RIASEC
+                TES RIASEC
               </h1>
               <p className="text-slate-600">
                 Mode tes telah ditentukan oleh admin:

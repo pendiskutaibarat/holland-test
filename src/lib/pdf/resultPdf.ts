@@ -193,7 +193,7 @@ class PdfLayout {
       this.doc.setTextColor(15, 118, 110);
       this.doc.setFont("helvetica", "bold");
       this.doc.setFontSize(16);
-      this.doc.text("Holland RIASEC", this.marginX, bannerHeight / 2 + 2);
+      this.doc.text("Tes RIASEC", this.marginX, bannerHeight / 2 + 2);
     }
     this.doc.setDrawColor(215, 225, 224);
     this.doc.line(this.marginX, bannerHeight, this.pageWidth - this.marginX, bannerHeight);
@@ -694,6 +694,68 @@ class PdfLayout {
     this.y += 2;
   }
 
+  addCareerTable(rows: Array<{ name: string; desc: string; majorRecommendation: string }>) {
+    const startX = this.marginX;
+    const tableWidth = this.pageWidth - this.marginX * 2;
+    const columns = [48, 76, tableWidth - 124];
+
+    const drawHeader = () => {
+      this.doc.setFillColor(248, 250, 252);
+      this.doc.setDrawColor(226, 232, 240);
+      this.doc.roundedRect(startX, this.y - 2, tableWidth, 10, 2, 2, "FD");
+
+      let cursorX = startX + 3;
+      ["Profesi", "Deskripsi", "Rekomendasi Studi"].forEach((header, index) => {
+        this.doc.setFont("helvetica", "bold");
+        this.doc.setFontSize(9);
+        this.doc.setTextColor(30, 41, 59);
+        this.doc.text(header, cursorX, this.y + 4);
+        cursorX += columns[index];
+      });
+      this.y += 11;
+    };
+
+    this.ensureSpace(14);
+    drawHeader();
+
+    rows.forEach((row, rowIndex) => {
+      const nameLines = this.wrapLines(row.name, columns[0] - 4);
+      const descriptionLines = this.wrapLines(row.desc, columns[1] - 4);
+      const majorLines = this.wrapLines(row.majorRecommendation, columns[2] - 4);
+      const rowHeight = Math.max(
+        nameLines.length,
+        descriptionLines.length,
+        majorLines.length,
+      ) * 4.3 + 5;
+
+      if (this.y + rowHeight + 1 > this.pageHeight - this.marginBottom) {
+        this.newPage();
+        drawHeader();
+      }
+
+      this.doc.setDrawColor(226, 232, 240);
+      if (rowIndex < rows.length - 1) {
+        this.doc.line(startX, this.y + rowHeight - 1.5, startX + tableWidth, this.y + rowHeight - 1.5);
+      }
+
+      let cursorX = startX + 3;
+      this.doc.setFont("helvetica", "bold");
+      this.doc.setFontSize(9);
+      this.doc.setTextColor(15, 23, 42);
+      this.doc.text(nameLines, cursorX, this.y + 3);
+
+      cursorX += columns[0];
+      this.doc.setFont("helvetica", "normal");
+      this.doc.setTextColor(71, 85, 105);
+      this.doc.text(descriptionLines, cursorX, this.y + 3);
+
+      cursorX += columns[1];
+      this.doc.text(majorLines, cursorX, this.y + 3);
+      this.y += rowHeight;
+    });
+    this.y += 2;
+  }
+
   addBars(rows: Array<{ label: string; score: number; max: number; color?: [number, number, number] }>) {
     rows.forEach((row) => {
       const labelLines = this.wrapLines(row.label, 54);
@@ -833,7 +895,7 @@ export async function renderKarirPdf(params: {
   const doc = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
   const layout = new PdfLayout(doc, banner);
 
-  layout.addTitle("Hasil Tes Holland RIASEC", "Laporan hasil asesmen yang bisa langsung dicetak sebagai ringkasan profil.");
+  layout.addTitle("Hasil Tes RIASEC", "Laporan hasil asesmen yang bisa langsung dicetak sebagai ringkasan profil.");
   layout.addKeyValue("Nama", params.name);
   layout.addKeyValue("Tanggal Lahir", formatDate(params.birthDate));
   layout.addKeyValue("Tanggal Tes", params.testDate);
@@ -858,10 +920,12 @@ export async function renderKarirPdf(params: {
           `Sifat Utama: ${row.traits}`,
           `Preferensi (Suka): ${row.preferences}`,
           `Hal yang Dihindari: ${row.avoidances}`,
-          `Profesi yang Cocok: ${row.careers.slice(0, 3).map((career) => career.name).join(", ")}`,
         ],
         imageDataUrl: personalityIcons[row.type],
       });
+      layout.addParagraph("Profesi yang Cocok", 10);
+      layout.addCareerTable(row.careers);
+      layout.addSpacer(3);
     });
   }
 

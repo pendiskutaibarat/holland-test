@@ -19,7 +19,7 @@ export interface AssessmentCatalogItem {
 export const assessmentCatalog: AssessmentCatalogItem[] = [
   {
     slug: ASSESSMENT_SLUGS.holland,
-    name: "Holland RIASEC",
+    name: "Tes RIASEC",
     description:
       "Eksplorasi minat, bakat, peminatan SMA/MA, serta rekomendasi karir dan program studi.",
     engineKey: ASSESSMENT_SLUGS.holland,
@@ -41,4 +41,8 @@ export const assessmentCatalog: AssessmentCatalogItem[] = [
 
 export function getAssessmentCatalogItem(slug: string) {
   return assessmentCatalog.find((item) => item.slug === slug);
+}
+
+export function getAssessmentDisplayName(slug: string, fallback?: string) {
+  return getAssessmentCatalogItem(slug)?.name ?? fallback ?? "Tes RIASEC";
 }

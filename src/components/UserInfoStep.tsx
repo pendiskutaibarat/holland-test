@@ -21,11 +21,11 @@ export default function UserInfoStep({
     <div className="space-y-6">
       {/* Banner */}
       <div className="text-center">
-        <AssessmentBanner src="/test-banners/riasec-banner.png" alt="Banner asesmen Holland RIASEC" />
+        <AssessmentBanner src="/test-banners/riasec-banner.png" alt="Banner Tes RIASEC" />
       </div>
 
       <h1 className="text-2xl font-bold text-center text-blue-500">
-        TES BAKAT HOLLAND RIASEC
+        TES RIASEC
       </h1>
 
       {/* Instructions */}

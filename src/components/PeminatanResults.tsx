@@ -61,6 +61,7 @@ interface PeminatanResultsProps {
   sessionId: string;
   name: string;
   birthDate: string;
+  studentClass: string;
   results: TestResult[];
   outcome?: PeminatanOutcome;
   hasTies?: boolean;
@@ -70,6 +71,7 @@ export default function PeminatanResults({
   sessionId,
   name,
   birthDate,
+  studentClass,
   results,
   outcome,
   hasTies,
@@ -116,7 +118,7 @@ export default function PeminatanResults({
       <header className="app-card overflow-hidden">
         <Image
           src="/test-banners/riasec-banner.png"
-          alt="Banner asesmen Holland RIASEC"
+          alt="Banner Tes RIASEC"
           width={1200}
           height={360}
           priority
@@ -124,7 +126,7 @@ export default function PeminatanResults({
         />
         <div className="p-5 md:p-6">
           <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
-            Hasil Tes Holland RIASEC
+            Hasil Tes RIASEC
           </p>
           <h1 className="mt-1 text-2xl font-bold text-slate-900">
             Peminatan SMA/MA
@@ -254,9 +256,7 @@ export default function PeminatanResults({
           onClick={() => {
             window.location.href = `/api/results/pdf?kind=peminatan&sessionId=${encodeURIComponent(
               sessionId,
-            )}&studentName=${encodeURIComponent(name)}&studentClass=${encodeURIComponent(
-              birthDate,
-            )}&filename=${encodeURIComponent(pdfFileName)}`;
+            )}&studentName=${encodeURIComponent(name)}&studentClass=${encodeURIComponent(studentClass)}&filename=${encodeURIComponent(pdfFileName)}`;
           }}
         >
           Unduh PDF

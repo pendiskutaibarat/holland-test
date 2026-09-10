@@ -41,12 +41,12 @@ export default function ModeSelectorStep({
   return (
     <div className="mx-auto max-w-[800px] space-y-8">
       <div className="text-center">
-        <AssessmentBanner src="/test-banners/riasec-banner.png" alt="Banner asesmen Holland RIASEC" />
+        <AssessmentBanner src="/test-banners/riasec-banner.png" alt="Banner Tes RIASEC" />
       </div>
 
       <div className="text-center">
         <h1 className="mb-2 text-2xl font-bold text-brand-700">
-          TES BAKAT HOLLAND RIASEC
+          TES RIASEC
         </h1>
         <p className="text-slate-600">
           Pilih tujuan tes ini untuk memulai perjalananmu:

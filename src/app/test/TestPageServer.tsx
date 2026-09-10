@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { getAssessmentDisplayName } from "@/data/assessments";
 import TestPageClient from "./[code]/TestPageClient";
 
 function isValidSessionSlug(code: string): boolean {
@@ -35,7 +36,10 @@ export default async function TestPageServer({
       schoolName={session.school_name}
       sessionMode={session.mode}
       assessmentSlug={session.assessment.slug}
-      assessmentName={session.assessment.name}
+      assessmentName={getAssessmentDisplayName(
+        session.assessment.slug,
+        session.assessment.name,
+      )}
       isActive={session.is_active}
     />
   );

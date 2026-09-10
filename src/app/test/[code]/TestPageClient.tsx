@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import WizardContainer from "@/components/WizardContainer";
 import MinatHobiAssessment from "@/components/MinatHobiAssessment";
 import { ASSESSMENT_SLUGS } from "@/data/assessments";
+import { getCompletedTest, type CompletedTest } from "@/lib/student-test-history";
 import {
   MINAT_HOBI_ANSWER_INSTRUCTION,
   MINAT_HOBI_ESTIMATED_DURATION,
@@ -63,6 +64,14 @@ export default function TestPageClient({
     {},
   );
   const [started, setStarted] = useState(false);
+  const [completedTest, setCompletedTest] = useState<CompletedTest | null>(null);
+
+  useEffect(() => {
+    const savedTest = getCompletedTest(sessionId);
+    if (savedTest) {
+      queueMicrotask(() => setCompletedTest(savedTest));
+    }
+  }, [sessionId]);
 
   function handleStart(e: FormEvent) {
     e.preventDefault();
@@ -82,6 +91,33 @@ export default function TestPageClient({
 
     setErrors({});
     setStarted(true);
+  }
+
+  if (completedTest) {
+    if (completedTest.snapshot.kind === "minat_hobi") {
+      return (
+        <MinatHobiAssessment
+          sessionId={sessionId}
+          studentName={completedTest.studentName}
+          birthDate={completedTest.snapshot.birthDate}
+          initialAnswers={completedTest.snapshot.answers}
+          initiallyCompleted
+        />
+      );
+    }
+
+    return (
+      <WizardContainer
+        sessionId={sessionId}
+        forcedMode={completedTest.snapshot.mode}
+        studentName={completedTest.studentName}
+        studentClass={completedTest.snapshot.birthDate}
+        initialSelections={completedTest.snapshot.selections}
+        initiallyCompleted
+        questionBannerSrc="/test-banners/riasec-banner.png"
+        questionBannerAlt="Banner asesmen RIASEC"
+      />
+    );
   }
 
   if (!isActive) {
