@@ -59,7 +59,7 @@ export default function GlobalNav() {
     void loadAuthState();
 
     return () => controller.abort();
-  }, []);
+  }, [pathname]);
 
   return (
     <header className="app-site-header" style={{ viewTransitionName: "persistent-nav" }}>
